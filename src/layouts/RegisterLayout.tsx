@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 function RegisterLayout() {
   return (
     <>
-    <section className="flex-1 bg-[#000]">
+    <section className="w-full bg-[#000]">
       <Outlet />
     </section> 
     </>

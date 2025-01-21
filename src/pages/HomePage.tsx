@@ -1,9 +1,14 @@
-import React from 'react'
+import { supabase } from "../utils/supabase"
 
 const HomePage = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  }
   return (
-    <div className='flex-1 bg-[#e6e6e6]'>
-      
+    <div className='h-screen w-full bg-[#e6e6e6]'>
+      <button onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   )
 }

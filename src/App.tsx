@@ -6,6 +6,7 @@ import Loader from "./components/loaders/Loader";
 
 const RegisterLayout = lazy(() => import("./layouts/RegisterLayout"));
 const RegisterPage = lazy(() => import("./pages/authPage/RegisterPage"));
+const SignUpPage = lazy(() => import("./pages/authPage/SignUpPage"));
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
 const PrivateRoute = lazy(() => import("./components/authentication/PrivateRoute"));
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -23,6 +24,7 @@ function App() {
 
             <Route element={<RegisterLayout />}>
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/signUp" element={<SignUpPage />} />
             </Route>
 
             <Route element={<MainLayout />}>
