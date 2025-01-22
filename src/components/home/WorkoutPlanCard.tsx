@@ -4,7 +4,7 @@ import { WorkoutPlansType } from "../../types/workoutPlans";
 const WorkoutPlanCard = ({ planDetails }: {planDetails: WorkoutPlansType}) => {
 
   const truncateText = (text: string, maxLength: number) => {
-    return text.length > maxLength ? `${text.slice(0, maxLength)}....` : text;
+    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
 
   return (

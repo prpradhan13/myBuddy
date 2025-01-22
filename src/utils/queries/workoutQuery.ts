@@ -39,3 +39,22 @@ export const useGetWorkoutPlan = (workoutPlanId?: number) => {
         }
     })
 }
+
+export const useGetPlanWithDays = (workoutPlanId: number) => {
+    return useQuery({
+        queryKey: [`workoutplan_days_${workoutPlanId}`],
+        queryFn: async () => {
+            const { data, error} = await supabase
+                .from("workoutplan_with_days")
+                .select("*")
+                .eq("workoutplan_id", workoutPlanId)
+                .single();
+            
+            if (error) {
+                toast.error(error.message || "Workout plans could not be find")
+            }
+
+            return data || []
+        }
+    })
+}

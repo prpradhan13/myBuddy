@@ -10,6 +10,7 @@ const SignUpPage = lazy(() => import("./pages/authPage/SignUpPage"));
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
 const PrivateRoute = lazy(() => import("./components/authentication/PrivateRoute"));
 const HomePage = lazy(() => import("./pages/HomePage"));
+const WorkOutPlanDetails = lazy(() => import("./pages/WorkoutPlanDetails"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<PrivateRoute />}>
                 <Route path="" element={<HomePage />} />
+                <Route path="workoutPlanDetails/:planId" element={<WorkOutPlanDetails />} />
               </Route>
             </Route>
 
