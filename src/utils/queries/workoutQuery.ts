@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "../supabase"
 import toast from "react-hot-toast"
-import { WorkoutPlansType } from "../../types/workoutPlans"
+import { WorkoutPlansType, WorkoutPlanWithDaysType } from "../../types/workoutPlans"
 
 export const useGetUserWorkoutPlans = (userId?: string) => {
     return useQuery<WorkoutPlansType[]>({
@@ -22,28 +22,11 @@ export const useGetUserWorkoutPlans = (userId?: string) => {
     })
 }
 
-export const useGetWorkoutPlan = (workoutPlanId?: number) => {
-    return useQuery<WorkoutPlansType[]>({
-        queryKey: [`workoutPlans_${workoutPlanId}`],
-        queryFn: async () => {
-            const { data, error} = await supabase
-                .from("workoutplan")
-                .select("*")
-                .eq("id", workoutPlanId)
-            
-            if (error) {
-                toast.error(error.message || "Workout plans could not be find")
-            }
-
-            return data || []
-        }
-    })
-}
-
 export const useGetPlanWithDays = (workoutPlanId: number) => {
-    return useQuery({
+    return useQuery<WorkoutPlanWithDaysType>({
         queryKey: [`workoutplan_days_${workoutPlanId}`],
         queryFn: async () => {
+
             const { data, error} = await supabase
                 .from("workoutplan_with_days")
                 .select("*")
@@ -55,6 +38,6 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
             }
 
             return data || []
-        }
+        },
     })
 }

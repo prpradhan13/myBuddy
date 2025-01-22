@@ -1,5 +1,5 @@
 import { useAuth } from "../../context/AuthProvider";
-import getInitialLetter from "../../utils/initialLetter";
+import { getInitialLetter } from "../../utils/helpingFunctions";
 import { getUserDetails } from "../../utils/queries/userProfileQuery";
 import Loader from "../loaders/Loader";
 import { FaCamera } from "react-icons/fa";

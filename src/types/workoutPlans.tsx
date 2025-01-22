@@ -12,5 +12,14 @@ export type WorkoutDayType = {
     description: string | null;
     difficulty_level: string | null;
     workout_name: string | null;
-    isrestday: boolean;
+    is_restday: boolean;
+}
+
+export type WorkoutPlanWithDaysType = {
+    workoutplan_id: number;
+    plan_name: string;
+    plan_description: string | null;
+    plan_difficulty: string;
+    creator_id: string;
+    workoutdays: WorkoutDayType[] | null;
 }

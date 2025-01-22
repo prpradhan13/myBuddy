@@ -1,6 +1,4 @@
-
-
-const getInitialLetter = (fullName?: string) => {
+export const getInitialLetter = (fullName?: string) => {
     if (!fullName) return "";
     const nameParts = fullName.split(" ");
     return nameParts.length === 1
@@ -11,4 +9,6 @@ const getInitialLetter = (fullName?: string) => {
           .toUpperCase();
 };
 
-export default getInitialLetter;
+export const truncateText = (text: string, maxLength: number) => {
+    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+};
