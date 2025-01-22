@@ -6,13 +6,19 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'],
+        ubuntu: ['Ubuntu', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+      },
+
       colors: {
         MainBackgroundColor: "#1e1e1e",
         SecondaryBackgroundColor: "#1C1C1C",
         PrimaryTextColor: "#FFFFFF",
         SecondaryTextColor: "#D3D3D3",
         MainButtonColor: "#FFFF33",
-        SecondaryButtonColor: "#39FF14",
+        SecondaryButtonColor: "#00F9FF",
         ButtonLoadingColor: "#caca4c"
       }
     },
