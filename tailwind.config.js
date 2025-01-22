@@ -8,10 +8,12 @@ export default {
     extend: {
       colors: {
         MainBackgroundColor: "#1e1e1e",
-        SecondaryBackgroundColor: "#2a2a2a",
-        PrimaryTextColor: "#ededed",
-        SecondaryTextColor: "#c8c8c8",
-        BorderColor: "#eee",
+        SecondaryBackgroundColor: "#1C1C1C",
+        PrimaryTextColor: "#FFFFFF",
+        SecondaryTextColor: "#D3D3D3",
+        MainButtonColor: "#FFFF33",
+        SecondaryButtonColor: "#39FF14",
+        ButtonLoadingColor: "#caca4c"
       }
     },
   },

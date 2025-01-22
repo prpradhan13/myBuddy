@@ -10,9 +10,9 @@ const RegisterBtn = ({ btnName, loading }: RegisterBtnProps) => {
     <button
         type='submit'
         className={`${
-            loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500"
-          } font-semibold w-full h-10 rounded-lg mt-5 uppercase flex justify-center items-center text-white`}
-          disabled={loading}
+            loading ? "bg-ButtonLoadingColor cursor-not-allowed" : "bg-MainButtonColor"
+          } font-semibold w-full h-10 rounded-lg mt-5 uppercase flex justify-center items-center text-black`}
+        disabled={loading}
     >
       {loading ? <ClipLoader color='#000' size={20} /> : btnName}
     </button>
