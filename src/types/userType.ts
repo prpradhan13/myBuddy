@@ -6,3 +6,10 @@ export type UserProfileType = {
     bio: string | null;
     avatar_url: string | null;
 }
+
+export type UserProfileFormType = {
+    full_name?: string;
+    username?: string;
+    bio?: string | null;
+    avatar_url?: string | null;
+}

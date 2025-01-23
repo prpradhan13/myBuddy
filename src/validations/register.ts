@@ -15,3 +15,12 @@ export const loginSchema = z.object({
 });
 
 export type LoginSchemaTypes = z.infer<typeof loginSchema>;
+
+export const profileUpdateSchema = z.object({
+    fullname: z.string().min(3, "Name must be at least 5 characters"),
+    username: z.string().min(3, "Username must be at least 3 characters"),
+    bio: z.string().nullable(),
+    avatar_url: z.any().optional(),
+});
+
+export type ProfileUpdateType = z.infer<typeof profileUpdateSchema>;

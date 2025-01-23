@@ -13,6 +13,7 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const WorkOutPlanDetails = lazy(() => import("./pages/WorkoutPlanDetails"));
 const WorkOutDayDetails = lazy(() => import("./pages/WorkoutDayDetails"));
 const ExercisePage = lazy(() => import("./pages/ExercisePage"));
+const EditProfilePage = lazy(() => import("./pages/EditProfilePage"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<PrivateRoute />}>
                 <Route path="" element={<HomePage />} />
+                <Route path="editProfile" element={<EditProfilePage />} />
                 <Route path="workoutPlanDetails/:planId" element={<WorkOutPlanDetails />} />
                 <Route path="workoutDayDetails/:dayId" element={<WorkOutDayDetails />} />
                 <Route path="exerciseDetails/:exerciseId" element={<ExercisePage />} />

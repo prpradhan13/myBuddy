@@ -13,7 +13,7 @@ export default {
       },
 
       colors: {
-        MainBackgroundColor: "#1e1e1e",
+        MainBackgroundColor: "#000000",
         SecondaryBackgroundColor: "#131313",
         PrimaryTextColor: "#FFFFFF",
         SecondaryTextColor: "#D3D3D3",
