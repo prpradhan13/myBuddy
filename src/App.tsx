@@ -12,6 +12,7 @@ const PrivateRoute = lazy(() => import("./components/authentication/PrivateRoute
 const HomePage = lazy(() => import("./pages/HomePage"));
 const WorkOutPlanDetails = lazy(() => import("./pages/WorkoutPlanDetails"));
 const WorkOutDayDetails = lazy(() => import("./pages/WorkoutDayDetails"));
+const ExercisePage = lazy(() => import("./pages/ExercisePage"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ function App() {
                 <Route path="" element={<HomePage />} />
                 <Route path="workoutPlanDetails/:planId" element={<WorkOutPlanDetails />} />
                 <Route path="workoutDayDetails/:dayId" element={<WorkOutDayDetails />} />
+                <Route path="exerciseDetails/:exerciseId" element={<ExercisePage />} />
               </Route>
             </Route>
 

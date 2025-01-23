@@ -13,7 +13,7 @@ const WorkoutDayDetails = () => {
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (
-    <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-poppins">
+    <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-montserrat">
       <h1 className="text-center text-2xl font-semibold capitalize text-PrimaryTextColor">
         {data?.workout_name}
       </h1>

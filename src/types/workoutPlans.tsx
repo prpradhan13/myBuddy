@@ -40,3 +40,22 @@ export type WorkoutDayWithExerciseType = {
     day_description: string | null;
     dayexercises: ExerciseType[] | null;
 }
+
+export type SetType = {
+    id: number;
+    target_repetitions: string | null;
+    achive_repetitions: string | null;
+    is_skip: boolean;
+    target_weight: string | null;
+    achive_weight: string | null;
+    is_completed: boolean;
+}
+
+export type ExerciseWithSetsType = {
+    exercise_id: number;
+    exercise_name: string;
+    exercise_description: string | null;
+    target_muscle: string | null;
+    rest: string | null;
+    exercise_sets: SetType[] | null;
+}
