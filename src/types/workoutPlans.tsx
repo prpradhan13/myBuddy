@@ -23,3 +23,20 @@ export type WorkoutPlanWithDaysType = {
     creator_id: string;
     workoutdays: WorkoutDayType[] | null;
 }
+
+export type ExerciseType = {
+    id: number;
+    exercise_name: string;
+    description: string | null;
+    target_muscle: string | null;
+    rest: string | null;
+}
+
+export type WorkoutDayWithExerciseType = {
+    workoutday_id: number;
+    day_name: string;
+    workout_name: string;
+    day_difficulty: string | null;
+    day_description: string | null;
+    dayexercises: ExerciseType[] | null;
+}

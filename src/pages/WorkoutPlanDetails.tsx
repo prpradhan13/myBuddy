@@ -51,30 +51,32 @@ const WorkoutPlanDetails = () => {
 
       {validWorkoutDays.length > 0 ? (
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <h2 className="text-center text-lg text-PrimaryTextColor font-semibold">
+            Week {currentPage}
+          </h2>
           {currentDays.map((day) => (
             <WorkoutDayCard dayDetails={day} key={day.id} />
           ))}
 
           {/* Pagination Controls */}
-          <div className="pagination-controls flex items-center justify-between">
-            <button
-              onClick={handlePrevious}
-              disabled={currentPage === 1}
-              className="px-4 py-2 bg-MainButtonColor text-[#000] text-sm font-semibold rounded-md disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <span className="text-sm text-PrimaryTextColor">
-              Week {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-MainButtonColor text-[#000] text-sm font-semibold rounded-md disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
+          {totalPages > 1 && (
+            <div className="pagination-controls flex items-center justify-between">
+              <button
+                onClick={handlePrevious}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-MainButtonColor text-[#000] text-sm font-semibold rounded-md disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-MainButtonColor text-[#000] text-sm font-semibold rounded-md disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="h-96 flex justify-center items-center">
