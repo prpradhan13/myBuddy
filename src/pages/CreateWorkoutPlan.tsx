@@ -41,7 +41,7 @@ const CreateWorkoutPlan = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-4 flex flex-col gap-3">
         {/* Plan Name */}
         <div className="">
-          <label htmlFor="plan_name" className="text-lg text-SecondaryTextColor font-semibold "> What is your Plan name? </label>
+          <label htmlFor="plan_name" className="text-lg text-SecondaryTextColor font-semibold"> What is your Plan name? </label>
           <input
             {...register("plan_name")}
             type="text"

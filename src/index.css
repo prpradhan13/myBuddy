@@ -20,6 +20,10 @@
   font-style: normal;
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 /* For Webkit browsers */
 .scrollbar-hidden-y::-webkit-scrollbar {
   display: none; /* Hide scrollbar */

@@ -66,3 +66,9 @@ export type CreatePlanType = {
     difficulty_level: string | null;
     weeks: number;
 }
+
+export type CreateWorkoutDayType = {
+    workout_name: string;
+    difficulty_level: string | null;
+    description: string | null;
+}
