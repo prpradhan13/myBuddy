@@ -15,11 +15,11 @@ const WorkoutPlanDetails = () => {
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
   );
-
   const validWorkoutDays = data?.workoutdays || [];
+  const sortedWorkoutDays = validWorkoutDays.sort((a, b) => a.id - b.id);
   const totalPages = Math.ceil(validWorkoutDays.length / itemsPerPage);
 
-  const currentDays = validWorkoutDays.slice(
+  const currentDays = sortedWorkoutDays.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -62,8 +62,9 @@ const WorkoutPlanDetails = () => {
           <h2 className="text-center text-lg text-PrimaryTextColor font-semibold">
             Week {currentPage}
           </h2>
+          
           {currentDays.map((day) => (
-            <WorkoutDayCard dayDetails={day} key={day.id} />
+            <WorkoutDayCard planId={Number(planId)} dayDetails={day} key={day.id} />
           ))}
 
           {/* Pagination Controls */}

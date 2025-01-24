@@ -1,30 +1,87 @@
 import { Link } from "react-router-dom";
 import { WorkoutDayType } from "../../types/workoutPlans";
 import { truncateText } from "../../utils/helpingFunctions";
+import { useToggleRestDay } from "../../utils/queries/dayQuery";
+import { ClipLoader } from "react-spinners";
 
-const WorkoutDayCard = ({ dayDetails }: { dayDetails: WorkoutDayType }) => {
+const WorkoutDayCard = ({ dayDetails, planId }: { dayDetails: WorkoutDayType, planId: number }) => {
   const firstThreeLetter = dayDetails.day_name?.slice(0, 3);
 
+  const newRestday = !dayDetails.is_restday;
+
+  const { mutate, isPending } = useToggleRestDay(dayDetails.id, newRestday, planId);
+
+  const handleToggleRestDay = () => {
+    mutate();
+  };
+
   return (
-    <Link to={`/workoutDayDetails/${dayDetails.id}`} className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
-      <div className="w-24 min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
-        <h1 className="text-PrimaryTextColor capitalize font-bold">
-          {firstThreeLetter}
-        </h1>
-      </div>
-      <div
-        className={`${
-          dayDetails.is_restday
-            ? "flex justify-center items-center"
-            : "flex flex-col gap-1"
-        }`}
-      >
-        {dayDetails.is_restday ? (
-          <h1 className="text-xl text-PrimaryTextColor font-semibold">
-            Rest Day
-          </h1>
-        ) : (
-          <>
+    <>
+      {dayDetails.is_restday ? (
+        <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
+          <div className="w-24 min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
+            <h1 className="text-PrimaryTextColor capitalize font-bold">
+              {firstThreeLetter}
+            </h1>
+          </div>
+          <div className="">
+          <h1 className="text-PrimaryTextColor text-lg font-medium">
+              Rest Day
+            </h1>
+            <div className="flex gap-3">
+              {dayDetails.is_restday && (
+                <button className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-md">
+                  Add Exercises
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleToggleRestDay}
+                disabled={isPending}
+                className="bg-green-500 mt-1 text-white text-sm font-medium px-2 w-24 rounded-md"
+              >
+                {isPending ? <ClipLoader size={15} /> : dayDetails.is_restday ? "No Rest" : "Rest"}
+              </button>
+              </div>
+          </div>
+        </div>
+      ) : !dayDetails.workout_name && !dayDetails.is_restday ? (
+        <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
+          <div className="w-24 min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
+            <h1 className="text-PrimaryTextColor capitalize font-bold">
+              {firstThreeLetter}
+            </h1>
+          </div>
+          <div className="">
+            <h1 className="text-PrimaryTextColor text-lg font-medium">
+              No Exercises Added
+            </h1>
+            <div className="flex gap-3">
+              <button className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-md">
+                Add Exercises
+              </button>
+              <button
+                type="button"
+                onClick={handleToggleRestDay}
+                disabled={isPending}
+                className="bg-green-500 mt-1 text-white text-sm font-medium px-2 w-24 rounded-md"
+              >
+                {isPending ? <ClipLoader size={15} /> : "Rest Day"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <Link
+          to={`/workoutDayDetails/${dayDetails.id}`}
+          className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3"
+        >
+          <div className="w-24 min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
+            <h1 className="text-PrimaryTextColor capitalize font-bold">
+              {firstThreeLetter}
+            </h1>
+          </div>
+          <div className="flex flex-col justify-center">
             <h1 className="text-PrimaryTextColor font-semibold text-xl capitalize">
               {dayDetails.workout_name}
             </h1>
@@ -36,10 +93,10 @@ const WorkoutDayCard = ({ dayDetails }: { dayDetails: WorkoutDayType }) => {
                 {truncateText(dayDetails.description, 35)}
               </p>
             )}
-          </>
-        )}
-      </div>
-    </Link>
+          </div>
+        </Link>
+      )}
+    </>
   );
 };
 
