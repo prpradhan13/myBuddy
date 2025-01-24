@@ -17,14 +17,9 @@ const UserDetails = () => {
     navigate("/editProfile");
   };
 
-  // const handleCameraClick = () => {
-  //   if (fileInputRef.current) {
-  //     fileInputRef.current.click();
-  //   }
-  // };
-  // const handleFileChange = (e) => {
-  //   setSelectedFile(e.target.files[0]);
-  // };
+  const handleCreatePlanBtnClick = () => {
+    navigate("/createPlan");
+  };
 
   if (isLoading) return <Loader />;
 
@@ -44,6 +39,13 @@ const UserDetails = () => {
           className="bg-MainButtonColor mt-3 py-1 px-2 rounded-md font-montserrat font-medium text-sm"
         >
           Edit Profile
+        </button>
+
+        <button
+          onClick={handleCreatePlanBtnClick}
+          className="bg-MainButtonColor mt-3 ml-3 py-1 px-2 rounded-md font-montserrat font-medium text-sm"
+        >
+          Create Plan
         </button>
       </div>
 

@@ -2,8 +2,8 @@ export type WorkoutPlansType = {
     id: number;
     creator_id: string;
     plan_name: string;
-    difficulty_level: string;
-    description: string;
+    difficulty_level: string | null;
+    description: string | null;
 }
 
 export type WorkoutDayType = {
@@ -58,4 +58,11 @@ export type ExerciseWithSetsType = {
     target_muscle: string | null;
     rest: string | null;
     exercise_sets: SetType[] | null;
+}
+
+export type CreatePlanType = {
+    plan_name: string;
+    description: string | null;
+    difficulty_level: string | null;
+    weeks: number;
 }

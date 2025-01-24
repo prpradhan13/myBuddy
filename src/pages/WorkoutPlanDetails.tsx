@@ -4,6 +4,7 @@ import Loader from "../components/loaders/Loader";
 import WorkoutDayCard from "../components/cards/WorkoutDayCard";
 import { useState } from "react";
 import ErrorPage from "../components/loaders/ErrorPage";
+import ReuseableBtn from "../components/buttons/ReuseableBtn";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,6 +32,10 @@ const WorkoutPlanDetails = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  const handleAddWorkout = () => {
+    // toast.success("Add workout!");
+  };
+
   if (isLoading) return <Loader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
@@ -48,9 +53,12 @@ const WorkoutPlanDetails = () => {
           <p className="text-sm leading-5">{data.plan_description}</p>
         </div>
       )}
+      <div className="mt-4">
+        <ReuseableBtn onClick={handleAddWorkout} btnName={"add workout"} />
+      </div>
 
       {validWorkoutDays.length > 0 ? (
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <h2 className="text-center text-lg text-PrimaryTextColor font-semibold">
             Week {currentPage}
           </h2>
