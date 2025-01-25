@@ -87,42 +87,48 @@ export const useAddWorkoutDay = (
 
   return useMutation({
     mutationFn: async ({ formData }: { formData: CreateWorkoutDayType }) => {
-      const { data, error } = await supabase
-        .from("workoutday")
-        .update(formData)
-        .eq("id", workoutDayId)
-        .select("*")
-        .single();
+      console.log(formData);
+      
+      // const { data: dayData, error } = await supabase
+      //   .from("workoutday")
+      //   .update({ 
+      //     workot_name: formData.workout_name,
+      //     difficulty_level: formData.difficulty_level,
+      //     description: formData.description
+      //   })
+      //   .eq("id", workoutDayId)
+      //   .select("id")
+      //   .single();
 
-      if (error) {
-        throw new Error(error.message);
-      }
+      // if (error) {
+      //   throw new Error(error.message);
+      // }
 
-      return data || {};
+      // const dayId = dayData.id; 
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        [`workoutplan_days_${planId}`],
-        (oldData: WorkoutPlanWithDaysType | undefined) => {
-          if (!oldData) return undefined;
+    // onSuccess: (data) => {
+    //   queryClient.setQueryData(
+    //     [`workoutplan_days_${planId}`],
+    //     (oldData: WorkoutPlanWithDaysType | undefined) => {
+    //       if (!oldData) return undefined;
 
-          // Update the specific day in the list
-          const updatedDays = oldData?.workoutdays?.map((day) =>
-            day.id === workoutDayId ? { ...day, ...data } : day
-          );
+    //       // Update the specific day in the list
+    //       const updatedDays = oldData?.workoutdays?.map((day) =>
+    //         day.id === workoutDayId ? { ...day, ...data } : day
+    //       );
 
-          return {
-            ...oldData,
-            workoutdays: updatedDays,
-          };
-        }
-      );
+    //       return {
+    //         ...oldData,
+    //         workoutdays: updatedDays,
+    //       };
+    //     }
+    //   );
 
-      toast.success("Update Success");
-      setOpenCreateForm(false);
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to update rest day");
-    },
+    //   toast.success("Update Success");
+    //   setOpenCreateForm(false);
+    // },
+    // onError: (error) => {
+    //   toast.error(error.message || "Failed to update rest day");
+    // },
   });
 };

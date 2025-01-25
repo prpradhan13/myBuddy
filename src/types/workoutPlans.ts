@@ -72,3 +72,22 @@ export type CreateWorkoutDayType = {
     difficulty_level: string | null;
     description: string | null;
 }
+
+export type AllWorkoutDataType = {
+    workout_name: string,
+    difficulty_level: string,
+    description: string,
+}
+
+export type ExercisesFormType = {
+    exercise_name: string,
+    target_muscle: string | null,
+    exercise_description: string | null
+}
+
+export type FinalWorkoutFormType = {
+    workout_name: string,
+    difficulty_level: string | null,
+    description: string | null,
+    exercises: ExercisesFormType[]
+}

@@ -6,14 +6,24 @@ import { ClipLoader } from "react-spinners";
 import { useState } from "react";
 import CreateWorkoutDay from "../forms/CreateWorkoutDay";
 
-const WorkoutDayCard = ({ dayDetails, planId }: { dayDetails: WorkoutDayType, planId: number }) => {
+const WorkoutDayCard = ({
+  dayDetails,
+  planId,
+}: {
+  dayDetails: WorkoutDayType;
+  planId: number;
+}) => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
 
   const firstThreeLetter = dayDetails.day_name?.slice(0, 3);
 
   const newRestday = !dayDetails.is_restday;
 
-  const { mutate, isPending } = useToggleRestDay(dayDetails.id, newRestday, planId);
+  const { mutate, isPending } = useToggleRestDay(
+    dayDetails.id,
+    newRestday,
+    planId
+  );
 
   const handleToggleRestDay = () => {
     mutate();
@@ -21,7 +31,7 @@ const WorkoutDayCard = ({ dayDetails, planId }: { dayDetails: WorkoutDayType, pl
 
   const clickOnAddExercise = () => {
     setOpenCreateForm(true);
-  }
+  };
 
   return (
     <>
@@ -33,12 +43,15 @@ const WorkoutDayCard = ({ dayDetails, planId }: { dayDetails: WorkoutDayType, pl
             </h1>
           </div>
           <div className="">
-          <h1 className="text-PrimaryTextColor text-lg font-medium">
+            <h1 className="text-PrimaryTextColor text-lg font-medium">
               Rest Day
             </h1>
             <div className="flex gap-3">
               {dayDetails.is_restday && (
-                <button onClick={clickOnAddExercise} className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-md">
+                <button
+                  onClick={clickOnAddExercise}
+                  className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-md"
+                >
                   Add Exercises
                 </button>
               )}
@@ -48,9 +61,15 @@ const WorkoutDayCard = ({ dayDetails, planId }: { dayDetails: WorkoutDayType, pl
                 disabled={isPending}
                 className="bg-green-500 mt-1 text-white text-sm font-medium px-2 rounded-md"
               >
-                {isPending ? <ClipLoader size={15} /> : dayDetails.is_restday ? "No Rest" : "Rest"}
+                {isPending ? (
+                  <ClipLoader size={15} />
+                ) : dayDetails.is_restday ? (
+                  "No Rest"
+                ) : (
+                  "Rest"
+                )}
               </button>
-              </div>
+            </div>
           </div>
         </div>
       ) : !dayDetails.workout_name && !dayDetails.is_restday ? (
@@ -65,7 +84,10 @@ const WorkoutDayCard = ({ dayDetails, planId }: { dayDetails: WorkoutDayType, pl
               No Exercises Added
             </h1>
             <div className="flex gap-3">
-              <button onClick={clickOnAddExercise} className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-md">
+              <button
+                onClick={clickOnAddExercise}
+                className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-md"
+              >
                 Add Exercises
               </button>
               <button
@@ -106,7 +128,12 @@ const WorkoutDayCard = ({ dayDetails, planId }: { dayDetails: WorkoutDayType, pl
       )}
 
       {openCreateForm && (
-        <CreateWorkoutDay workoutDayId={dayDetails.id} planId={planId} openCreateForm={openCreateForm} setOpenCreateForm={setOpenCreateForm} />
+        <CreateWorkoutDay
+          workoutDayId={dayDetails.id}
+          planId={planId}
+          openCreateForm={openCreateForm}
+          setOpenCreateForm={setOpenCreateForm}
+        />
       )}
     </>
   );
