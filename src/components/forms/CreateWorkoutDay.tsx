@@ -180,7 +180,7 @@ const CreateWorkoutDay = ({
       )}
 
       {step === 3 && (
-        <FinalStep workoutDetail={{ ...watch(), exercises: exerciseData }} setStep={setStep} />
+        <FinalStep workoutDetail={{ ...watch(), exercises: exerciseData }} setStep={setStep} workoutDayId={workoutDayId} planId={planId} setOpenCreateForm={setOpenCreateForm} />
       )}
     </div>
   );

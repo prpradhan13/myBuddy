@@ -31,12 +31,10 @@ const ExerciseForm = ({
   const exerciseName = watch("exercise_name");
 
   const handleNextBtnClick = (data: TExerciseForm) => {
-    setExerciseData((prev) => [...prev, {exercises: data}])
+    setExerciseData((prev) => [...prev, {...data}])
     setStep(3)
     reset();
   };
-  console.log("render");
-  
   
   return (
     <div className="w-full">
