@@ -11,8 +11,6 @@ import {
   createWorkoutDayschema,
   TCreateWorkoutDay,
 } from "../../validations/forms";
-import { useAddWorkoutDay } from "../../utils/queries/dayQuery";
-import ErrorPage from "../loaders/ErrorPage";
 import ExerciseForm from "./ExerciseForm";
 import FinalStep from "./FinalStep";
 import { ExercisesFormType } from "../../types/workoutPlans";
@@ -64,14 +62,6 @@ const CreateWorkoutDay = ({
       setOpenCreateForm(false);
     }
   };
-
-  const { mutate, isPending, isError, error } = useAddWorkoutDay(
-    workoutDayId,
-    planId,
-    setOpenCreateForm
-  );
-
-  if (isError) return <ErrorPage errorMessage={error.message} />;
 
   const handleCloseBtn = () => {
     reset();
