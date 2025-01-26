@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import toast from "react-hot-toast";
 import {
-  CreateWorkoutDayType,
   FinalWorkoutFormType,
   WorkoutDayWithExerciseType,
   WorkoutPlanWithDaysType,

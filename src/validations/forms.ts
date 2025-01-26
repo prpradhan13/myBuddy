@@ -17,14 +17,18 @@ export const createWorkoutDayschema = z.object({
 
 export type TCreateWorkoutDay = z.infer<typeof createWorkoutDayschema>;
 
-export const setSchema = z.object({
-  target_repetitions: z.string(),
-  target_weight: z.string(),
-})
-
 export const exerciseSchema = z.object({
-  exercise_name: z.string().min(3, "Exercise Name must be at least 3 characters"),
+  exercise_name: z
+    .string()
+    .min(3, "Exercise Name must be at least 3 characters"),
   target_muscle: z.string().nullable(),
-  exercise_description: z.string().nullable()
-})
+  exercise_description: z.string().nullable(),
+});
 export type TExerciseForm = z.infer<typeof exerciseSchema>;
+
+export const setSchema = z.object({
+  target_repetitions: z.string().nonempty("Repetitions are required."),
+  target_weight: z.string().nonempty("Weight is required."),
+});
+
+export type TSetSchema = z.infer<typeof setSchema>;

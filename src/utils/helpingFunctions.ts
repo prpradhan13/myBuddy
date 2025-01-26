@@ -1,3 +1,5 @@
+import { MouseEvent } from "react";
+
 export const getInitialLetter = (fullName?: string) => {
     if (!fullName) return "";
     const nameParts = fullName.split(" ");

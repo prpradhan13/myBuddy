@@ -91,3 +91,8 @@ export type FinalWorkoutFormType = {
     description: string | null,
     exercises: ExercisesFormType[]
 }
+
+export type SetsFormType = {
+    target_repetitions: string | null;
+    target_weight: string | null;
+}

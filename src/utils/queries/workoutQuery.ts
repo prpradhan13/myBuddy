@@ -110,6 +110,7 @@ export const useCreateWorkoutPlan = () => {
 
       if (joinError) {
         toast.error(joinError.message || "Error while joining");
+        return ;
       }
     },
     onSuccess: () => {
