@@ -23,6 +23,7 @@ export const exerciseSchema = z.object({
     .min(3, "Exercise Name must be at least 3 characters"),
   target_muscle: z.string().nullable(),
   exercise_description: z.string().nullable(),
+  rest: z.string().nullable(),
 });
 export type TExerciseForm = z.infer<typeof exerciseSchema>;
 

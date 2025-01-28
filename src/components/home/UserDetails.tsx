@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthProvider";
 import { getInitialLetter } from "../../utils/helpingFunctions";
 import { getUserDetails } from "../../utils/queries/userProfileQuery";
 import Loader from "../loaders/Loader";
+import { Button } from "../ui/button";
 
 const UserDetails = () => {
   const { user } = useAuth();
@@ -34,19 +35,14 @@ const UserDetails = () => {
         </h3>
         <p className="text-SecondaryTextColor text-sm">{data?.email}</p>
 
-        <button
-          onClick={handleEditBtnClick}
-          className="bg-MainButtonColor mt-3 py-1 px-2 rounded-md font-montserrat font-medium text-sm"
-        >
-          Edit Profile
-        </button>
-
-        <button
-          onClick={handleCreatePlanBtnClick}
-          className="bg-MainButtonColor mt-3 ml-3 py-1 px-2 rounded-md font-montserrat font-medium text-sm"
-        >
-          Create Plan
-        </button>
+        <div className="flex gap-2 mt-3">
+          <Button variant="secondary" onClick={handleEditBtnClick} >
+            Edit Profile
+          </Button>
+          <Button variant="secondary" onClick={handleCreatePlanBtnClick} className="">
+            Create Plan
+          </Button>
+        </div>
       </div>
 
       {/* Profile Image */}

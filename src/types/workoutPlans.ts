@@ -82,7 +82,8 @@ export type AllWorkoutDataType = {
 export type ExercisesFormType = {
     exercise_name: string,
     target_muscle: string | null,
-    exercise_description: string | null
+    exercise_description: string | null,
+    rest: string | null
 }
 
 export type FinalWorkoutFormType = {

@@ -1,34 +1,44 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { setSchema, TSetSchema } from "../../validations/forms";
 import { useCreateExerciseSets } from "../../utils/queries/exerciseQuery";
 import ErrorPage from "../loaders/ErrorPage";
-import { ClipLoader } from "react-spinners";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Loader2 } from "lucide-react"
 
 interface SetsFormProps {
   exerciseId: number;
-  setOpenSetsCreateForm: Dispatch<SetStateAction<boolean>>
+  setOpenSetsCreateForm: Dispatch<SetStateAction<boolean>>;
 }
 
 const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors }
-  } = useForm<TSetSchema>({
-    resolver: zodResolver(setSchema)
-  })
+  const form = useForm<TSetSchema>({
+    resolver: zodResolver(setSchema),
+  });
 
-  const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      setOpenSetsCreateForm(false);
-    }
-  };
-
-  const [exerciseSetsData, setExerciseSetsData] = useState<TSetSchema[]>([])
+  const [exerciseSetsData, setExerciseSetsData] = useState<TSetSchema[]>([]);
 
   const handleAddSet = (data: TSetSchema) => {
     if (!data.target_repetitions || !data.target_weight) {
@@ -37,7 +47,7 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
     }
 
     setExerciseSetsData((prev) => [...prev, { ...data }]);
-    reset({target_repetitions: "", target_weight: ""});
+    form.reset({ target_repetitions: "", target_weight: "" });
   };
 
   const handleRemoveSet = (index: number) => {
@@ -48,9 +58,10 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
   const handleClose = () => {
     setExerciseSetsData([]);
     setOpenSetsCreateForm(false);
-  }
+  };
 
-  const { mutate, isPending, isError, error } = useCreateExerciseSets(exerciseId);
+  const { mutate, isPending, isError, error } =
+    useCreateExerciseSets(exerciseId);
 
   const handleSaveExercise = () => {
     if (exerciseSetsData.length === 0) {
@@ -58,50 +69,67 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
       return;
     }
 
-    mutate({ formData: exerciseSetsData })
+    mutate({ formData: exerciseSetsData });
   };
 
-  if (isError) return <ErrorPage errorMessage={error.message} />
+  if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (
-    <div onClick={handleOverlayClick} className="bg-[#00000096] absolute top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
+    <div className="bg-[#00000096] absolute top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
       <div className="bg-SecondaryBackgroundColor w-full rounded-md p-3 flex flex-col gap-4">
-        <form onSubmit={handleSubmit(handleAddSet)} className="mb-1">
-          <div>
-            <h1 className="text-SecondaryTextColor font-semibold">
-              Target Repetition
-            </h1>
-            <input
-              {...register("target_repetitions")}
-              type="text"
-              className="text-white mt-1 bg-transparent border border-[#5e5e5e] rounded-lg py-2 px-3 w-full focus:outline-none"
-            />
-            {errors.target_repetitions && (
-              <p className="text-red-500">{`${errors.target_repetitions.message}`}</p>
-            )}
-          </div>
-
-          <div>
-            <h1 className="text-SecondaryTextColor font-semibold">
-              Target Weight
-            </h1>
-            <input
-              {...register("target_weight")}
-              type="text"
-              className="text-white mt-1 bg-transparent border border-[#5e5e5e] rounded-lg py-2 px-3 w-full focus:outline-none"
-            />
-            {errors.target_weight && (
-              <p className="text-red-500">{`${errors.target_weight.message}`}</p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="bg-blue-500 py-1 px-2 rounded-md mt-1 font-semibold"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleAddSet)}
+            className="flex flex-col gap-2"
           >
-            Save Set
-          </button>
-        </form>
+            <FormField
+              control={form.control}
+              name="target_repetitions"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-PrimaryTextColor text-lg">
+                    Target Repetitions
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder=""
+                      {...field}
+                      className="text-PrimaryTextColor"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="target_weight"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-PrimaryTextColor text-lg">
+                    Target Weight
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder=""
+                      {...field}
+                      className="text-PrimaryTextColor"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="bg-blue-500 py-1 px-2 rounded-md font-semibold"
+            >
+              Save Set
+            </Button>
+          </form>
+        </Form>
 
         {/* Display List of Created Sets */}
         {exerciseSetsData.length > 0 && (
@@ -110,51 +138,69 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
               <h2 className="text-SecondaryTextColor font-semibold mb-2">
                 Created Sets For:
               </h2>
-              {exerciseSetsData
-                .map((set, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-800 px-4 py-2 rounded-md mb-2 flex justify-between items-center"
-                  >
-                    <div>
-                      <p className="text-white">Set {index + 1}</p>
-                      <p className="text-sm text-gray-400">
-                        Reps: {set.target_repetitions} | Weight:{" "}
-                        {set.target_weight}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => handleRemoveSet(index)}
-                      className="text-red-500 text-sm"
-                    >
+              {exerciseSetsData.map((set, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-800 px-4 py-2 rounded-md mb-2"
+                >
+                  <div className="flex justify-between items-center">
+                    <p className="text-white">Set {index + 1}</p>
+                    <Button variant="ghost" onClick={() => handleRemoveSet(index)} className="text-red-500 text-sm h-0 hover:text-red-500 hover:bg-transparent">
                       Remove
-                    </button>
+                    </Button>
                   </div>
-                ))}
+                    <p className="text-sm text-gray-400">
+                      Reps: {set.target_repetitions} | Weight:{" "}
+                      {set.target_weight}
+                    </p>
+                </div>
+              ))}
             </div>
           </>
         )}
 
         <div className="flex gap-3 w-full">
-          <button
-            type="button"
-            onClick={handleClose}
-            className={`bg-red-500 rounded-md h-8 text-lg font-semibold mt-4 ${
-              exerciseSetsData.length <= 1 ? "w-full" : "w-1/2"
-            }`}
-          >
-            CLOSE
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                className={`${
+                  exerciseSetsData.length === 0 ? "w-full" : "w-1/2"
+                }`}
+              >
+                Close
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleClose}>
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {exerciseSetsData.length > 0 && (
-            <button
-              type="button"
+            <Button 
+              variant="secondary"
               disabled={isPending}
               onClick={handleSaveExercise}
-              className={`${isPending ? "bg-[#ffff33bb]" : "bg-MainButtonColor"} rounded-md h-8 text-lg font-semibold mt-4 w-1/2`}
+              className="w-1/2"
             >
-              {isPending ? <ClipLoader size={15} /> : "SAVE"}
-            </button>
+              {isPending ? (
+              <>
+            <Loader2 className="animate-spin" />
+            Please wait
+          </>
+        ) : "Save"}
+            </Button>
           )}
         </div>
       </div>

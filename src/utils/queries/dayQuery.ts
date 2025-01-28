@@ -107,6 +107,7 @@ export const useAddWorkoutDay = (
         exercise_name: item.exercise_name,
         target_muscle: item.target_muscle,
         description: item.exercise_description,
+        rest: item.rest
       }))
 
       const { data: exerciseIds, error: exerciseError } = await supabase

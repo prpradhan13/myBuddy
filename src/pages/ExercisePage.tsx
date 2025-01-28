@@ -22,7 +22,7 @@ const ExercisePage = () => {
     !data.exercise_sets ||
     data.exercise_sets.length === 0 ? (
     <div className="bg-MainBackgroundColor h-screen w-full flex flex-col items-center font-montserrat justify-center gap-3">
-      <p className="text-SecondaryTextColor font-semibold">
+      <p className="text-SecondaryTextColor font-semibold text-center">
         Let's go Champ! Let's add sets, repetitions, weights💪
       </p>
       <button onClick={() => setOpenSetsCreateForm(true)} className="border-b border-PrimaryTextColor text-PrimaryTextColor px-2 font-semibold">
