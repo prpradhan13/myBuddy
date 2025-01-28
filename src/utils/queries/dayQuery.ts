@@ -103,12 +103,12 @@ export const useAddWorkoutDay = (
         throw new Error(error.message);
       }
 
-      const exerciseSchemaForDB = formData.exercises.map(item => ({
+      const exerciseSchemaForDB = formData.exercises.map((item) => ({
         exercise_name: item.exercise_name,
         target_muscle: item.target_muscle,
         description: item.exercise_description,
-        rest: item.rest
-      }))
+        rest: item.rest,
+      }));
 
       const { data: exerciseIds, error: exerciseError } = await supabase
         .from("exercise")
