@@ -2,17 +2,6 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { ExercisesFormType, FinalWorkoutFormType } from "../../types/workoutPlans";
 import { useAddWorkoutDay } from "../../utils/queries/dayQuery";
 import ErrorPage from "../loaders/ErrorPage";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
 import {
   Collapsible,
@@ -21,6 +10,7 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronsUpDown } from "lucide-react";
 import { Loader2 } from "lucide-react";
+import Alert from "../extra/Alert";
 
 const FinalStep = ({
   workoutDetail,
@@ -60,7 +50,7 @@ const FinalStep = ({
       if (workoutDetail.exercises.length === 0) {
         setOpenCreateForm(false);
       }
-    }, [workoutDetail.exercises.length])
+    }, [workoutDetail.exercises.length, setOpenCreateForm])
 
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
@@ -124,30 +114,11 @@ const FinalStep = ({
       </div>
 
       <div className="flex gap-3 justify-evenly mt-3">
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="destructive"
-              className="w-1/2 text-lg font-semibold"
-            >
-              Close
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleCloseBtn}>
-                Continue
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <Alert 
+          trigerBtnVarient={"destructive"}
+          triggerBtnClassName="w-1/2 text-lg font-semibold"
+          handleContinueBtn={handleCloseBtn}
+        />
 
         <Button onClick={handleCreateBtn} disabled={isPending} variant="secondary">
         {isPending ? (

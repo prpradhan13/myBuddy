@@ -40,7 +40,7 @@ const AddExerciseFinal = ({
     if (exerciseDetails.length === 0) {
       setStep(1);
     }
-  }, [exerciseDetails.length])
+  }, [exerciseDetails.length, setStep])
 
   if (isError) return <ErrorPage errorMessage={error.message} />
 

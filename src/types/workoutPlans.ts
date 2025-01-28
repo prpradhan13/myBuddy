@@ -4,6 +4,7 @@ export type WorkoutPlansType = {
     plan_name: string;
     difficulty_level: string | null;
     description: string | null;
+    created_at: string | null;
 }
 
 export type WorkoutDayType = {
@@ -22,6 +23,7 @@ export type WorkoutPlanWithDaysType = {
     plan_difficulty: string;
     creator_id: string;
     workoutdays: WorkoutDayType[] | null;
+    created_at: string | null;
 }
 
 export type ExerciseType = {

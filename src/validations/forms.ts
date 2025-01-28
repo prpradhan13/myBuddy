@@ -33,3 +33,10 @@ export const setSchema = z.object({
 });
 
 export type TSetSchema = z.infer<typeof setSchema>;
+
+export const achiveSchema = z.object({
+  achive_repetitions: z.string().nonempty("Repetitions are required."),
+  achive_weight: z.string().nonempty("Weight is required."),
+});
+
+export type TAchiveSchema = z.infer<typeof achiveSchema>;

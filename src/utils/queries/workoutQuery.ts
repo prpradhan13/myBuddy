@@ -120,3 +120,26 @@ export const useCreateWorkoutPlan = () => {
     },
   });
 };
+
+export const useDeletePlan = (planId: number) => {
+  const queryClient = useQueryClient();
+  const {user} = useAuth();
+  const userId = user?.id;
+
+  return useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+      .from("workoutplan")
+      .delete()
+      .eq("id", planId)
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`workoutPlans_${userId}`] });
+      toast.success("Delete Plan Successfully");
+    }
+  })
+};

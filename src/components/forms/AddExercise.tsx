@@ -16,17 +16,7 @@ import { useState } from "react";
 import AddExerciseFinal from "./AddExerciseFinal";
 import { ExercisesFormType } from "@/types/workoutPlans";
 import { Dispatch, SetStateAction } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import Alert from "../extra/Alert";
 
 interface AddExerciseProps {
   workoutId: number;
@@ -151,25 +141,11 @@ const AddExercise = ({
             />
 
             <div className="w-full flex gap-3">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive" className="w-1/2">Close</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleCloseBtn}>Continue</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <Alert 
+                trigerBtnVarient={"destructive"}
+                triggerBtnClassName="w-1/2"
+                handleContinueBtn={handleCloseBtn}
+              />
 
               <Button type="submit" variant="secondary" className="w-1/2">
                 Submit

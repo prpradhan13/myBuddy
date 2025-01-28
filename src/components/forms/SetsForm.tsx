@@ -15,18 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react";
+import Alert from "../extra/Alert";
 
 interface SetsFormProps {
   exerciseId: number;
@@ -37,7 +27,6 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
   const form = useForm<TSetSchema>({
     resolver: zodResolver(setSchema),
   });
-
   const [exerciseSetsData, setExerciseSetsData] = useState<TSetSchema[]>([]);
 
   const handleAddSet = (data: TSetSchema) => {
@@ -75,7 +64,7 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (
-    <div className="bg-[#00000096] absolute top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
+    <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
       <div className="bg-SecondaryBackgroundColor w-full rounded-md p-3 flex flex-col gap-4">
         <Form {...form}>
           <form
@@ -145,14 +134,17 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
                 >
                   <div className="flex justify-between items-center">
                     <p className="text-white">Set {index + 1}</p>
-                    <Button variant="ghost" onClick={() => handleRemoveSet(index)} className="text-red-500 text-sm h-0 hover:text-red-500 hover:bg-transparent">
+                    <Button
+                      variant="ghost"
+                      onClick={() => handleRemoveSet(index)}
+                      className="text-red-500 text-sm h-0 hover:text-red-500 hover:bg-transparent"
+                    >
                       Remove
                     </Button>
                   </div>
-                    <p className="text-sm text-gray-400">
-                      Reps: {set.target_repetitions} | Weight:{" "}
-                      {set.target_weight}
-                    </p>
+                  <p className="text-sm text-gray-400">
+                    Reps: {set.target_repetitions} | Weight: {set.target_weight}
+                  </p>
                 </div>
               ))}
             </div>
@@ -160,46 +152,29 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
         )}
 
         <div className="flex gap-3 w-full">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="destructive"
-                className={`${
-                  exerciseSetsData.length === 0 ? "w-full" : "w-1/2"
-                }`}
-              >
-                Close
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClose}>
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <Alert
+            trigerBtnVarient={"destructive"}
+            handleContinueBtn={handleClose}
+            triggerBtnClassName={`${
+              exerciseSetsData.length === 0 ? "w-full" : "w-1/2"
+            }`}
+          />
 
           {exerciseSetsData.length > 0 && (
-            <Button 
+            <Button
               variant="secondary"
               disabled={isPending}
               onClick={handleSaveExercise}
               className="w-1/2"
             >
               {isPending ? (
-              <>
-            <Loader2 className="animate-spin" />
-            Please wait
-          </>
-        ) : "Save"}
+                <>
+                  <Loader2 className="animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                "Save"
+              )}
             </Button>
           )}
         </div>

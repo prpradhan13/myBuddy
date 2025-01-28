@@ -16,20 +16,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import Alert from "../extra/Alert";
 
 const CreateWorkoutDay = ({
   workoutDayId,
@@ -75,7 +65,7 @@ const CreateWorkoutDay = ({
   };
 
   return (
-    <div className="bg-[#00000096] absolute top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
+    <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
       {step === 1 && (
         <Form {...form}>
           <form
@@ -145,31 +135,11 @@ const CreateWorkoutDay = ({
             />
 
           <div className="flex gap-3 justify-evenly">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="destructive"
-                  className="w-1/2 text-lg font-semibold"
-                >
-                  Close
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleCloseBtn}>
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-
+            <Alert 
+              handleContinueBtn={handleCloseBtn}
+              trigerBtnVarient="destructive"
+              triggerBtnClassName="w-1/2 text-lg font-semibold"
+            />
             <Button
               type="submit"
               variant="secondary"

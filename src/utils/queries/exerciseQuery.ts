@@ -8,6 +8,7 @@ import {
   WorkoutDayWithExerciseType,
 } from "../../types/workoutPlans";
 import { useNavigate } from "react-router-dom";
+import { TAchiveSchema } from "@/validations/forms";
 
 export const useGetExercises = (exerciseId: number) => {
   return useQuery<ExerciseWithSetsType>({
@@ -77,7 +78,7 @@ export const useAddExercises = (workoutdayId: number) => {
         exercise_name: item.exercise_name,
         target_muscle: item.target_muscle,
         description: item.exercise_description,
-        rest: item.rest
+        rest: item.rest,
       }));
 
       const { data, error } = await supabase
@@ -124,6 +125,71 @@ export const useAddExercises = (workoutdayId: number) => {
 
       toast.success("Update Success");
       navigate(-1);
+    },
+  });
+};
+
+export const useRemoveSet = (exerciseId: number) => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async ({ setId }: {setId: number}) => {
+      const { data, error } = await supabase
+        .from("exercise_set")
+        .delete()
+        .eq("id", setId)
+        .select("*");
+
+      if (error) {
+        toast.error(error.message);
+        throw new Error(error.message);
+      }
+
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: `exercise_${exerciseId}` });
+      toast.success("Exercise set deleted");
+      navigate(-1);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to Delete");
+    },
+  });
+};
+
+export const useUpdateAchives = (
+  exerciseId: number,
+  setId: number,
+) => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async ({
+      formData,
+    }: {
+      formData: TAchiveSchema;
+    }) => {
+      const { error } = await supabase
+        .from("exercise_set")
+        .update(formData)
+        .eq("id", setId)
+        .single();
+
+      if (error) {
+        toast.error(error.message);
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`exercise_${exerciseId}`]});
+      toast.success("Update Success");
+      navigate(-1);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update");
     },
   });
 };

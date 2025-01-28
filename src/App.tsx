@@ -15,6 +15,7 @@ const WorkOutDayDetails = lazy(() => import("./pages/WorkoutDayDetails"));
 const ExercisePage = lazy(() => import("./pages/ExercisePage"));
 const EditProfilePage = lazy(() => import("./pages/EditProfilePage"));
 const CreateWorkoutPlanPage = lazy(() => import("./pages/CreateWorkoutPlan"));
+const AllWorkoutPlan = lazy(() => import("./pages/AllWorkoutPlan"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ function App() {
                 <Route path="workoutDayDetails/:dayId" element={<WorkOutDayDetails />} />
                 <Route path="exerciseDetails/:exerciseId" element={<ExercisePage />} />
                 <Route path="createPlan" element={<CreateWorkoutPlanPage />} />
+                <Route path="allWorkoutPlans" element={<AllWorkoutPlan />} />
               </Route>
             </Route>
 

@@ -5,6 +5,9 @@ import { useToggleRestDay } from "../../utils/queries/dayQuery";
 import { ClipLoader } from "react-spinners";
 import { useState } from "react";
 import CreateWorkoutDay from "../forms/CreateWorkoutDay";
+import Alert from "../extra/Alert";
+import { CalendarHeart } from "lucide-react";
+import { Button } from "../ui/button";
 
 const WorkoutDayCard = ({
   dayDetails,
@@ -37,25 +40,17 @@ const WorkoutDayCard = ({
     <>
       {dayDetails.is_restday ? (
         <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
-          <div className="w-24 min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
+          <div className="w-[20%] min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
-          <div className="">
+          <div className="w-[calc(100% - 20%)]">
             <h1 className="text-PrimaryTextColor text-lg font-medium">
               Rest Day
             </h1>
             <div className="flex gap-3">
-              {dayDetails.is_restday && (
-                <button
-                  onClick={clickOnAddExercise}
-                  className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-md"
-                >
-                  Add Exercises
-                </button>
-              )}
-              <button
+              <Button
                 type="button"
                 onClick={handleToggleRestDay}
                 disabled={isPending}
@@ -68,18 +63,18 @@ const WorkoutDayCard = ({
                 ) : (
                   "Rest"
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       ) : !dayDetails.workout_name && !dayDetails.is_restday ? (
         <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
-          <div className="w-24 min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
+          <div className="w-[20%] min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
-          <div className="">
+          <div className="w-[80%]">
             <h1 className="text-PrimaryTextColor text-lg font-medium">
               No Exercises Added
             </h1>
@@ -90,31 +85,44 @@ const WorkoutDayCard = ({
               >
                 Add Exercises
               </button>
-              <button
+              <Button
                 type="button"
                 onClick={handleToggleRestDay}
                 disabled={isPending}
                 className="bg-green-500 mt-1 text-white text-sm font-medium px-2 rounded-md"
               >
                 {isPending ? <ClipLoader size={15} /> : "Rest Day"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       ) : (
-        <Link
-          to={`/workoutDayDetails/${dayDetails.id}`}
-          className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3"
-        >
-          <div className="w-24 min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
+        <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
+          <Link
+            to={`/workoutDayDetails/${dayDetails.id}`}
+            className="w-[20%] min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center"
+          >
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
-          </div>
-          <div className="flex flex-col justify-center">
-            <h1 className="text-PrimaryTextColor font-semibold text-xl capitalize">
-              {dayDetails.workout_name}
-            </h1>
+          </Link>
+          <div className="flex flex-col justify-center w-[calc(100%-20%)]">
+            <div className="flex items-center justify-between">
+              <Link to={`/workoutDayDetails/${dayDetails.id}`}>
+                <h1 className="text-PrimaryTextColor font-semibold text-lg capitalize">
+                  {truncateText(dayDetails.workout_name!, 25)}
+                </h1>
+              </Link>
+
+              <Alert
+                trigerBtnVarient={"ghost"}
+                icon={CalendarHeart}
+                iconClassName="text-green-500"
+                handleContinueBtn={handleToggleRestDay}
+                headLine="Are you absolutely sure make this Rest day?"
+                descLine="Don't worry you can change this."
+              />
+            </div>
             <h1 className="text-SecondaryTextColor font-medium text-lg capitalize">
               {dayDetails.difficulty_level}
             </h1>
@@ -124,7 +132,7 @@ const WorkoutDayCard = ({
               </p>
             )}
           </div>
-        </Link>
+        </div>
       )}
 
       {openCreateForm && (
