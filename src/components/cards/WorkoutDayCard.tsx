@@ -40,12 +40,12 @@ const WorkoutDayCard = ({
     <>
       {dayDetails.is_restday ? (
         <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
-          <div className="w-[20%] min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
+          <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#232323] rounded-md flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
-          <div className="w-[calc(100% - 20%)]">
+          <div className="w-[calc(100% - 25%)]">
             <h1 className="text-PrimaryTextColor text-lg font-medium">
               Rest Day
             </h1>
@@ -69,12 +69,12 @@ const WorkoutDayCard = ({
         </div>
       ) : !dayDetails.workout_name && !dayDetails.is_restday ? (
         <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
-          <div className="w-[20%] min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center">
+          <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#232323] rounded-md flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
-          <div className="w-[80%]">
+          <div className="w-[75%]">
             <h1 className="text-PrimaryTextColor text-lg font-medium">
               No Exercises Added
             </h1>
@@ -100,13 +100,13 @@ const WorkoutDayCard = ({
         <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
           <Link
             to={`/workoutDayDetails/${dayDetails.id}`}
-            className="w-[20%] min-h-20 bg-gradient-to-r from-slate-900 to-slate-700 rounded-md flex justify-center items-center"
+            className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#232323] rounded-md flex justify-center items-center"
           >
-            <h1 className="text-PrimaryTextColor capitalize font-bold">
+            <h1 className="capitalize font-bold text-PrimaryTextColor">
               {firstThreeLetter}
             </h1>
           </Link>
-          <div className="flex flex-col justify-center w-[calc(100%-20%)]">
+          <div className="flex flex-col justify-center w-[calc(100%-25%)]">
             <div className="flex items-center justify-between">
               <Link to={`/workoutDayDetails/${dayDetails.id}`}>
                 <h1 className="text-PrimaryTextColor font-semibold text-lg capitalize">

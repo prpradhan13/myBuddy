@@ -24,7 +24,7 @@ export const useGetUserWorkoutPlans = (userId?: string) => {
       }
 
       return data || [];
-    },
+    }
   });
 };
 

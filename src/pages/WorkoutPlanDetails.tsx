@@ -4,6 +4,8 @@ import Loader from "../components/loaders/Loader";
 import WorkoutDayCard from "../components/cards/WorkoutDayCard";
 import { useState } from "react";
 import ErrorPage from "../components/loaders/ErrorPage";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,28 +56,36 @@ const WorkoutPlanDetails = () => {
           <h2 className="text-center text-lg text-PrimaryTextColor font-semibold">
             Week {currentPage}
           </h2>
-          
+
           {currentDays.map((day) => (
-            <WorkoutDayCard planId={Number(planId)} dayDetails={day} key={day.id} />
+            <WorkoutDayCard
+              planId={Number(planId)}
+              dayDetails={day}
+              key={day.id}
+            />
           ))}
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="pagination-controls flex items-center justify-between">
-              <button
+              <Button
+                variant={"secondary"}
                 onClick={handlePrevious}
                 disabled={currentPage === 1}
-                className="px-4 py-2 bg-MainButtonColor text-[#000] text-sm font-semibold rounded-md disabled:opacity-50"
+                className="text-sm font-semibold disabled:opacity-50"
               >
+                <ChevronLeft />
                 Previous
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={"secondary"}
                 onClick={handleNext}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-MainButtonColor text-[#000] text-sm font-semibold rounded-md disabled:opacity-50"
+                className="text-sm font-semibold disabled:opacity-50"
               >
                 Next
-              </button>
+                <ChevronRight />
+              </Button>
             </div>
           )}
         </div>

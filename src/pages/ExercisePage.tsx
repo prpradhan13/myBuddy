@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, ChevronsUpDown } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, BicepsFlexed, NotebookPen, Plus } from "lucide-react";
 import Alert from "@/components/extra/Alert";
 import AchiveForm from "@/components/forms/AchiveForm";
 import {
@@ -71,31 +71,23 @@ const ExercisePage = () => {
       )}
     </div>
   ) : (
-    <div className="w-full min-h-screen bg-MainBackgroundColor p-4 font-montserrat">
-      <h1 className="text-[#fca311] font-bold text-lg capitalize">
-        {data?.exercise_name}
+    <div className="w-full min-h-screen bg-MainBackgroundColor p-4 font-poppins">
+      <h1 className="text-[#fca311] font-bold text-lg capitalize flex items-center gap-1">
+        <BicepsFlexed size={22} /> {data?.exercise_name}
       </h1>
-      <h2 className="text-SecondaryTextColor font-semibold capitalize">
-        {data?.target_muscle}
-      </h2>
+      <p className="text-SecondaryTextColor font-medium capitalize">
+       {data?.target_muscle}
+      </p>
       {data?.exercise_description && (
-        <div className="mt-2">
-          <p className="text-SecondaryTextColor font-semibold text-sm capitalize">
-            Tips:
+        <div className="mt-2 flex flex-col gap-1">
+          <p className="text-PrimaryTextColor font-medium text-sm capitalize flex items-center gap-1">
+            <NotebookPen size={16}/> Important Note
           </p>
-          <p className="text-SecondaryTextColor font-medium text-sm capitalize">
+          <p className="text-SecondaryTextColor font- text-sm capitalize">
             {data?.exercise_description}
           </p>
         </div>
       )}
-
-      <Button
-        onClick={handleAddSetBtnClick}
-        variant="secondary"
-        className="mt-3"
-      >
-        Add Set
-      </Button>
 
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {data.exercise_sets.map((set, index) => (
@@ -136,13 +128,13 @@ const ExercisePage = () => {
             </div>
             <h1 className="text-PrimaryTextColor capitalize font-medium">
               Target Repetitions:{" "}
-              <span className="text-[#f18701] text-[1.1rem]">
+              <span className="text-[#f18701] text-[1rem]">
                 {set.target_repetitions}
               </span>
             </h1>
             <h1 className="text-PrimaryTextColor capitalize font-medium">
               Target Weight:{" "}
-              <span className="text-[#f18701] text-[1.1rem]">
+              <span className="text-[#f18701] text-[1rem]">
                 {set.target_weight}
               </span>
             </h1>
@@ -168,13 +160,13 @@ const ExercisePage = () => {
                   <CollapsibleContent>
                     <h1 className="text-PrimaryTextColor bg-[#403d39] px-2 py-1 rounded-md capitalize font-medium">
                       Achive Repetitions:{" "}
-                      <span className="text-[#f18701] text-[1.1rem]">
+                      <span className="text-[#f18701] text-[1rem]">
                         {set.achive_repetitions}
                       </span>
                     </h1>
                     <h1 className="text-PrimaryTextColor bg-[#403d39] px-2 py-1 rounded-md mt-1 capitalize font-medium">
                       Achive Weight:{" "}
-                      <span className="text-[#f18701] text-[1.1rem]">
+                      <span className="text-[#f18701] text-[1rem]">
                         {set.achive_weight}
                       </span>
                     </h1>
@@ -185,6 +177,14 @@ const ExercisePage = () => {
           </div>
         ))}
       </div>
+
+      <Button
+        onClick={handleAddSetBtnClick}
+        variant="outline"
+        className="mt-3 bg-transparent border border-[#fca311] text-[#fff] flex items-center"
+      >
+        Add Set <Plus />
+      </Button>
 
       {openSetForm && (
         <SetsForm
