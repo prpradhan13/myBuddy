@@ -172,9 +172,13 @@ export const useUpdateAchives = (
     }: {
       formData: TAchiveSchema;
     }) => {
+
+      const currentDateTime = new Date().toISOString()
+      const sendingData = {...formData, achive_date_time: currentDateTime}
+
       const { error } = await supabase
         .from("exercise_set")
-        .update(formData)
+        .update(sendingData)
         .eq("id", setId)
         .single();
 

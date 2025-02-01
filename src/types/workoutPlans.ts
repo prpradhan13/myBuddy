@@ -51,6 +51,7 @@ export type SetType = {
     target_weight: string | null;
     achive_weight: string | null;
     is_completed: boolean;
+    achive_date_time: string | null;
 }
 
 export type ExerciseWithSetsType = {
