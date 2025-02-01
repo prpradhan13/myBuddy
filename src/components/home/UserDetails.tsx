@@ -4,8 +4,19 @@ import { getInitialLetter } from "../../utils/helpingFunctions";
 import { getUserDetails } from "../../utils/queries/userProfileQuery";
 import Loader from "../loaders/Loader";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
+import CreateWorkoutPlan from "../forms/CreateWorkoutPlan";
 
 const UserDetails = () => {
+  const [openCreateForm, setOpenCreateForm] = useState(false);
+
   const { user } = useAuth();
 
   const { data, isLoading } = getUserDetails(user?.id);
@@ -19,7 +30,7 @@ const UserDetails = () => {
   };
 
   const handleCreatePlanBtnClick = () => {
-    navigate("/createPlan");
+    setOpenCreateForm(true);
   };
 
   if (isLoading) return <Loader />;
@@ -36,12 +47,23 @@ const UserDetails = () => {
         <p className="text-SecondaryTextColor text-sm">{data?.email}</p>
 
         <div className="flex gap-2 mt-3">
-          <Button variant="secondary" onClick={handleEditBtnClick} >
-            Edit Profile
-          </Button>
-          <Button variant="secondary" onClick={handleCreatePlanBtnClick} className="">
-            Create Plan
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">Manage</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="ml-4">
+              <DropdownMenuItem onClick={handleEditBtnClick} className="">
+                Edit Profile
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleCreatePlanBtnClick}
+                className=""
+              >
+                Create Plan
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -57,6 +79,10 @@ const UserDetails = () => {
           />
         )}
       </div>
+
+      {openCreateForm && (
+        <CreateWorkoutPlan openCreateForm={openCreateForm} setOpenCreateForm={setOpenCreateForm} />
+      )}
     </div>
   );
 };

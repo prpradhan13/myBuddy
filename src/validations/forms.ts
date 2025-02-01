@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const createPlanSchema = z.object({
   plan_name: z.string().min(3, "Workout Name must be at least 3 characters"),
-  difficulty_level: z.string(),
-  description: z.string().nullable(),
-  weeks: z.number().min(1, "Weeks must be at least 1"),
+  difficulty_level: z.string().min(3, "Workout Name must be at least 3 characters"),
+  description: z.string().optional(),
+  weeks: z.preprocess((val) => Number(val), z.number().min(1, "Weeks must be at least 1")),
 });
 
 export type TCreateWorkout = z.infer<typeof createPlanSchema>;

@@ -7,7 +7,7 @@ import {
   WorkoutPlanWithDaysType,
 } from "../../types/workoutPlans";
 import { useAuth } from "../../context/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { Dispatch, SetStateAction } from "react";
 
 export const useGetUserWorkoutPlans = (userId?: string) => {
   return useQuery<WorkoutPlansType[]>({
@@ -47,11 +47,10 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
   });
 };
 
-export const useCreateWorkoutPlan = () => {
+export const useCreateWorkoutPlan = (setOpenCreateForm: Dispatch<SetStateAction<boolean>>) => {
   const { user } = useAuth();
   const userId = user?.id;
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async ({ planFormData }: { planFormData: CreatePlanType }) => {
@@ -116,7 +115,7 @@ export const useCreateWorkoutPlan = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: `workoutPlans_${userId}` });
       toast.success("New Workout plan Created");
-      navigate(-1);
+      setOpenCreateForm(false);
     },
   });
 };
