@@ -82,10 +82,10 @@ const ExercisePage = () => {
     </div>
   ) : (
     <div className="w-full min-h-screen bg-MainBackgroundColor p-4 font-poppins">
-      <h1 className="text-[#d90429] font-bold text-lg capitalize flex items-center gap-1">
+      <h1 className="text-[#ef233c] font-bold text-lg capitalize flex items-center gap-1">
         <BicepsFlexed size={22} /> {data?.exercise_name}
       </h1>
-      <p className="text-[#4cc9f0] font-medium capitalize">
+      <p className="text-[#0aefff] font-semibold capitalize">
         {data?.target_muscle}
       </p>
       {data?.exercise_description && (
@@ -109,7 +109,7 @@ const ExercisePage = () => {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <ChevronDown color="#fff" size={20} />
+                  <ChevronDown color="#fff" size={20} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Edit</DropdownMenuLabel>
@@ -132,13 +132,13 @@ const ExercisePage = () => {
             </div>
             <h1 className="text-PrimaryTextColor capitalize font-medium mt-2">
               Target Repetitions:{" "}
-              <span className="text-[#f85e00] font-semibold text-[1rem]">
+              <span className="text-[#0aefff] text-[1rem]">
                 {set.target_repetitions}
               </span>
             </h1>
             <h1 className="text-PrimaryTextColor capitalize font-medium">
               Target Weight:{" "}
-              <span className="text-[#f85e00] font-semibold text-[1rem]">
+              <span className="text-[#ef233c] text-[1rem]">
                 {set.target_weight}
               </span>
             </h1>
@@ -151,9 +151,9 @@ const ExercisePage = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-[#4cc9f0] p-0 hover:bg-transparent hover:text-white"
+                        className="text-[#0aefff] p-0 hover:bg-transparent hover:text-white"
                       >
-                        <h4 className="text-[#4cc9f0] font-semibold text-sm">
+                        <h4 className="text-[#0aefff] text-sm">
                           Your Achivements
                         </h4>
                         <ChevronsUpDown className="h-4 w-4" />
@@ -182,11 +182,7 @@ const ExercisePage = () => {
         ))}
       </div>
 
-      <Button
-        onClick={handleAddSetBtnClick}
-        variant="outline"
-        className="mt-3 bg-transparent border border-[#fca311] text-[#fff] flex items-center"
-      >
+      <Button onClick={handleAddSetBtnClick} variant="outline" className="mt-3">
         Add Set <Plus />
       </Button>
 
