@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useGetWorkoutDay } from "../utils/queries/dayQuery";
-import Loader from "../components/loaders/Loader";
 import ErrorPage from "../components/loaders/ErrorPage";
 import WorkoutExerciseCard from "../components/cards/WorkoutExerciseCard";
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import AddExercise from "@/components/forms/AddExercise";
+import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
 
 const WorkoutDayDetails = () => {
   const [openAddExerciseForm, setOpenAddExerciseForm] = useState(false);
@@ -15,7 +15,7 @@ const WorkoutDayDetails = () => {
   const validDAyExercises = data?.dayexercises || [];
   const sortedWorkoutDays = validDAyExercises.sort((a, b) => a.id - b.id);
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <WorkoutDayLoader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   const handleClickAddBtn = () => {

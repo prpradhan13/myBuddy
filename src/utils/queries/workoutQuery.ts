@@ -9,14 +9,28 @@ import {
 import { useAuth } from "../../context/AuthProvider";
 import { Dispatch, SetStateAction } from "react";
 
-export const useGetUserWorkoutPlans = (userId?: string) => {
+interface WorkoutQueryParams {
+  limit?: number;
+  offset?: number;
+}
+
+export const useGetUserWorkoutPlans = (
+  userId?: string,
+  { limit, offset }: WorkoutQueryParams = {}
+) => {
   return useQuery<WorkoutPlansType[]>({
-    queryKey: [`workoutPlans_${userId}`],
+    queryKey: [`workoutPlans_${userId}_${limit}_${offset}`],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("workoutplan")
         .select("*")
-        .eq("creator_id", userId);
+        .eq("creator_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (limit) query = query.limit(limit);
+      if (offset && limit) query = query.range(offset, offset + limit - 1);
+
+      const { data, error } = await query;
 
       if (error) {
         toast.error(error.message || "Workout plans could not be find");
@@ -24,7 +38,7 @@ export const useGetUserWorkoutPlans = (userId?: string) => {
       }
 
       return data || [];
-    }
+    },
   });
 };
 
@@ -47,14 +61,15 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
   });
 };
 
-export const useCreateWorkoutPlan = (setOpenCreateForm: Dispatch<SetStateAction<boolean>>) => {
+export const useCreateWorkoutPlan = (
+  setOpenCreateForm: Dispatch<SetStateAction<boolean>>
+) => {
   const { user } = useAuth();
   const userId = user?.id;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ planFormData }: { planFormData: CreatePlanType }) => {
-
       const { plan_name, description, difficulty_level, weeks } = planFormData;
 
       // Step 1: Create a new workout plan
@@ -85,7 +100,9 @@ export const useCreateWorkoutPlan = (setOpenCreateForm: Dispatch<SetStateAction<
         "sunday",
       ];
       const totalDays = weeks * 7;
-      const workoutDays = Array.from({ length: totalDays }, (_, index) => ({day_name: daysOfWeek[index % 7]}));
+      const workoutDays = Array.from({ length: totalDays }, (_, index) => ({
+        day_name: daysOfWeek[index % 7],
+      }));
 
       const { data: workoutDayIds, error: daysError } = await supabase
         .from("workoutday")
@@ -109,7 +126,7 @@ export const useCreateWorkoutPlan = (setOpenCreateForm: Dispatch<SetStateAction<
 
       if (joinError) {
         toast.error(joinError.message || "Error while joining");
-        return ;
+        return;
       }
     },
     onSuccess: () => {
@@ -122,23 +139,40 @@ export const useCreateWorkoutPlan = (setOpenCreateForm: Dispatch<SetStateAction<
 
 export const useDeletePlan = (planId: number) => {
   const queryClient = useQueryClient();
-  const {user} = useAuth();
+  const { user } = useAuth();
   const userId = user?.id;
 
   return useMutation({
     mutationFn: async () => {
-      const { error } = await supabase
-      .from("workoutplan")
-      .delete()
-      .eq("id", planId)
+      const { data: workoutDays, error: fetchError } = await supabase
+        .from("workoutplan_workoutday")
+        .select("workoutday_id")
+        .eq("workoutplan_id", planId);
 
-      if (error) {
-        throw new Error(error.message);
+      if (fetchError) throw new Error(fetchError.message);
+
+      if (workoutDays && workoutDays.length > 0) {
+        const workoutDayIds = workoutDays.map((plan) => plan.workoutday_id);
+
+        const { error: deleteJoinError } = await supabase
+          .from("workoutday")
+          .delete()
+          .in("id", workoutDayIds);
+
+        if (deleteJoinError) throw new Error(deleteJoinError.message);
       }
+
+      // Finally, delete the workout plan
+      const { error: deletePlanError } = await supabase
+        .from("workoutplan")
+        .delete()
+        .eq("id", planId);
+
+      if (deletePlanError) throw new Error(deletePlanError.message);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`workoutPlans_${userId}`] });
       toast.success("Delete Plan Successfully");
-    }
-  })
+    },
+  });
 };

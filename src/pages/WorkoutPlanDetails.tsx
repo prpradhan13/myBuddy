@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useGetPlanWithDays } from "../utils/queries/workoutQuery";
-import Loader from "../components/loaders/Loader";
 import WorkoutDayCard from "../components/cards/WorkoutDayCard";
 import { useState } from "react";
 import ErrorPage from "../components/loaders/ErrorPage";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +33,7 @@ const WorkoutPlanDetails = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <WorkoutDayLoader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (

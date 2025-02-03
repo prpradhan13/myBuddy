@@ -13,6 +13,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import CreateWorkoutPlan from "../forms/CreateWorkoutPlan";
+import { LogOut } from "lucide-react";
+import toast from "react-hot-toast";
+import { supabase } from "@/utils/supabase";
 
 const UserDetails = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
@@ -31,6 +34,14 @@ const UserDetails = () => {
 
   const handleCreatePlanBtnClick = () => {
     setOpenCreateForm(true);
+  };
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error(`Logout error: ${error.message}`);
+      throw new Error(error.message);
+    }
   };
 
   if (isLoading) return <Loader />;
@@ -56,11 +67,11 @@ const UserDetails = () => {
                 Edit Profile
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={handleCreatePlanBtnClick}
-                className=""
-              >
+              <DropdownMenuItem onClick={handleCreatePlanBtnClick} className="">
                 Create Plan
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="text-red-500 hover:text-red-500">
+                Logout <LogOut color="#ef4444" />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -81,7 +92,10 @@ const UserDetails = () => {
       </div>
 
       {openCreateForm && (
-        <CreateWorkoutPlan openCreateForm={openCreateForm} setOpenCreateForm={setOpenCreateForm} />
+        <CreateWorkoutPlan
+          openCreateForm={openCreateForm}
+          setOpenCreateForm={setOpenCreateForm}
+        />
       )}
     </div>
   );

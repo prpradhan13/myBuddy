@@ -16,7 +16,6 @@ import { Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import Alert from "../extra/Alert";
-import ErrorPage from "../loaders/ErrorPage";
 
 interface CreateWorkoutPlanProps {
   openCreateForm: boolean;
@@ -29,7 +28,6 @@ const CreateWorkoutPlan = ({
 }: CreateWorkoutPlanProps) => {
   const form = useForm<TCreateWorkout>({
     resolver: zodResolver(createPlanSchema),
-    
   });
 
   useEffect(() => {
@@ -44,7 +42,7 @@ const CreateWorkoutPlan = ({
     };
   }, [openCreateForm]);
 
-  const { mutate, isPending, isError, error } = useCreateWorkoutPlan(setOpenCreateForm);
+  const { mutate, isPending } = useCreateWorkoutPlan(setOpenCreateForm);
 
   const handleCloseBtn = () => {
     setOpenCreateForm(false);
@@ -60,8 +58,6 @@ const CreateWorkoutPlan = ({
 
     form.reset();
   };
-
-  if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (
     <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
@@ -82,6 +78,7 @@ const CreateWorkoutPlan = ({
                   <Input
                     placeholder=""
                     {...field}
+                    value={field.value ?? ""}
                     className="text-PrimaryTextColor"
                   />
                 </FormControl>
@@ -102,6 +99,7 @@ const CreateWorkoutPlan = ({
                   <Input
                     placeholder=""
                     {...field}
+                    value={field.value ?? ""}
                     className="text-PrimaryTextColor"
                   />
                 </FormControl>

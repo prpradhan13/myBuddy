@@ -1,13 +1,14 @@
-import { Outlet } from 'react-router-dom'
+import { useAuth } from '@/context/AuthProvider';
+import { Navigate, Outlet } from 'react-router-dom'
 
 function RegisterLayout() {
-  return (
-    <>
-    <section className="w-full bg-MainBackgroundColor">
-      <Outlet />
-    </section> 
-    </>
-  )
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />; // Redirect logged-in users to home
+  }
+
+  return <Outlet />;
 }
 
 export default RegisterLayout
