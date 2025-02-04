@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
-import { useGetPlanWithDays } from "../utils/queries/workoutQuery";
+import { useAddNewWeek, useGetPlanWithDays } from "../utils/queries/workoutQuery";
 import WorkoutDayCard from "../components/cards/WorkoutDayCard";
 import { useState } from "react";
 import ErrorPage from "../components/loaders/ErrorPage";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
+import Alert from "@/components/extra/Alert";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,16 +34,22 @@ const WorkoutPlanDetails = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  const { mutate, isPending } = useAddNewWeek(Number(planId));
+
+  const handleAddWeek = () => {
+    mutate()
+  };
+
   if (isLoading) return <WorkoutDayLoader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-poppins">
-      <h1 className="text-center text-2xl font-semibold capitalize text-PrimaryTextColor">
+      <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
         {data?.plan_name}
       </h1>
-      <h2 className="text-center text-base text-SecondaryTextColor capitalize">
-        {data?.plan_difficulty}
+      <h2 className="text-base text-SecondaryTextColor capitalize">
+        {data?.plan_difficulty}, {totalPages} week plan
       </h2>
       {data?.plan_description && (
         <div className="text-SecondaryTextColor">
@@ -50,6 +57,16 @@ const WorkoutPlanDetails = () => {
           <p className="text-sm leading-5">{data.plan_description}</p>
         </div>
       )}
+
+      <Alert 
+        btnName="Add a week"
+        trigerBtnVarient={"link"}
+        triggerBtnClassName="text-blue-500 p-0"
+        pendingState={isPending}
+        headLine="Are you want to add a new week?"
+        descLine="This is add a new week in this plan."
+        handleContinueBtn={handleAddWeek}
+      />
 
       {validWorkoutDays.length > 0 ? (
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

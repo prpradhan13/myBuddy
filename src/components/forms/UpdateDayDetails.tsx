@@ -70,6 +70,7 @@ const UpdateDayDetails = ({
   return (
     <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 ">
       <Form {...form}>
+        
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="border bg-SecondaryBackgroundColor w-full rounded-md p-3 flex flex-col gap-4"
@@ -153,6 +154,7 @@ const UpdateDayDetails = ({
               )}
             </Button>
           </div>
+
         </form>
       </Form>
     </div>

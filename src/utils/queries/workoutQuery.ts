@@ -3,6 +3,7 @@ import { supabase } from "../supabase";
 import toast from "react-hot-toast";
 import {
   CreatePlanType,
+  WorkoutDayType,
   WorkoutPlansType,
   WorkoutPlanWithDaysType,
 } from "../../types/workoutPlans";
@@ -109,8 +110,8 @@ export const useCreateWorkoutPlan = (
         .insert(workoutDays)
         .select("id");
 
-      if (daysError) {
-        toast.error(daysError.message || "Error while inserting workoutDay");
+      if (daysError || !workoutDayIds) {
+        toast.error(daysError?.message || "Error while inserting workoutDay");
         return;
       }
 
@@ -173,6 +174,73 @@ export const useDeletePlan = (planId: number) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`workoutPlans_${userId}`] });
       toast.success("Delete Plan Successfully");
+    },
+  });
+};
+
+export const useAddNewWeek = (planId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ():Promise<WorkoutDayType[]> => {
+      const daysOfWeek: string[] = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ];
+      const totalDays = 7;
+
+      const workoutDays = Array.from({ length: totalDays }, (_, index) => ({
+        day_name: daysOfWeek[index % 7],
+      }));
+
+      const { data: workoutDayIds, error: daysError } = await supabase
+        .from("workoutday")
+        .insert(workoutDays)
+        .select("*");
+
+      if (daysError || !workoutDayIds || workoutDayIds.length === 0) {
+        toast.error(daysError?.message || "Error while inserting workoutDay");
+        throw new Error(daysError?.message || "Error while inserting workoutDay");
+      }
+
+      const workoutPlanWorkoutDays = workoutDayIds.map((day) => ({
+        workoutplan_id: planId,
+        workoutday_id: day.id,
+      }));
+
+      const { error: joinError } = await supabase
+        .from("workoutplan_workoutday")
+        .insert(workoutPlanWorkoutDays);
+
+      if (joinError) {
+        toast.error(joinError.message || "Error while joining");
+        throw new Error(joinError.message || "Error while joining");
+      }
+
+      return workoutDayIds;
+    },
+    onSuccess: (data: WorkoutDayType[]) => {
+      queryClient.setQueryData(
+        [`workoutplan_days_${planId}`],
+        (oldData: WorkoutPlanWithDaysType | undefined) => {
+          if (!oldData) return undefined;
+
+          return {
+            ...oldData,
+            workoutdays: [...(oldData.workoutdays || []), ...data],
+          };
+        }
+      );
+    },
+    onError: (error) => {
+      const errorMessage = (error as Error)?.message || "Something went wrong";
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
     },
   });
 };

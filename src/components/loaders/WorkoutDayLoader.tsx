@@ -3,7 +3,7 @@ import { Skeleton } from "../ui/skeleton"
 const WorkoutDayLoader = () => {
   return (
     <div className="bg-MainBackgroundColor h-screen w-full p-4">
-        <div className="flex flex-col gap-1 items-center">
+        <div className="flex flex-col gap-1">
             <Skeleton className="w-40 h-7 rounded-full" />
             <Skeleton className="w-28 h-7 rounded-full" />
             <Skeleton className="w-20 h-7 rounded-full" />
