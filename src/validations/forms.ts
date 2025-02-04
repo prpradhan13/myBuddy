@@ -40,3 +40,11 @@ export const achiveSchema = z.object({
 });
 
 export type TAchiveSchema = z.infer<typeof achiveSchema>;
+
+export const updateDayDetails = z.object({
+  workout_name: z.string().min(3, "Workout Name must be at least 3 characters"),
+  difficulty_level: z.string().nullable(),
+  description: z.string().nullable(),
+});
+
+export type TUpdateDayDetails = z.infer<typeof updateDayDetails>

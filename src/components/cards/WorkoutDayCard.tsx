@@ -6,8 +6,15 @@ import { ClipLoader } from "react-spinners";
 import { useState } from "react";
 import CreateWorkoutDay from "../forms/CreateWorkoutDay";
 import Alert from "../extra/Alert";
-import { CalendarHeart } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import UpdateDayDetails from "../forms/UpdateDayDetails";
 
 const WorkoutDayCard = ({
   dayDetails,
@@ -17,6 +24,7 @@ const WorkoutDayCard = ({
   planId: number;
 }) => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
+  const [openUpdateForm, setOpenUpdateForm] = useState(false);
 
   const firstThreeLetter = dayDetails.day_name?.slice(0, 3);
 
@@ -35,6 +43,10 @@ const WorkoutDayCard = ({
   const clickOnAddExercise = () => {
     setOpenCreateForm(true);
   };
+
+  const handleEditClick = () => {
+    setOpenUpdateForm(true);
+  }
 
   return (
     <>
@@ -114,14 +126,22 @@ const WorkoutDayCard = ({
                 </h1>
               </Link>
 
-              <Alert
-                trigerBtnVarient={"ghost"}
-                icon={CalendarHeart}
-                iconClassName="text-green-500"
-                handleContinueBtn={handleToggleRestDay}
-                headLine="Are you absolutely sure make this Rest day?"
-                descLine="Don't worry you can change this."
-              />
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <EllipsisVertical color="#fff" size={20} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="mr-8">
+                  <DropdownMenuItem onClick={handleEditClick} className="font-medium">Edit</DropdownMenuItem>
+                  <Alert
+                    trigerBtnVarient={"ghost"}
+                    btnName="Rest Day"
+                    triggerBtnClassName="hover:bg-transparent px-2"
+                    handleContinueBtn={handleToggleRestDay}
+                    headLine="Are you absolutely sure make this Rest day?"
+                    descLine="Don't worry you can change this."
+                  />
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <h1 className="text-SecondaryTextColor font-medium text-lg capitalize">
               {dayDetails.difficulty_level}
@@ -141,6 +161,15 @@ const WorkoutDayCard = ({
           planId={planId}
           openCreateForm={openCreateForm}
           setOpenCreateForm={setOpenCreateForm}
+        />
+      )}
+
+      {openUpdateForm && (
+        <UpdateDayDetails
+          dayId={dayDetails.id}
+          planId={planId}
+          openUpdateForm={openUpdateForm}
+          setOpenUpdateForm={setOpenUpdateForm}
         />
       )}
     </>

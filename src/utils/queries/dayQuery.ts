@@ -7,6 +7,7 @@ import {
   WorkoutPlanWithDaysType,
 } from "../../types/workoutPlans";
 import { Dispatch, SetStateAction } from "react";
+import { TUpdateDayDetails } from "@/validations/forms";
 
 export const useGetWorkoutDay = (workoutDayId: number) => {
   return useQuery<WorkoutDayWithExerciseType>({
@@ -161,4 +162,52 @@ export const useAddWorkoutDay = (
       toast.error(error.message || "Failed to update rest day");
     },
   });
+};
+
+export const useUpdateDayDetails = ({ planId, dayId, setOpenUpdateForm }: { planId: number, dayId: number, setOpenUpdateForm: Dispatch<SetStateAction<boolean>> }) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (formData: TUpdateDayDetails) => {
+      const {data, error} = await supabase
+        .from("workoutday")
+        .update(formData)
+        .eq("id", dayId)
+        .select("*")
+        .single();
+
+      if (error) throw new Error(error.message);
+
+      if (!data) {
+        throw new Error("Update failed, no data returned");
+      }
+
+      return data;
+    },
+    onSuccess: (data: TUpdateDayDetails) => {
+      queryClient.setQueryData(
+        [`workoutplan_days_${planId}`],
+        (oldData: WorkoutPlanWithDaysType | undefined) => {
+          if (!oldData) return undefined;
+
+          // Update the specific day in the list
+          const updatedDays = oldData?.workoutdays?.map((day) =>
+            day.id === dayId ? { ...day, ...data } : day
+          );
+
+          return {
+            ...oldData,
+            workoutdays: updatedDays,
+          };
+        }
+      );
+
+      toast.success("Update Success");
+      setOpenUpdateForm(false);
+    },
+    onError: (error) => {
+      setOpenUpdateForm(false);
+      toast.error(error.message || "Failed to update!");
+    }
+  })
 };
