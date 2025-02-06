@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 
 export const getInitialLetter = (fullName?: string) => {
     if (!fullName) return "";
@@ -13,3 +14,14 @@ export const getInitialLetter = (fullName?: string) => {
 export const truncateText = (text: string, maxLength: number) => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 };
+
+export const useDebounce = (value: string, delay = 300) => {
+    const [debounceText, setDebounceText] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => setDebounceText(value), delay);
+        return () => clearTimeout(handler);
+    }, [value, delay])
+
+    return debounceText;
+}

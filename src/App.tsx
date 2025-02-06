@@ -16,6 +16,7 @@ const WorkOutDayDetails = lazy(() => import("./pages/WorkoutDayDetails"));
 const ExercisePage = lazy(() => import("./pages/ExercisePage"));
 const EditProfilePage = lazy(() => import("./pages/EditProfilePage"));
 const AllWorkoutPlan = lazy(() => import("./pages/AllWorkoutPlan"));
+const SharedPlanDetails = lazy(() => import("./pages/SharedPlanDetails"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ function App() {
                 element={<ExercisePage />}
               />
               <Route path="/allWorkoutPlans" element={<AllWorkoutPlan />} />
+              <Route path="/sharedplandetails" element={<SharedPlanDetails />}/>
             </Route>
           </Routes>
         </Suspense>

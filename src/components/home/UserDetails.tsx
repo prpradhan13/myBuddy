@@ -8,7 +8,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
@@ -34,6 +33,10 @@ const UserDetails = () => {
 
   const handleCreatePlanBtnClick = () => {
     setOpenCreateForm(true);
+  };
+
+  const handleSharedBtnClick = () => {
+    navigate("/sharedplandetails");
   };
 
   const handleLogout = async () => {
@@ -66,9 +69,11 @@ const UserDetails = () => {
               <DropdownMenuItem onClick={handleEditBtnClick} className="">
                 Edit Profile
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleCreatePlanBtnClick} className="">
                 Create Plan
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSharedBtnClick} className="">
+                Shared Plan
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout} className="text-red-500 hover:text-red-500">
                 Logout <LogOut color="#ef4444" />

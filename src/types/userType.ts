@@ -12,4 +12,12 @@ export type UserProfileFormType = {
     username?: string;
     bio?: string | null;
     avatar_url?: string | null;
+};
+
+export type SearchUserType = {
+    id: string;
+    full_name: string;
+    username: string;
+    email: string;
+    avatar_url: string | null;
 }
