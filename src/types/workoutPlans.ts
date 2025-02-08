@@ -101,16 +101,18 @@ export type SetsFormType = {
   target_weight: string | null;
 };
 
-export type SharedPlanType = {
-  workoutplan_id: number,
-  user_id: string, // This userId is shared with whom
+export type SendedPlanType = {
+  workoutplan_id: number;
+  sender_id: string; // creator_id
+  user_id: string; // This userId is shared with whom
   workoutplan: {
-    id: number;
-    profiles: { full_name:string, email: string, avatar_url: string | null };
-    creator_id: string;
     plan_name: string;
-    difficulty_level: string | null;
-    description: string | null;
-    created_at: string | null;
   };
+  profiles: {
+    full_name: string;
+    username: string;
+    email: string;
+    avatar_url: string | null;
+  };
+  created_at: string;
 };

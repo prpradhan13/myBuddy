@@ -28,6 +28,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import dayjs from "dayjs";
+import { useAuth } from "@/context/AuthProvider";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
@@ -35,8 +36,9 @@ const ExercisePage = () => {
   const [openSetAchivesForm, setOpenSetAchivesForm] = useState<number | null>(
     null
   );
-
-  const { exerciseId } = useParams();
+  const { user } = useAuth();
+  const { exerciseId, creatorId } = useParams();
+  const creatorOfPlan = creatorId === user?.id;
 
   const { data, isLoading, isError, error } = useGetExercises(
     Number(exerciseId)
@@ -62,16 +64,25 @@ const ExercisePage = () => {
     Object.keys(data).length === 0 ||
     !data.exercise_sets ||
     data.exercise_sets.length === 0 ? (
-    <div className="bg-MainBackgroundColor h-screen w-full flex flex-col items-center font-montserrat justify-center gap-3">
-      <p className="text-SecondaryTextColor font-semibold text-center">
-        Let's go Champ! Let's add sets, repetitions, weights💪
-      </p>
-      <button
-        onClick={() => setOpenSetsCreateForm(true)}
-        className="border-b border-PrimaryTextColor text-PrimaryTextColor px-2 font-semibold"
-      >
-        Let's Go
-      </button>
+    <div className="bg-MainBackgroundColor h-screen w-full flex flex-col items-center font-montserrat justify-center">
+      {creatorOfPlan ? (
+        <>
+          <p className="text-SecondaryTextColor font-semibold text-center">
+            Let's go Champ! Let's add sets, repetitions, weights💪
+          </p>
+          <button
+            onClick={() => setOpenSetsCreateForm(true)}
+            className="border-b border-PrimaryTextColor text-PrimaryTextColor px-2 font-semibold"
+          >
+            Let's Go
+          </button>
+        </>
+      ) : (
+        <>
+          <h1 className="text-PrimaryTextColor font-semibold text-center leading-5">No Sets added yet </h1>
+          <p className="text-SecondaryTextColor text-sm">Wait till creator not added sets.</p>
+        </>
+      )}
 
       {openSetsCreateForm && (
         <SetsForm
@@ -107,29 +118,32 @@ const ExercisePage = () => {
                 Set {index + 1}
               </h1>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <ChevronDown color="#fff" size={20} />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Edit</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => setOpenSetAchivesForm(set.id)}
-                    className="cursor-pointer"
-                  >
-                    Achives
-                  </DropdownMenuItem>
-                  <Alert
-                    btnName="Remove"
-                    trigerBtnVarient={"ghost"}
-                    triggerBtnClassName="px-2 text-red-500 font-normal hover:text-red-500 hover:bg-transparent"
-                    handleContinueBtn={() => handleRemoveSetBtnClick(set.id)}
-                    pendingState={isPending}
-                  />
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {creatorOfPlan && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <ChevronDown color="#fff" size={20} />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>Edit</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => setOpenSetAchivesForm(set.id)}
+                      className="cursor-pointer"
+                    >
+                      Achives
+                    </DropdownMenuItem>
+                    <Alert
+                      btnName="Remove"
+                      trigerBtnVarient={"ghost"}
+                      triggerBtnClassName="px-2 text-red-500 font-normal hover:text-red-500 hover:bg-transparent"
+                      handleContinueBtn={() => handleRemoveSetBtnClick(set.id)}
+                      pendingState={isPending}
+                    />
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
+
             <h1 className="text-PrimaryTextColor capitalize font-medium mt-2">
               Target Repetitions:{" "}
               <span className="text-[#0aefff] text-[1rem]">
@@ -142,8 +156,8 @@ const ExercisePage = () => {
                 {set.target_weight}
               </span>
             </h1>
-
-            {set.achive_repetitions && set.achive_weight && (
+            
+            {creatorOfPlan && !!set.achive_repetitions && !!set.achive_weight && (
               <div className="">
                 <Collapsible>
                   <div className="flex gap-1 items-center">
@@ -154,7 +168,7 @@ const ExercisePage = () => {
                         className="text-[#0aefff] p-0 hover:bg-transparent hover:text-white"
                       >
                         <h4 className="text-[#0aefff] text-sm">
-                          Your Achivements
+                          My Achivements
                         </h4>
                         <ChevronsUpDown className="h-4 w-4" />
                       </Button>
@@ -182,9 +196,11 @@ const ExercisePage = () => {
         ))}
       </div>
 
-      <Button onClick={handleAddSetBtnClick} variant="outline" className="mt-3">
-        Add Set <Plus />
-      </Button>
+        {creatorOfPlan && (
+          <Button onClick={handleAddSetBtnClick} variant="outline" className="mt-3">
+            Add Set <Plus />
+          </Button>
+        )}
 
       {openSetForm && (
         <SetsForm

@@ -55,6 +55,7 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
 
       if (error) {
         toast.error(error.message || "Workout plans could not be find");
+        return;
       }
 
       return data || [];

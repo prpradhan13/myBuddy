@@ -1,67 +1,89 @@
 import ErrorPage from "@/components/loaders/ErrorPage";
 import Loader from "@/components/loaders/Loader";
-import { useAuth } from "@/context/AuthProvider";
-import { useGetSharedPlan } from "@/utils/queries/sharedPlanQuery";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getInitialLetter } from "@/utils/helpingFunctions";
+import {
+  useGetSharedPlan,
+  useSendedPlan,
+} from "@/utils/queries/sharedPlanQuery";
 import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SharedPlanCard from "@/components/cards/SharedPlanCard";
 
 const SharedPlanDetails = () => {
-  const { user } = useAuth();
-  const userId = user?.id;
   const navigate = useNavigate();
 
-  const { data, isPending, isError, error } = useGetSharedPlan(userId!);
-  const sharedPlansData = data?.map((item) => item.workoutplan);
+  const { data: sharedPlansData, isPending, isError, error } = useGetSharedPlan();
 
   const handleBackBtn = () => {
     navigate(-1);
   };
+
+  const { data: sendPlanData } = useSendedPlan();
 
   if (isPending) return <Loader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (
     <div className="bg-MainBackgroundColor p-4 min-h-screen w-full font-poppins">
-      <h1 className="text-xl text-PrimaryTextColor font-semibold mb-3 flex items-center gap-2">
-        <ArrowLeft onClick={handleBackBtn} className="cursor-pointer" />
-        Shared Plans
-      </h1>
-      {sharedPlansData && sharedPlansData?.length > 0 ? (
-        sharedPlansData?.map((item) => (
-          <div
-            className="bg-SecondaryBackgroundColor mb-3 rounded-lg p-3"
-            key={item.id}
+      <ArrowLeft
+        onClick={handleBackBtn}
+        className="cursor-pointer text-PrimaryTextColor mb-3"
+      />
+
+      <Tabs defaultValue="recived" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 bg-SecondaryBackgroundColor text-SecondaryTextColor">
+          <TabsTrigger
+            value="recived"
+            className="data-[state=active]:bg-MainBackgroundColor data-[state=active]:text-PrimaryTextColor"
           >
-            <Link to={`/workoutPlanDetails/${item.id}`}>
-              <h1 className="text-PrimaryTextColor text-lg font-semibold">
-                {item.plan_name}
-              </h1>
-            </Link>
-            <div className="flex items-center gap-2 mt-2">
-              <Avatar>
-                {!item.profiles.avatar_url ? (
-                  <AvatarFallback className="w-10 h-10 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] text-PrimaryTextColor text-sm font-semibold">
-                    {getInitialLetter(item.profiles.full_name)}
-                  </AvatarFallback>
-                ) : (
-                  <AvatarImage
-                    src={item.profiles.avatar_url}
-                    alt="profileImg"
-                    className="w-10 h-10"
-                  />
-                )}
-              </Avatar>
-              <h1 className="text-SecondaryTextColor text-sm">
-                {item.profiles.email}
-              </h1>
-            </div>
-          </div>
-        ))
-      ) : (
-        <p className="text-SecondaryTextColor text-center mt-5">No plans rechived</p>
-      )}
+            Recived
+          </TabsTrigger>
+          <TabsTrigger
+            value="sended"
+            className="data-[state=active]:bg-MainBackgroundColor data-[state=active]:text-PrimaryTextColor"
+          >
+            Sended
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="recived">
+          {sharedPlansData && sharedPlansData?.length > 0 ? (
+            sharedPlansData?.map((item, index) => (
+              <SharedPlanCard
+                key={`${index}_ ${item.created_at}`}
+                avatarUrl={item.profiles.avatar_url}
+                createdAt={item.created_at}
+                username={item.profiles.username}
+                workoutplanId={item.workoutplan_id}
+                workoutplanName={item.workoutplan.plan_name}
+                userFullname={item.profiles.full_name}
+              />
+            ))
+          ) : (
+            <p className="text-SecondaryTextColor text-center mt-5">
+              No rechived plans
+            </p>
+          )}
+        </TabsContent>
+        <TabsContent value="sended">
+          {sendPlanData && sendPlanData.length > 0 ? (
+            sendPlanData.map((sendPlan, index) => (
+              <SharedPlanCard 
+                key={`${index}_${sendPlan.created_at}`}
+                avatarUrl={sendPlan.profiles.avatar_url}
+                createdAt={sendPlan.created_at}
+                username={sendPlan.profiles.username}
+                workoutplanId={sendPlan.workoutplan_id}
+                workoutplanName={sendPlan.workoutplan.plan_name}
+                userFullname={sendPlan.profiles.full_name}
+              />
+            ))
+          ) : (
+            <p className="text-SecondaryTextColor text-center mt-5">
+              No share plans
+            </p>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

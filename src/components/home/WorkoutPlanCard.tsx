@@ -74,7 +74,7 @@ const WorkoutPlanCard = ({
               Share
             </Button>
           </SheetTrigger>
-          <SheetContent className="bg-[#121212] text-PrimaryTextColor border-none rounded-l-xl">
+          <SheetContent className="bg-[#292929] text-PrimaryTextColor border-none rounded-l-xl">
             <SheetHeader>
               <SheetTitle className="text-PrimaryTextColor">Search</SheetTitle>
             </SheetHeader>

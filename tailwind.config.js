@@ -23,7 +23,7 @@ export default {
   		},
   		colors: {
   			MainBackgroundColor: '#000000',
-  			SecondaryBackgroundColor: '#0c0c0c',
+  			SecondaryBackgroundColor: '#242527',
   			PrimaryTextColor: '#FFFFFF',
   			SecondaryTextColor: '#D3D3D3',
   			MainButtonColor: '#FFFF33',

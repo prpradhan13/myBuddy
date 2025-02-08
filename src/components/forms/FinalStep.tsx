@@ -1,5 +1,8 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
-import { ExercisesFormType, FinalWorkoutFormType } from "../../types/workoutPlans";
+import {
+  ExercisesFormType,
+  FinalWorkoutFormType,
+} from "../../types/workoutPlans";
 import { useAddWorkoutDay } from "../../utils/queries/dayQuery";
 import ErrorPage from "../loaders/ErrorPage";
 import { Button } from "../ui/button";
@@ -34,9 +37,11 @@ const FinalStep = ({
   );
 
   const handleRemoveBtn = (index: number) => {
-    const updatedExercise = workoutDetail.exercises.filter((_, i) => i !== index);
+    const updatedExercise = workoutDetail.exercises.filter(
+      (_, i) => i !== index
+    );
     setExerciseData(updatedExercise);
-  }
+  };
 
   const handleCreateBtn = () => {
     mutate({ formData: workoutDetail });
@@ -46,11 +51,11 @@ const FinalStep = ({
     setOpenCreateForm(false);
   };
 
-    useEffect(() => {
-      if (workoutDetail.exercises.length === 0) {
-        setOpenCreateForm(false);
-      }
-    }, [workoutDetail.exercises.length, setOpenCreateForm])
+  useEffect(() => {
+    if (workoutDetail.exercises.length === 0) {
+      setOpenCreateForm(false);
+    }
+  }, [workoutDetail.exercises.length, setOpenCreateForm]);
 
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
@@ -80,54 +85,71 @@ const FinalStep = ({
       </div>
 
       <div className="bg-black p-3 rounded-md flex flex-col gap-2 max-h-[40vh] overflow-y-scroll">
-      {workoutDetail.exercises.map((exercise, index) => (
-        <Collapsible
-          key={index}
-          className="bg-SecondaryBackgroundColor rounded-md p-3"
-        >
-          <div className="">
-              <Button onClick={() => handleRemoveBtn(index)} variant="ghost" className="mt-1 p-0 text-red-500 hover:text-red-500 hover:bg-transparent">Remove</Button>
-            <div className="flex justify-between items-center">
-              <h1 className="text-PrimaryTextColor capitalize font-semibold">
-                {exercise.exercise_name}
-              </h1>
-              {(exercise.target_muscle || exercise.exercise_description) && (
+        {workoutDetail.exercises.map((exercise, index) => (
+          <Collapsible
+            key={index}
+            className="bg-SecondaryBackgroundColor rounded-md p-3"
+          >
+            <div className="">
+              <Button
+                onClick={() => handleRemoveBtn(index)}
+                variant="ghost"
+                className="mt-1 p-0 text-red-500 hover:text-red-500 hover:bg-transparent"
+              >
+                Remove
+              </Button>
+              <div className="flex justify-between items-center">
+                <h1 className="text-PrimaryTextColor capitalize font-semibold">
+                  {exercise.exercise_name}
+                </h1>
+                {(exercise.target_muscle || exercise.exercise_description) && (
                   <CollapsibleTrigger asChild>
-                  <Button variant="ghost" size="sm" className="hover:bg-black hover:text-white">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hover:bg-black hover:text-white"
+                    >
                       <ChevronsUpDown className="h-4 w-4 text-PrimaryTextColor" />
                       <span className="sr-only">Toggle</span>
-                  </Button>
+                    </Button>
                   </CollapsibleTrigger>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-          <CollapsibleContent className="">
-            <h1 className="text-SecondaryTextColor capitalize">
-              Target Muscle: {exercise.target_muscle}
-            </h1>
-            <p className="text-SecondaryTextColor">
-              {exercise.exercise_description}
-            </p>
-          </CollapsibleContent>
-        </Collapsible>
-      ))}
+            <CollapsibleContent className="">
+              <h1 className="text-SecondaryTextColor capitalize">
+                Target Muscle: {exercise.target_muscle}
+              </h1>
+              <p className="text-SecondaryTextColor">
+                {exercise.exercise_description}
+              </p>
+            </CollapsibleContent>
+          </Collapsible>
+        ))}
       </div>
 
       <div className="flex gap-3 justify-evenly mt-3">
-        <Alert 
+        <Alert
           trigerBtnVarient={"destructive"}
-          triggerBtnClassName="w-1/2 text-lg font-semibold"
+          triggerBtnClassName="w-1/2 font-semibold"
           handleContinueBtn={handleCloseBtn}
         />
 
-        <Button onClick={handleCreateBtn} disabled={isPending} variant="secondary">
-        {isPending ? (
-          <>
-            <Loader2 className="animate-spin" />
-            Please wait
-          </>
-        ) : "SUBMIT"}
-      </Button>
+        <Button
+          onClick={handleCreateBtn}
+          disabled={isPending}
+          variant="secondary"
+          className="w-1/2 font-semibold"
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="animate-spin" />
+              Please wait
+            </>
+          ) : (
+            "SUBMIT"
+          )}
+        </Button>
       </div>
     </div>
   );

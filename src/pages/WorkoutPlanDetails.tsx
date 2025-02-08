@@ -78,6 +78,7 @@ const WorkoutPlanDetails = () => {
             <WorkoutDayCard
               planId={Number(planId)}
               dayDetails={day}
+              planCreatorId={data?.creator_id}
               key={day.id}
             />
           ))}

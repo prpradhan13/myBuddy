@@ -14,6 +14,7 @@ import ErrorPage from "../loaders/ErrorPage";
 interface AddExerciseFinalProps {
   exerciseDetails: ExercisesFormType[];
   setExerciseData: Dispatch<SetStateAction<ExercisesFormType[]>>;
+  setOpenAddExerciseForm: Dispatch<SetStateAction<boolean>>;
   setStep: Dispatch<SetStateAction<number>>;
   workoutId: number;
 }
@@ -21,11 +22,12 @@ interface AddExerciseFinalProps {
 const AddExerciseFinal = ({
   exerciseDetails,
   setExerciseData,
+  setOpenAddExerciseForm,
   setStep,
   workoutId
 }: AddExerciseFinalProps) => {
 
-  const { mutate, isPending, isError, error } = useAddExercises(workoutId)
+  const { mutate, isPending, isError, error } = useAddExercises(workoutId, setOpenAddExerciseForm)
 
   const handleRemoveBtn = (index: number) => {
     const updatedExercise = exerciseDetails.filter((_, i) => i !== index);

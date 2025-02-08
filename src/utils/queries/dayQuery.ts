@@ -23,6 +23,7 @@ export const useGetWorkoutDay = (workoutDayId: number) => {
         toast.error(
           error.message || "Can not find workout day with exercise id"
         );
+        return;
       }
 
       return data || {};
@@ -48,7 +49,8 @@ export const useToggleRestDay = (
         .single();
 
       if (error) {
-        throw new Error(error.message);
+        toast.error(error.message);
+        return;
       }
 
       return data || {};
@@ -101,7 +103,7 @@ export const useAddWorkoutDay = (
 
       if (error) {
         toast.error(error.message);
-        throw new Error(error.message);
+        return;
       }
 
       const exerciseSchemaForDB = formData.exercises.map((item) => ({
@@ -118,7 +120,7 @@ export const useAddWorkoutDay = (
 
       if (exerciseError) {
         toast.error(exerciseError.message);
-        throw new Error(exerciseError.message);
+        return;
       }
 
       const workoutDayExercises = exerciseIds.map((exer) => ({
@@ -159,7 +161,7 @@ export const useAddWorkoutDay = (
       setOpenCreateForm(false);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update rest day");
+      toast.error(error.message || "Failed to Add Workout");
     },
   });
 };
@@ -176,10 +178,14 @@ export const useUpdateDayDetails = ({ planId, dayId, setOpenUpdateForm }: { plan
         .select("*")
         .single();
 
-      if (error) throw new Error(error.message);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
       if (!data) {
-        throw new Error("Update failed, no data returned");
+        toast.error("Update failed, no data returned");
+        return;
       }
 
       return data;

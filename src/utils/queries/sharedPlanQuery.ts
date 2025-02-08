@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import toast from "react-hot-toast";
-import { SharedPlanType } from "@/types/workoutPlans";
+import { SendedPlanType } from "@/types/workoutPlans";
 import { SearchUserType } from "@/types/userType";
 import { useAuth } from "@/context/AuthProvider";
 
@@ -20,20 +20,24 @@ export const useGetSharedUsers = (planId: number) => {
   });
 };
 
-export const useGetSharedPlan = (userId: string) => {
-  return useQuery<SharedPlanType[]>({
+export const useGetSharedPlan = () => {
+  const { user } = useAuth();
+  const currentUserId = user?.id;
+
+  return useQuery<SendedPlanType[]>({
     queryKey: [`sharedPlans`],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("workoutplan_shared")
-        .select("*, workoutplan:workoutplan_id (*, profiles!workoutplan_creator_id_fkey(full_name, email, avatar_url))")
-        .eq("user_id", userId);
+        .select("*, workoutplan:workoutplan_id (plan_name), profiles:user_id (full_name, username, email, avatar_url)")
+        .eq("user_id", currentUserId)
+        .order("created_at", { ascending: false });
 
       if (error) throw new Error(error.message);
 
       return data || [];
     },
-    enabled: !!userId
+    enabled: !!currentUserId
   });
 };
 
@@ -82,3 +86,23 @@ export const useSearchUser = (searchText: string) => {
     enabled: searchText.length > 0,
   })
 };
+
+export const useSendedPlan = () => {
+  const { user } = useAuth();
+  const currentUserId = user?.id;
+  
+  return useQuery<SendedPlanType[]>({
+    queryKey: ["sendedPlans", currentUserId],
+    queryFn: async () => {
+       const { data, error } = await supabase
+        .from("workoutplan_shared")
+        .select("*, workoutplan:workoutplan_id (plan_name), profiles:user_id (full_name, username, email, avatar_url)")
+        .eq("sender_id", currentUserId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw new Error(error.message);
+      return data || []
+    },
+    enabled: !!currentUserId
+  });
+}

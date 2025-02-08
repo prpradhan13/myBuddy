@@ -9,6 +9,7 @@ import {
 } from "../../types/workoutPlans";
 import { useNavigate } from "react-router-dom";
 import { TAchiveSchema } from "@/validations/forms";
+import { Dispatch, SetStateAction } from "react";
 
 export const useGetExercises = (exerciseId: number) => {
   return useQuery<ExerciseWithSetsType>({
@@ -68,9 +69,8 @@ export const useCreateExerciseSets = (exerciseId: number) => {
   });
 };
 
-export const useAddExercises = (workoutdayId: number) => {
+export const useAddExercises = (workoutdayId: number, setOpenAddExerciseForm: Dispatch<SetStateAction<boolean>>) => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async ({ formData }: { formData: ExercisesFormType[] }) => {
@@ -84,7 +84,7 @@ export const useAddExercises = (workoutdayId: number) => {
       const { data, error } = await supabase
         .from("exercise")
         .insert(finalData)
-        .select("id");
+        .select("*");
 
       if (error) {
         throw new Error(error.message);
@@ -111,20 +111,17 @@ export const useAddExercises = (workoutdayId: number) => {
         (oldData: WorkoutDayWithExerciseType | undefined) => {
           if (!oldData) return undefined;
 
-          // Update the specific day in the list
-          const updatedDays = oldData.dayexercises?.map((day) =>
-            day.id === workoutdayId ? { ...day, ...data } : day
-          );
+          const updatedExercises = oldData.dayexercises ? [...oldData.dayexercises, ...data] : data
 
           return {
             ...oldData,
-            workoutdays: updatedDays,
+            dayexercises: updatedExercises,
           };
         }
       );
 
+      setOpenAddExerciseForm(false);
       toast.success("Update Success");
-      navigate(-1);
     },
   });
 };
@@ -197,3 +194,42 @@ export const useUpdateAchives = (
     },
   });
 };
+
+export const useDeleteExercise = (exerciseId: number, workoutDayId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("exercise")
+        .delete()
+        .eq("id", exerciseId)
+
+        if (error) {
+          toast.error(error.message || "Failed to delete exercise");
+          throw new Error(error.message);
+        }
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(
+        [`workoutDay_${workoutDayId}`],
+        (oldData: WorkoutDayWithExerciseType | undefined) => {
+          if (!oldData) return undefined;
+
+          const updatedExercises = oldData.dayexercises?.filter(
+            (exercise) => exercise.id !== exerciseId
+          ) || [];
+
+          return {
+            ...oldData,
+            dayexercises: updatedExercises,
+          };
+        }
+      );
+      toast.success("Delete Success");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete exercise");
+    }
+  })
+}

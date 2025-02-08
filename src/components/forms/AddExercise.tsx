@@ -161,6 +161,7 @@ const AddExercise = ({
           exerciseDetails={exerciseData}
           setExerciseData={setExerciseData}
           setStep={setStep}
+          setOpenAddExerciseForm={setOpenAddExerciseForm}
         />
       )}
     </div>

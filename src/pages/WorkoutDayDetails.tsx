@@ -2,14 +2,19 @@ import { useParams } from "react-router-dom";
 import { useGetWorkoutDay } from "../utils/queries/dayQuery";
 import ErrorPage from "../components/loaders/ErrorPage";
 import WorkoutExerciseCard from "../components/cards/WorkoutExerciseCard";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import AddExercise from "@/components/forms/AddExercise";
 import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
+import { useAuth } from "@/context/AuthProvider";
 
 const WorkoutDayDetails = () => {
   const [openAddExerciseForm, setOpenAddExerciseForm] = useState(false);
   const { dayId } = useParams();
+  const { creatorId } = useParams();
+  const { user } = useAuth();
+
+  const creatorOfPlan = creatorId === user?.id;
 
   const { data, isLoading, isError, error } = useGetWorkoutDay(Number(dayId));
   const validDAyExercises = data?.dayexercises || [];
@@ -20,7 +25,7 @@ const WorkoutDayDetails = () => {
 
   const handleClickAddBtn = () => {
     setOpenAddExerciseForm(true);
-  }
+  };
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-montserrat">
@@ -39,12 +44,16 @@ const WorkoutDayDetails = () => {
         </div>
       )}
 
-      <Button onClick={handleClickAddBtn} variant="outline" className="mt-2">Add Exercise</Button>
+      {creatorOfPlan && (
+        <Button onClick={handleClickAddBtn} variant="outline" className="mt-2">
+          Add Exercise
+        </Button>
+      )}
 
       {sortedWorkoutDays && sortedWorkoutDays.length > 0 ? (
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sortedWorkoutDays.map((exercise) => (
-            <WorkoutExerciseCard exerciseDetails={exercise} key={exercise.id} />
+          {sortedWorkoutDays.map((exercise, index) => (
+            <WorkoutExerciseCard key={`${index}_${exercise.id}`} exerciseDetails={exercise} dayId={data?.workoutday_id} creatorId={creatorId!} />
           ))}
         </div>
       ) : (
@@ -54,7 +63,10 @@ const WorkoutDayDetails = () => {
       )}
 
       {openAddExerciseForm && (
-        <AddExercise workoutId={Number(dayId)} setOpenAddExerciseForm={setOpenAddExerciseForm} />
+        <AddExercise
+          workoutId={Number(dayId)}
+          setOpenAddExerciseForm={setOpenAddExerciseForm}
+        />
       )}
     </div>
   );
