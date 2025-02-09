@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/collapsible";
 import dayjs from "dayjs";
 import { usePlan } from "@/context/WorkoutPlanProvider";
-import { useRecipientPlan } from "@/context/SharedPlanProvider";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
@@ -39,7 +38,6 @@ const ExercisePage = () => {
   );
   const { exerciseId } = useParams();
   const { creatorOfPlan } = usePlan();
-  const { sharedPlanInfo } = useRecipientPlan();
 
   const { data, isLoading, isError, error } = useGetExercises(
     Number(exerciseId)
