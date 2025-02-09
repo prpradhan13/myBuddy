@@ -41,11 +41,11 @@ function App() {
                 element={<WorkOutPlanDetails />}
               />
               <Route
-                path="/workoutDayDetails/:dayId/:creatorId"
+                path="/workoutDayDetails/:dayId"
                 element={<WorkOutDayDetails />}
               />
               <Route
-                path="/exerciseDetails/:exerciseId/:dayId/:creatorId"
+                path="/exerciseDetails/:exerciseId/:dayId"
                 element={<ExercisePage />}
               />
               <Route path="/allWorkoutPlans" element={<AllWorkoutPlan />} />

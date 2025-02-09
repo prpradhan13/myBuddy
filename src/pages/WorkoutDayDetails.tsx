@@ -6,17 +6,14 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import AddExercise from "@/components/forms/AddExercise";
 import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
-import { useAuth } from "@/context/AuthProvider";
+import { usePlan } from "@/context/WorkoutPlanProvider";
 
 const WorkoutDayDetails = () => {
   const [openAddExerciseForm, setOpenAddExerciseForm] = useState(false);
   const { dayId } = useParams();
-  const { creatorId } = useParams();
-  const { user } = useAuth();
-
-  const creatorOfPlan = creatorId === user?.id;
-
+  const { creatorOfPlan } = usePlan();
   const { data, isLoading, isError, error } = useGetWorkoutDay(Number(dayId));
+  
   const validDAyExercises = data?.dayexercises || [];
   const sortedWorkoutDays = validDAyExercises.sort((a, b) => a.id - b.id);
 
@@ -53,7 +50,11 @@ const WorkoutDayDetails = () => {
       {sortedWorkoutDays && sortedWorkoutDays.length > 0 ? (
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sortedWorkoutDays.map((exercise, index) => (
-            <WorkoutExerciseCard key={`${index}_${exercise.id}`} exerciseDetails={exercise} dayId={data?.workoutday_id} creatorId={creatorId!} />
+            <WorkoutExerciseCard
+              key={`${index}_${exercise.id}`}
+              exerciseDetails={exercise}
+              dayId={data?.workoutday_id}
+            />
           ))}
         </div>
       ) : (

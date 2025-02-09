@@ -15,21 +15,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import UpdateDayDetails from "../forms/UpdateDayDetails";
-import { useAuth } from "@/context/AuthProvider";
+import { usePlan } from "@/context/WorkoutPlanProvider";
 
 const WorkoutDayCard = ({
   dayDetails,
   planId,
-  planCreatorId,
 }: {
   dayDetails: WorkoutDayType;
   planId: number;
-  planCreatorId: string | undefined;
 }) => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [openUpdateForm, setOpenUpdateForm] = useState(false);
-  const { user } = useAuth();
-  const creatorOfPlan = user?.id === planCreatorId;
+  const { creatorOfPlan } = usePlan();
 
   const firstThreeLetter = dayDetails.day_name?.slice(0, 3);
 
@@ -122,7 +119,7 @@ const WorkoutDayCard = ({
       ) : (
         <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
           <Link
-            to={`/workoutDayDetails/${dayDetails.id}/${planCreatorId}`}
+            to={`/workoutDayDetails/${dayDetails.id}`}
             className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#232323] rounded-md flex justify-center items-center"
           >
             <h1 className="capitalize font-bold text-PrimaryTextColor">
@@ -131,7 +128,7 @@ const WorkoutDayCard = ({
           </Link>
           <div className="flex flex-col justify-center w-[calc(100%-25%)]">
             <div className="flex items-center justify-between">
-              <Link to={`/workoutDayDetails/${dayDetails.id}/${planCreatorId}`}>
+              <Link to={`/workoutDayDetails/${dayDetails.id}`}>
                 <h1 className="text-PrimaryTextColor font-semibold text-lg capitalize">
                   {truncateText(dayDetails.workout_name!, 25)}
                 </h1>

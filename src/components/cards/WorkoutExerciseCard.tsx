@@ -3,21 +3,17 @@ import { ExerciseType } from "../../types/workoutPlans";
 import { truncateText } from "../../utils/helpingFunctions";
 import Alert from "../extra/Alert";
 import { useDeleteExercise } from "@/utils/queries/exerciseQuery";
-import { useAuth } from "@/context/AuthProvider";
+import { usePlan } from "@/context/WorkoutPlanProvider";
 
 const WorkoutExerciseCard = ({
   exerciseDetails,
-  creatorId,
   dayId,
 }: {
   exerciseDetails: ExerciseType;
-  creatorId: string;
   dayId: number | undefined;
 }) => {
-  const { user } = useAuth();
+  const { creatorOfPlan } = usePlan();
   const { mutate, isPending } = useDeleteExercise(exerciseDetails.id, dayId!)
-
-  const creatorOfPlan = creatorId === user?.id
 
   const handleRemoveExercise = () => {
     mutate()
@@ -26,7 +22,7 @@ const WorkoutExerciseCard = ({
   return (
     <div className="bg-SecondaryBackgroundColor p-4 rounded-md">
       <Link
-        to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}/${creatorId}`}
+        to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}
       >
         <h1 className="text-[#fca311] text-lg capitalize font-semibold">
           {" "}

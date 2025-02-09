@@ -1,22 +1,42 @@
 import { useParams } from "react-router-dom";
-import { useAddNewWeek, useGetPlanWithDays } from "../utils/queries/workoutQuery";
+import {
+  useAddNewWeek,
+  useGetPlanWithDays,
+} from "../utils/queries/workoutQuery";
 import WorkoutDayCard from "../components/cards/WorkoutDayCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ErrorPage from "../components/loaders/ErrorPage";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
 import Alert from "@/components/extra/Alert";
+import { usePlan } from "@/context/WorkoutPlanProvider";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
-
   const { planId } = useParams();
+
+  const { planInfo, setPlanInfo } = usePlan();
 
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
   );
+
+  useEffect(() => {
+    if (data?.workoutplan_id && data?.creator_id) {
+      if (
+        planInfo.planId !== data.workoutplan_id ||
+        planInfo.creatorId !== data.creator_id
+      ) {
+        setPlanInfo({
+          planId: data.workoutplan_id,
+          creatorId: data.creator_id,
+        });
+      }
+    }
+  }, [data, setPlanInfo, planInfo]);
+
   const validWorkoutDays = data?.workoutdays || [];
   const sortedWorkoutDays = validWorkoutDays.sort((a, b) => a.id - b.id);
   const totalPages = Math.ceil(validWorkoutDays.length / itemsPerPage);
@@ -37,7 +57,7 @@ const WorkoutPlanDetails = () => {
   const { mutate, isPending } = useAddNewWeek(Number(planId));
 
   const handleAddWeek = () => {
-    mutate()
+    mutate();
   };
 
   if (isLoading) return <WorkoutDayLoader />;
@@ -58,7 +78,7 @@ const WorkoutPlanDetails = () => {
         </div>
       )}
 
-      <Alert 
+      <Alert
         btnName="Add a week"
         trigerBtnVarient={"link"}
         triggerBtnClassName="text-blue-500 p-0"
@@ -78,7 +98,6 @@ const WorkoutPlanDetails = () => {
             <WorkoutDayCard
               planId={Number(planId)}
               dayDetails={day}
-              planCreatorId={data?.creator_id}
               key={day.id}
             />
           ))}

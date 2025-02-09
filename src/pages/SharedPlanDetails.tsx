@@ -10,15 +10,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SharedPlanCard from "@/components/cards/SharedPlanCard";
 
 const SharedPlanDetails = () => {
-  const navigate = useNavigate();
-
   const { data: sharedPlansData, isPending, isError, error } = useGetSharedPlan();
 
+  const { data: sendPlanData } = useSendedPlan();
+  
+  const navigate = useNavigate();
+  
   const handleBackBtn = () => {
     navigate(-1);
   };
-
-  const { data: sendPlanData } = useSendedPlan();
 
   if (isPending) return <Loader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
@@ -50,12 +50,10 @@ const SharedPlanDetails = () => {
             sharedPlansData?.map((item, index) => (
               <SharedPlanCard
                 key={`${index}_ ${item.created_at}`}
-                avatarUrl={item.profiles.avatar_url}
                 createdAt={item.created_at}
-                username={item.profiles.username}
                 workoutplanId={item.workoutplan_id}
                 workoutplanName={item.workoutplan.plan_name}
-                userFullname={item.profiles.full_name}
+                recipientId={item.user_id}
               />
             ))
           ) : (
@@ -75,6 +73,7 @@ const SharedPlanDetails = () => {
                 workoutplanId={sendPlan.workoutplan_id}
                 workoutplanName={sendPlan.workoutplan.plan_name}
                 userFullname={sendPlan.profiles.full_name}
+                recipientId={sendPlan.user_id}
               />
             ))
           ) : (

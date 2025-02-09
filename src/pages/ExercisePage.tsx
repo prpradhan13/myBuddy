@@ -28,7 +28,8 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import dayjs from "dayjs";
-import { useAuth } from "@/context/AuthProvider";
+import { usePlan } from "@/context/WorkoutPlanProvider";
+import { useRecipientPlan } from "@/context/SharedPlanProvider";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
@@ -36,9 +37,9 @@ const ExercisePage = () => {
   const [openSetAchivesForm, setOpenSetAchivesForm] = useState<number | null>(
     null
   );
-  const { user } = useAuth();
-  const { exerciseId, creatorId } = useParams();
-  const creatorOfPlan = creatorId === user?.id;
+  const { exerciseId } = useParams();
+  const { creatorOfPlan } = usePlan();
+  const { sharedPlanInfo } = useRecipientPlan();
 
   const { data, isLoading, isError, error } = useGetExercises(
     Number(exerciseId)
@@ -60,6 +61,8 @@ const ExercisePage = () => {
   if (isLoading) return <Loader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
+
+
   return !data ||
     Object.keys(data).length === 0 ||
     !data.exercise_sets ||
@@ -70,12 +73,13 @@ const ExercisePage = () => {
           <p className="text-SecondaryTextColor font-semibold text-center">
             Let's go Champ! Let's add sets, repetitions, weights💪
           </p>
-          <button
+          <Button
+            variant={"ghost"}
             onClick={() => setOpenSetsCreateForm(true)}
             className="border-b border-PrimaryTextColor text-PrimaryTextColor px-2 font-semibold"
           >
             Let's Go
-          </button>
+          </Button>
         </>
       ) : (
         <>

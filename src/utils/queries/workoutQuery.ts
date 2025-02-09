@@ -58,7 +58,7 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
         return;
       }
 
-      return data || [];
+      return data || {};
     },
   });
 };

@@ -3,14 +3,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { getInitialLetter } from "@/utils/helpingFunctions";
 import dayjs from "dayjs";
 import { CalendarClock, Send } from "lucide-react";
+import { useRecipientPlan } from "@/context/SharedPlanProvider";
+import { useEffect } from "react";
 
 interface SharedPlanCardProps {
   workoutplanId: number;
   workoutplanName: string;
-  avatarUrl: string | null;
-  username: string;
+  avatarUrl?: string | null;
+  username?: string;
   createdAt: string;
-  userFullname: string
+  userFullname?: string;
+  recipientId?: string;
 }
 
 const SharedPlanCard = ({
@@ -19,8 +22,17 @@ const SharedPlanCard = ({
   avatarUrl,
   username,
   createdAt,
-  userFullname
+  userFullname,
+  recipientId,
 }: SharedPlanCardProps) => {
+  const { isRecipient, setSharedPlanInfo } = useRecipientPlan();
+  
+  useEffect(() => {
+    if (recipientId) {
+      setSharedPlanInfo((prev) => ({...prev, recipientId}))
+    }
+  }, [recipientId, setSharedPlanInfo])
+
   return (
     <div className="bg-SecondaryBackgroundColor mb-3 rounded-lg p-3">
       <Link to={`/workoutPlanDetails/${workoutplanId}`}>
@@ -30,23 +42,22 @@ const SharedPlanCard = ({
       </Link>
 
       <div className="flex items-center gap-2 mt-2">
-        <Avatar>
-          {!avatarUrl ? (
-            <AvatarFallback className="w-10 h-10 bg-gradient-to-t from-[#000000] via-[#1b1b1b] to-[#3a3a3a] text-PrimaryTextColor text-xs font-semibold">
-              {getInitialLetter(userFullname)}
-            </AvatarFallback>
-          ) : (
-            <AvatarImage
-              src={avatarUrl}
-              alt="profileImg"
-              className="w-9 h-9"
-            />
-          )}
-        </Avatar>
-        <h1 className="text-SecondaryTextColor">
-          {username}
-        </h1>
-        <Send color="#1c86ff" size={16} />
+        {!isRecipient && (
+          <>
+            <Avatar>
+              {!avatarUrl ? (
+                <AvatarFallback className="w-10 h-10 bg-gradient-to-t from-[#000000] via-[#1b1b1b] to-[#3a3a3a] text-PrimaryTextColor text-xs font-semibold">
+                  {getInitialLetter(userFullname)}
+                </AvatarFallback>
+              ) : (
+                <AvatarImage src={avatarUrl} alt="profileImg" className="w-9 h-9" />
+              )}
+            </Avatar>
+            <h1 className="text-SecondaryTextColor">{username}</h1>
+    
+            <Send color="#1c86ff" size={16} />
+          </>
+        )}
         <p className="text-SecondaryTextColor text-sm flex items-center gap-1">
           {dayjs(createdAt).format("DD-MM-YYYY h:mm A")}{" "}
           <CalendarClock size={16} color="#36ff23" />
