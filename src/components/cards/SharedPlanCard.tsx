@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { getInitialLetter } from "@/utils/helpingFunctions";
+import { calculateAverageRating, getInitialLetter } from "@/utils/helpingFunctions";
 import dayjs from "dayjs";
-import { CalendarClock, Send } from "lucide-react";
+import { CalendarClock, Send, Star } from "lucide-react";
 import { useRecipientPlan } from "@/context/SharedPlanProvider";
 import { useEffect } from "react";
+import { useGetReviewDetails } from "@/utils/queries/reviewQuery";
 
 interface SharedPlanCardProps {
   workoutplanId: number;
@@ -26,14 +27,17 @@ const SharedPlanCard = ({
   recipientId,
 }: SharedPlanCardProps) => {
   const { isRecipient, sharedPlanInfo, setSharedPlanInfo } = useRecipientPlan();
-  
+
   useEffect(() => {
     if (recipientId) {
       if (sharedPlanInfo.recipientId !== recipientId) {
-        setSharedPlanInfo({recipientId})
+        setSharedPlanInfo({ recipientId });
       }
     }
-  }, [recipientId, sharedPlanInfo.recipientId, setSharedPlanInfo])
+  }, [recipientId, sharedPlanInfo.recipientId, setSharedPlanInfo]);
+
+  const { data: reviews } = useGetReviewDetails(workoutplanId);
+  const averageRating = calculateAverageRating(reviews)
 
   return (
     <div className="bg-SecondaryBackgroundColor mb-3 rounded-lg p-3">
@@ -42,7 +46,19 @@ const SharedPlanCard = ({
           {workoutplanName}
         </h1>
       </Link>
-
+      <div className="flex mt-2">
+        {Array.from({ length: 5 }).map((_, index) => (
+            <Star
+              key={index}
+              size={16}
+              className={
+                index < averageRating
+                  ? "fill-yellow-500 text-yellow-500"
+                  : "text-gray-400"
+              }
+            />
+          ))}
+      </div>
       <div className="flex items-center gap-2 mt-2">
         {!isRecipient && (
           <>
@@ -52,11 +68,15 @@ const SharedPlanCard = ({
                   {getInitialLetter(userFullname)}
                 </AvatarFallback>
               ) : (
-                <AvatarImage src={avatarUrl} alt="profileImg" className="w-9 h-9" />
+                <AvatarImage
+                  src={avatarUrl}
+                  alt="profileImg"
+                  className="w-9 h-9"
+                />
               )}
             </Avatar>
             <h1 className="text-SecondaryTextColor">{username}</h1>
-    
+
             <Send color="#1c86ff" size={16} />
           </>
         )}

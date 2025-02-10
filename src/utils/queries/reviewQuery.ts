@@ -23,7 +23,7 @@ export const useAddReview = (planId: number) => {
       ]);
 
       if (error) throw new Error(error.message);
-    }
+    },
   });
 };
 
@@ -34,7 +34,7 @@ export const useGetReviewDetails = (planId: number) => {
       const { data, error } = await supabase
         .from("plan_review")
         .select("*")
-        .eq("plan_id", planId);
+        .eq("plan_id", planId)
 
       if (error) throw new Error(error.message);
 
@@ -47,8 +47,7 @@ export const useRemoveReview = (planId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (reviewId?: number) => {
-        if (!reviewId) throw new Error ("Review ID not specified");
+    mutationFn: async (reviewId: number) => {
 
       const { error } = await supabase
         .from("plan_review")

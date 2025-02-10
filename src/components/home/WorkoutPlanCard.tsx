@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { WorkoutPlansType } from "../../types/workoutPlans";
 import {
+  calculateAverageRating,
   getInitialLetter,
   truncateText,
   useDebounce,
@@ -19,9 +20,13 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
-import { useCreateSharedPlan, useSearchUser } from "@/utils/queries/sharedPlanQuery";
+import {
+  useCreateSharedPlan,
+  useSearchUser,
+} from "@/utils/queries/sharedPlanQuery";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
-import { MessageSquareShare } from "lucide-react";
+import { MessageSquareShare, Star } from "lucide-react";
+import { useGetReviewDetails } from "@/utils/queries/reviewQuery";
 
 const WorkoutPlanCard = ({
   planDetails,
@@ -34,25 +39,46 @@ const WorkoutPlanCard = ({
   const debouncedSearch = useDebounce(searchText, 1000);
 
   const { data: searchData, isFetching } = useSearchUser(debouncedSearch);
+  const { data: reviews } = useGetReviewDetails(planDetails.id);
+
+  const averageRating = calculateAverageRating(reviews)
 
   const handleDeletePlan = () => {
     mutate();
   };
 
-  const { mutate: shareMutate, isPending: shareIsPending } = useCreateSharedPlan(planDetails.id)
+  const { mutate: shareMutate, isPending: shareIsPending } =
+    useCreateSharedPlan(planDetails.id);
 
   const handleSharePlan = (userId: string) => {
-    shareMutate(userId)
+    shareMutate(userId);
   };
 
   return (
     <div className="bg-[#2d2d2d] p-4 rounded-md shadow-md font-poppins text-SecondaryTextColor flex flex-col">
-      <Badge
-          variant="secondary"
-          className="self-start capitalize"
-        >
+      <div className="flex items-center gap-3">
+        <Badge variant="secondary" className="self-start capitalize">
           {planDetails.difficulty_level}
         </Badge>
+
+        <div className="flex">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <Star
+              key={index}
+              size={16}
+              className={
+                index < averageRating
+                  ? "fill-yellow-500 text-yellow-500"
+                  : "text-gray-400"
+              }
+            />
+          ))}
+          {reviews && reviews.length > 0 && (
+            <p className="ml-2 text-sm h-0">({reviews.length})</p>
+          )}
+        </div>
+      </div>
+
       <div className="mt-1">
         <Link
           to={`/workoutPlanDetails/${planDetails.id}`}

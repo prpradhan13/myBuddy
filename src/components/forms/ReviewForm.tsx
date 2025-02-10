@@ -29,9 +29,10 @@ import {
 } from "@/components/ui/drawer";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import toast from "react-hot-toast";
-import { useAuth } from "@/context/AuthProvider";
 import { GetReviewDetailsType } from "@/types/workoutPlans";
 import Alert from "../extra/Alert";
+import { useAuth } from "@/context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const ReviewForm = memo(() => {
   const form = useForm<TReviewForm>({
@@ -43,11 +44,9 @@ const ReviewForm = memo(() => {
   const [userReview, setUserReview] = useState<GetReviewDetailsType | null>(
     null
   );
-
+  const navigate = useNavigate();
   const { planInfo } = usePlan();
   const { user } = useAuth();
-
-  // Fetch existing reviews
   const { data: reviewData, isLoading } = useGetReviewDetails(
     Number(planInfo.planId)
   );
@@ -87,6 +86,7 @@ const ReviewForm = memo(() => {
           setStar(null);
           form.reset();
           toast.success("Review updated successfully");
+          navigate(-1)
         },
         onError: () => {
           setStar(null);
@@ -98,7 +98,12 @@ const ReviewForm = memo(() => {
   };
 
   const handleRemoveReview = () => {
-    removeReview(userReview?.id, {
+    if (!userReview?.id) {
+      toast.error("Invalid review ID");
+      return;
+    }
+  
+    removeReview(userReview.id, {
       onSuccess: () => {
         toast.success("Review removed successfully.");
         setIsDrawerOpen(false);
