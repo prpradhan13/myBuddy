@@ -5,13 +5,11 @@ import {
   useSendedPlan,
 } from "@/utils/queries/sharedPlanQuery";
 import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SharedPlanCard from "@/components/cards/SharedPlanCard";
-import { useRecipientPlan } from "@/context/SharedPlanProvider";
 
 const SharedPlanDetails = () => {
-  const { isRecipient } = useRecipientPlan();
   const { data: sharedPlansData, isPending, isError, error } = useGetSharedPlan();
   const { data: sendPlanData } = useSendedPlan();
   
@@ -30,15 +28,6 @@ const SharedPlanDetails = () => {
         onClick={handleBackBtn}
         className="cursor-pointer text-PrimaryTextColor mb-3"
       />
-
-      {isRecipient && (
-        <Link
-          to={"/recipientAchivementsDetails"}
-          className="text-PrimaryTextColor"
-        >
-          Your achivements
-        </Link>
-      )}
       
       <Tabs defaultValue="recived" className="w-full">
         <TabsList className="grid w-full grid-cols-2 bg-SecondaryBackgroundColor text-SecondaryTextColor">
