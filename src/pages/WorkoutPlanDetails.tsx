@@ -11,13 +11,15 @@ import { Button } from "@/components/ui/button";
 import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
 import Alert from "@/components/extra/Alert";
 import { usePlan } from "@/context/WorkoutPlanProvider";
+import { useRecipientPlan } from "@/context/SharedPlanProvider";
+import ReviewForm from "@/components/forms/ReviewForm";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
   const { planId } = useParams();
-
   const { planInfo, setPlanInfo, creatorOfPlan } = usePlan();
+  const { isRecipient } = useRecipientPlan();
 
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
@@ -89,6 +91,10 @@ const WorkoutPlanDetails = () => {
           descLine="This is add a new week in this plan."
           handleContinueBtn={handleAddWeek}
         />
+      )}
+
+      {(isRecipient && !creatorOfPlan) && (
+        <ReviewForm />
       )}
 
       {validWorkoutDays.length > 0 ? (

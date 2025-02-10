@@ -55,3 +55,9 @@ export const recipientAchiveForm = z.object({
 })
 
 export type TRecipientAchiveForm = z.infer<typeof recipientAchiveForm>;
+
+export const reviewForm = z.object({
+  review: z.string().min(3, { message: "Review cannot be empty" }).max(200,{message: "Review maximum 200 characters"}).optional(),
+})
+
+export type TReviewForm = z.infer<typeof reviewForm>;

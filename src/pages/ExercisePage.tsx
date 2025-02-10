@@ -231,7 +231,7 @@ const ExercisePage = () => {
               </Button>
             )}
 
-            {isRecipient && (
+            {(isRecipient && !creatorOfPlan) && (
               <Button
                 onClick={() => handleNavigateToRecipientAchive(set.id)}
                 variant={"secondary"}

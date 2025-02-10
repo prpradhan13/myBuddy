@@ -134,3 +134,11 @@ export type RecipientAchivementType = {
   is_skip: boolean;
   created_at: string;
 };
+
+export type GetReviewDetailsType = {
+  id: number;
+  plan_id: number;
+  reviewed_user: string;
+  rating: number;
+  review: string | null;
+}

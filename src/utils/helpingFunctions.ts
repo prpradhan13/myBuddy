@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthProvider";
 import { useEffect, useState } from "react";
 
 export const getInitialLetter = (fullName?: string) => {
@@ -24,4 +25,10 @@ export const useDebounce = (value: string, delay = 300) => {
     }, [value, delay])
 
     return debounceText;
+}
+
+export const useHasReviewed = () => {
+    const { user } = useAuth();
+
+    
 }
