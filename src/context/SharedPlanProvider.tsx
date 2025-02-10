@@ -1,20 +1,13 @@
-import {
-  ReactNode,
-  useContext,
-  createContext,
-  useState,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { ReactNode, useContext, createContext, useState, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthProvider";
 
 interface TSharedPlanInfo {
-  recipientId: string;
+  recipientId?: string;
 }
 
 interface SharedPlanContextType {
   sharedPlanInfo: TSharedPlanInfo;
-  setSharedPlanInfo: Dispatch<SetStateAction<TSharedPlanInfo>>;
+  setSharedPlanInfo: (newSharedPlan: TSharedPlanInfo) => void;
   isRecipient: boolean;
 }
 
@@ -23,15 +16,36 @@ const SharedPlanContext = createContext<SharedPlanContextType | undefined>(
 );
 
 export const SharedPlanProvider = ({ children }: { children: ReactNode }) => {
-  const [sharedPlanInfo, setSharedPlanInfo] = useState<TSharedPlanInfo>({
-    recipientId: "",
-  });
   const { user } = useAuth();
 
-  const isRecipient = sharedPlanInfo.recipientId === user?.id;
-  
+  const [sharedPlanInfo, setSharedPlanInfoState] = useState<TSharedPlanInfo>(
+    () => {
+      const savedSharedPlan = localStorage.getItem("sharedPlanInfo");
+      return savedSharedPlan ? JSON.parse(savedSharedPlan) : {};
+    }
+  );
+  const [isRecipient, setIsRecipient] = useState(false);
+
+  useEffect(() => {
+    setIsRecipient(sharedPlanInfo.recipientId === user?.id)
+  }, [sharedPlanInfo.recipientId, user?.id])
+
+  useEffect(() => {
+    localStorage.setItem("sharedPlanInfo", JSON.stringify(sharedPlanInfo))
+  }, [sharedPlanInfo])
+
+  const setSharedPlanInfo = useCallback((newSharedPlan: TSharedPlanInfo) => {
+    setSharedPlanInfoState((prev) => {
+      const updatedSharedPlan = { ...prev, ...newSharedPlan }
+      localStorage.setItem('sharedPlanInfo', JSON.stringify(updatedSharedPlan))
+      return updatedSharedPlan
+    });
+  }, [])
+
   return (
-    <SharedPlanContext.Provider value={{ sharedPlanInfo, setSharedPlanInfo, isRecipient }}>
+    <SharedPlanContext.Provider
+      value={{ sharedPlanInfo, setSharedPlanInfo, isRecipient }}
+    >
       {children}
     </SharedPlanContext.Provider>
   );

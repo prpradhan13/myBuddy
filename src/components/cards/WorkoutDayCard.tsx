@@ -138,7 +138,7 @@ const WorkoutDayCard = ({
                   <DropdownMenuTrigger>
                     <EllipsisVertical color="#fff" size={20} />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="mr-8">
+                  <DropdownMenuContent align="end">
                     <DropdownMenuItem
                       onClick={handleEditClick}
                       className="font-medium"

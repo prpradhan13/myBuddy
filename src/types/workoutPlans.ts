@@ -116,3 +116,21 @@ export type SendedPlanType = {
   };
   created_at: string;
 };
+
+export type RecipientAchivementType = {
+  plan_id: number;
+  day_id: number;
+  exercise_id: number;
+  recipient_id: string;
+  profiles: {
+    username: string;
+    avatar_url: string | null;
+    full_name: string;
+  }
+  set_id: number;
+  achive_repetition: string;
+  achive_weight: string;
+  is_complete: boolean;
+  is_skip: boolean;
+  created_at: string;
+};

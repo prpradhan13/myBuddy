@@ -45,6 +45,7 @@ const UserDetails = () => {
       toast.error(`Logout error: ${error.message}`);
       throw new Error(error.message);
     }
+    localStorage.clear();
   };
 
   if (isLoading) return <Loader />;

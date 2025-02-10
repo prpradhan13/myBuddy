@@ -1,9 +1,10 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import toast from "react-hot-toast";
-import { SendedPlanType } from "@/types/workoutPlans";
+import { RecipientAchivementType, SendedPlanType } from "@/types/workoutPlans";
 import { SearchUserType } from "@/types/userType";
 import { useAuth } from "@/context/AuthProvider";
+import { Dispatch, SetStateAction } from "react";
 
 export const useGetSharedUsers = (planId: number) => {
   return useQuery({
@@ -105,4 +106,66 @@ export const useSendedPlan = () => {
     },
     enabled: !!currentUserId
   });
+}
+
+interface TUseUpdateSetByRecipient {
+  planId?: number;
+  dayId?: number;
+  exerciseId?: number;
+  recipientId?: string;
+  setExerciseSetIdForUpdate: Dispatch<SetStateAction<number | null>>;
+}
+
+interface TRecipientAchiveFormData {
+  achive_repetition: string;
+  achive_weight: string;
+  setId: number;
+}
+
+export const useUpdateSetByRecipient = ({ planId, dayId, exerciseId, recipientId, setExerciseSetIdForUpdate }: TUseUpdateSetByRecipient) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ formData }: {formData: TRecipientAchiveFormData}) => {
+      const { error } = await supabase
+        .from("recipient_achive")
+        .insert({
+          recipient_id: recipientId,
+          plan_id: planId,
+          day_id: dayId,
+          exercise_id: exerciseId,
+          set_id: formData.setId,
+          achive_repetition: formData.achive_repetition,
+          achive_weight: formData.achive_weight
+        })
+
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["recipientAchive", recipientId] });
+      setExerciseSetIdForUpdate(null);
+      toast.success("Successfully submitted")
+    },
+    onError: () => {
+      toast.error("Submission failed");
+    }
+  })
+  
+}
+
+export const useGetRecipientAchivement = (setId: number) => {
+  return useQuery<RecipientAchivementType[]>({
+    queryKey: ["recipientAchiveSet", setId],
+    queryFn: async () => {
+      const {data, error} = await supabase
+        .from("recipient_achive")
+        .select("*, profiles(username, avatar_url, full_name)")
+        .eq("set_id", setId)
+
+      if(error) throw new Error(error.message);
+      
+      return data || [];
+    },
+    enabled: !!setId
+  })
 }

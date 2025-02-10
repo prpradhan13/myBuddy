@@ -1,7 +1,9 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import { useAuth } from "./AuthProvider";
@@ -9,6 +11,7 @@ import { useAuth } from "./AuthProvider";
 interface TPlanInfo {
   planId?: number;
   creatorId?: string;
+  dayId?: number;
 }
 
 interface WorkoutPlanContextType {
@@ -22,19 +25,30 @@ const WorkoutPlanContext = createContext<WorkoutPlanContextType | undefined>(
 );
 
 export const WorkoutPlanProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth();
+
   const [planInfo, setPlanInfoState] = useState<TPlanInfo>(() => {
     const savedPlan = localStorage.getItem("planInfo");
     return savedPlan ? JSON.parse(savedPlan) : {};
   });
 
-  const setPlanInfo = (newPlan: TPlanInfo) => {
-    localStorage.setItem("planInfo", JSON.stringify(newPlan));
-    setPlanInfoState(newPlan);
-  };
+  const [creatorOfPlan, setCreatorOfPlan] = useState(false);
 
-  const { user } = useAuth();
+  useEffect(() => {
+    setCreatorOfPlan(planInfo.creatorId === user?.id);
+  }, [planInfo.creatorId, user?.id]);
 
-  const creatorOfPlan = planInfo.creatorId === user?.id;
+  useEffect(() => {
+    localStorage.setItem("planInfo", JSON.stringify(planInfo));
+  }, [planInfo]);
+
+  const setPlanInfo = useCallback((newPlan: TPlanInfo) => {
+    setPlanInfoState((prevPlan) => {
+      const updatedPlan = { ...prevPlan, ...newPlan };
+      localStorage.setItem("planInfo", JSON.stringify(updatedPlan));
+      return updatedPlan;
+    });
+  }, []);
 
   return (
     <WorkoutPlanContext.Provider

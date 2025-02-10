@@ -25,13 +25,15 @@ const SharedPlanCard = ({
   userFullname,
   recipientId,
 }: SharedPlanCardProps) => {
-  const { isRecipient, setSharedPlanInfo } = useRecipientPlan();
+  const { isRecipient, sharedPlanInfo, setSharedPlanInfo } = useRecipientPlan();
   
   useEffect(() => {
     if (recipientId) {
-      setSharedPlanInfo((prev) => ({...prev, recipientId}))
+      if (sharedPlanInfo.recipientId !== recipientId) {
+        setSharedPlanInfo({recipientId})
+      }
     }
-  }, [recipientId, setSharedPlanInfo])
+  }, [recipientId, sharedPlanInfo.recipientId, setSharedPlanInfo])
 
   return (
     <div className="bg-SecondaryBackgroundColor mb-3 rounded-lg p-3">

@@ -3,7 +3,7 @@ import { useGetWorkoutDay } from "../utils/queries/dayQuery";
 import ErrorPage from "../components/loaders/ErrorPage";
 import WorkoutExerciseCard from "../components/cards/WorkoutExerciseCard";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddExercise from "@/components/forms/AddExercise";
 import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
 import { usePlan } from "@/context/WorkoutPlanProvider";
@@ -11,9 +11,17 @@ import { usePlan } from "@/context/WorkoutPlanProvider";
 const WorkoutDayDetails = () => {
   const [openAddExerciseForm, setOpenAddExerciseForm] = useState(false);
   const { dayId } = useParams();
-  const { creatorOfPlan } = usePlan();
-  const { data, isLoading, isError, error } = useGetWorkoutDay(Number(dayId));
+  const { creatorOfPlan, planInfo, setPlanInfo } = usePlan();
   
+  const { data, isLoading, isError, error } = useGetWorkoutDay(Number(dayId));
+  const validDayId = Number(dayId);
+
+  useEffect(() => {
+    if (validDayId && planInfo.dayId !== validDayId) {
+      setPlanInfo({ dayId: validDayId });
+    }
+  }, [validDayId, planInfo.dayId, setPlanInfo]);
+
   const validDAyExercises = data?.dayexercises || [];
   const sortedWorkoutDays = validDAyExercises.sort((a, b) => a.id - b.id);
 

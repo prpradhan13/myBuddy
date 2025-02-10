@@ -47,4 +47,11 @@ export const updateDayDetails = z.object({
   description: z.string().nullable(),
 });
 
-export type TUpdateDayDetails = z.infer<typeof updateDayDetails>
+export type TUpdateDayDetails = z.infer<typeof updateDayDetails>;
+
+export const recipientAchiveForm = z.object({
+  achive_repetition: z.string(),
+  achive_weight: z.string(),
+})
+
+export type TRecipientAchiveForm = z.infer<typeof recipientAchiveForm>;

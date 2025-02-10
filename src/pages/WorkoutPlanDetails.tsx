@@ -17,7 +17,7 @@ const WorkoutPlanDetails = () => {
   const itemsPerPage = 7;
   const { planId } = useParams();
 
-  const { planInfo, setPlanInfo } = usePlan();
+  const { planInfo, setPlanInfo, creatorOfPlan } = usePlan();
 
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
@@ -38,7 +38,7 @@ const WorkoutPlanDetails = () => {
   }, [data, setPlanInfo, planInfo]);
 
   const validWorkoutDays = data?.workoutdays || [];
-  const sortedWorkoutDays = validWorkoutDays.sort((a, b) => a.id - b.id);
+  const sortedWorkoutDays = [...validWorkoutDays].sort((a, b) => a.id - b.id);
   const totalPages = Math.ceil(validWorkoutDays.length / itemsPerPage);
 
   const currentDays = sortedWorkoutDays.slice(
@@ -71,6 +71,7 @@ const WorkoutPlanDetails = () => {
       <h2 className="text-base text-SecondaryTextColor capitalize">
         {data?.plan_difficulty}, {totalPages} week plan
       </h2>
+
       {data?.plan_description && (
         <div className="text-SecondaryTextColor">
           <p className="font-semibold">Note:</p>
@@ -78,15 +79,17 @@ const WorkoutPlanDetails = () => {
         </div>
       )}
 
-      <Alert
-        btnName="Add a week"
-        trigerBtnVarient={"link"}
-        triggerBtnClassName="text-blue-500 p-0"
-        pendingState={isPending}
-        headLine="Are you want to add a new week?"
-        descLine="This is add a new week in this plan."
-        handleContinueBtn={handleAddWeek}
-      />
+      {creatorOfPlan && (
+        <Alert
+          btnName="Add a week"
+          trigerBtnVarient={"link"}
+          triggerBtnClassName="text-blue-500 p-0"
+          pendingState={isPending}
+          headLine="Are you want to add a new week?"
+          descLine="This is add a new week in this plan."
+          handleContinueBtn={handleAddWeek}
+        />
+      )}
 
       {validWorkoutDays.length > 0 ? (
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
