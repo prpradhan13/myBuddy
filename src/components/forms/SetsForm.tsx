@@ -65,7 +65,7 @@ const SetsForm = ({ exerciseId, setOpenSetsCreateForm }: SetsFormProps) => {
 
   return (
     <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
-      <div className="bg-SecondaryBackgroundColor w-full rounded-md p-3 flex flex-col gap-4">
+      <div className="bg-SecondaryBackgroundColor w-full md:w-[50vw] rounded-md p-3 flex flex-col gap-4">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleAddSet)}

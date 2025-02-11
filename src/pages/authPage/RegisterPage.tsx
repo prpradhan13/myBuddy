@@ -53,7 +53,7 @@ const RegisterPage = () => {
       </h3>
 
       <Form {...form}>
-        <form className="w-full mt-10" onSubmit={form.handleSubmit(formSubmit)}>
+        <form className="w-full md:w-[50vw] lg:w-[30vw] mt-10" onSubmit={form.handleSubmit(formSubmit)}>
           <FormField
             control={form.control}
             name="email"

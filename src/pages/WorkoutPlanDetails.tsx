@@ -93,16 +93,14 @@ const WorkoutPlanDetails = () => {
         />
       )}
 
-      {(isRecipient && !creatorOfPlan) && (
-        <ReviewForm />
-      )}
+      {isRecipient && !creatorOfPlan && <ReviewForm />}
+
+      <h2 className="text-center text-lg text-PrimaryTextColor font-semibold">
+        Week {currentPage}
+      </h2>
 
       {validWorkoutDays.length > 0 ? (
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <h2 className="text-center text-lg text-PrimaryTextColor font-semibold">
-            Week {currentPage}
-          </h2>
-
           {currentDays.map((day) => (
             <WorkoutDayCard
               planId={Number(planId)}
@@ -111,35 +109,36 @@ const WorkoutPlanDetails = () => {
             />
           ))}
 
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="pagination-controls flex items-center justify-between">
-              <Button
-                variant={"secondary"}
-                onClick={handlePrevious}
-                disabled={currentPage === 1}
-                className="text-sm font-semibold disabled:opacity-50"
-              >
-                <ChevronLeft />
-                Previous
-              </Button>
-              <Button
-                variant={"secondary"}
-                onClick={handleNext}
-                disabled={currentPage === totalPages}
-                className="text-sm font-semibold disabled:opacity-50"
-              >
-                Next
-                <ChevronRight />
-              </Button>
-            </div>
-          )}
         </div>
       ) : (
         <div className="h-96 flex justify-center items-center">
           <p className="text-PrimaryTextColor font-semibold">
             No workout days found
           </p>
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="pagination-controls flex items-center justify-between mt-6">
+          <Button
+            variant={"secondary"}
+            onClick={handlePrevious}
+            disabled={currentPage === 1}
+            className="text-sm font-semibold disabled:opacity-50"
+          >
+            <ChevronLeft />
+            Previous
+          </Button>
+          <Button
+            variant={"secondary"}
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className="text-sm font-semibold disabled:opacity-50"
+          >
+            Next
+            <ChevronRight />
+          </Button>
         </div>
       )}
     </div>

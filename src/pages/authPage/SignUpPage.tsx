@@ -69,7 +69,7 @@ const SignUpPage = () => {
 
       <Form {...form}>
         <form
-          className="w-full mt-10 flex flex-col gap-3"
+          className="w-full md:w-[50vw] lg:w-[30vw] mt-10 flex flex-col gap-3"
           onSubmit={form.handleSubmit(formSubmit)}
         >
           <FormField

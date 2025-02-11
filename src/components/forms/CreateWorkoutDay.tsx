@@ -70,7 +70,7 @@ const CreateWorkoutDay = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="bg-SecondaryBackgroundColor w-full rounded-md p-3 flex flex-col gap-4"
+            className="bg-SecondaryBackgroundColor w-full md:w-[50vw] rounded-md p-3 flex flex-col gap-4"
           >
             <FormField
               control={form.control}

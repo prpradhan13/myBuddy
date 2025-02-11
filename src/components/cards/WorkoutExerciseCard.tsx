@@ -45,7 +45,7 @@ const WorkoutExerciseCard = ({
       )}
 
       {creatorOfPlan && (
-        <Alert btnName="Remove" trigerBtnVarient={"outline"} handleContinueBtn={handleRemoveExercise} pendingState={isPending} />
+        <Alert btnName="Remove" triggerBtnClassName="mt-2" trigerBtnVarient={"destructive"} handleContinueBtn={handleRemoveExercise} pendingState={isPending} />
       )}
     </div>
   );

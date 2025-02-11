@@ -8,7 +8,6 @@ import {
 } from "../../utils/helpingFunctions";
 import Alert from "../extra/Alert";
 import dayjs from "dayjs";
-import { Badge } from "@/components/ui/badge";
 import { useDeletePlan } from "@/utils/queries/workoutQuery";
 import {
   Sheet,
@@ -56,10 +55,19 @@ const WorkoutPlanCard = ({
 
   return (
     <div className="bg-[#2d2d2d] p-4 rounded-md shadow-md font-poppins text-SecondaryTextColor flex flex-col">
+        <Link
+          to={`/workoutPlanDetails/${planDetails.id}`}
+          className="text-xl font-semibold capitalize text-[#ffffff]"
+        >
+          {truncateText(planDetails.plan_name, 30)}
+        </Link>
+      <p className="text-SecondaryTextColor text-sm">
+        Created: {dayjs(planDetails.created_at).format("DD/MM/YY, dddd")}{" "}
+      </p>
       <div className="flex items-center gap-3">
-        <Badge variant="secondary" className="self-start capitalize">
+        <h5 className="self-start capitalize text-sm font-semibold">
           {planDetails.difficulty_level}
-        </Badge>
+        </h5>
 
         <div className="flex">
           {Array.from({ length: 5 }).map((_, index) => (
@@ -78,18 +86,6 @@ const WorkoutPlanCard = ({
           )}
         </div>
       </div>
-
-      <div className="mt-1">
-        <Link
-          to={`/workoutPlanDetails/${planDetails.id}`}
-          className="text-xl font-semibold capitalize text-[#ffffff]"
-        >
-          {truncateText(planDetails.plan_name, 30)}
-        </Link>
-      </div>
-      <p className="text-SecondaryTextColor text-sm">
-        Created: {dayjs(planDetails.created_at).format("DD/MM/YY, dddd")}{" "}
-      </p>
       <div className="mt-3 flex gap-2">
         <Sheet>
           <SheetTrigger asChild>

@@ -73,7 +73,7 @@ const UpdateDayDetails = ({
         
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="border bg-SecondaryBackgroundColor w-full rounded-md p-3 flex flex-col gap-4"
+          className="border bg-SecondaryBackgroundColor w-full md:w-[50vw] rounded-md p-3 flex flex-col gap-4"
         >
           <FormField
             control={form.control}

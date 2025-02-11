@@ -35,7 +35,7 @@ const WorkoutDayDetails = () => {
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-montserrat">
       <div className="">
-        <h1 className=" text-2xl font-semibold capitalize text-PrimaryTextColor">
+        <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
           {data?.workout_name}
         </h1>
         <h2 className=" text-base text-SecondaryTextColor capitalize">

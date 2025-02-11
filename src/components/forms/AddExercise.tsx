@@ -55,7 +55,7 @@ const AddExercise = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="p-3 bg-black border rounded-md w-full flex flex-col gap-3"
+            className="p-3 bg-black border rounded-md w-full md:w-[50vw] flex flex-col gap-3"
           >
             <FormField
               control={form.control}
