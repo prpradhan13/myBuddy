@@ -5,6 +5,7 @@ export type WorkoutPlansType = {
   difficulty_level: string | null;
   description: string | null;
   created_at: string | null;
+  is_public: boolean;
 };
 
 export type WorkoutDayType = {

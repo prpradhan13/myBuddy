@@ -18,6 +18,7 @@ const EditProfilePage = lazy(() => import("./pages/EditProfilePage"));
 const AllWorkoutPlan = lazy(() => import("./pages/AllWorkoutPlan"));
 const SharedPlanDetails = lazy(() => import("./pages/SharedPlanDetails"));
 const RecipientAchivementsDetails = lazy(() => import("./pages/RecipientAchivements"));
+const PublicPlanPage = lazy(() => import("./pages/PublicPlanPage"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ function App() {
               <Route path="/allWorkoutPlans" element={<AllWorkoutPlan />} />
               <Route path="/sharedplandetails" element={<SharedPlanDetails />}/>
               <Route path="/recipientAchivementsDetails/:setId" element={<RecipientAchivementsDetails />}/>
+              <Route path="/publicplan" element={<PublicPlanPage />}/>
             </Route>
           </Routes>
         </Suspense>

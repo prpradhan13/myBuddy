@@ -64,11 +64,10 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
 };
 
 export const useCreateWorkoutPlan = (
-  setOpenCreateForm: Dispatch<SetStateAction<boolean>>
+  setOpenCreateForm: Dispatch<SetStateAction<boolean>>,
 ) => {
   const { user } = useAuth();
   const userId = user?.id;
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ planFormData }: { planFormData: CreatePlanType }) => {
@@ -83,7 +82,7 @@ export const useCreateWorkoutPlan = (
           difficulty_level,
           description,
         })
-        .select("id")
+        .select("*")
         .single();
 
       if (error) {
@@ -132,17 +131,16 @@ export const useCreateWorkoutPlan = (
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: `workoutPlans_${userId}` });
+      window.location.reload();
       toast.success("New Workout plan Created");
       setOpenCreateForm(false);
     },
   });
 };
 
-export const useDeletePlan = (planId: number) => {
-  const queryClient = useQueryClient();
-  const { user } = useAuth();
-  const userId = user?.id;
+export const useDeletePlan = (
+  planId: number,
+) => {
 
   return useMutation({
     mutationFn: async () => {
@@ -173,8 +171,11 @@ export const useDeletePlan = (planId: number) => {
       if (deletePlanError) throw new Error(deletePlanError.message);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`workoutPlans_${userId}`] });
-      toast.success("Delete Plan Successfully");
+      window.location.reload();
+      toast.success("Deleted Plan Successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete plan");
     },
   });
 };
@@ -183,7 +184,7 @@ export const useAddNewWeek = (planId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ():Promise<WorkoutDayType[]> => {
+    mutationFn: async (): Promise<WorkoutDayType[]> => {
       const daysOfWeek: string[] = [
         "monday",
         "tuesday",
@@ -206,7 +207,9 @@ export const useAddNewWeek = (planId: number) => {
 
       if (daysError || !workoutDayIds || workoutDayIds.length === 0) {
         toast.error(daysError?.message || "Error while inserting workoutDay");
-        throw new Error(daysError?.message || "Error while inserting workoutDay");
+        throw new Error(
+          daysError?.message || "Error while inserting workoutDay"
+        );
       }
 
       const workoutPlanWorkoutDays = workoutDayIds.map((day) => ({
@@ -245,3 +248,44 @@ export const useAddNewWeek = (planId: number) => {
     },
   });
 };
+
+export const useTogglePlanVisibility = (planId: number) => {
+  return useMutation({
+    mutationFn: async (newStatus: boolean) => {
+      const { error } = await supabase
+        .from("workoutplan")
+        .update({ is_public: newStatus })
+        .eq("id", planId)
+        .select("*")
+        .single();
+
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      window.location.reload();
+      toast.success("Visibility Updated Successfully");
+    },
+  });
+};
+
+export const useGetPublicPlans = ({ limit=5, offset=0 }: WorkoutQueryParams) => {
+  return useQuery({
+    queryKey: ["public_plans", limit, offset],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("workoutplan")
+        .select("*")
+        .eq("is_public", true)
+        .limit(limit)
+        .range(offset, offset + limit - 1)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        toast.error(error.message || "Workout plans could not be find");
+        throw new Error(error.message);
+      }
+
+      return data || [];
+    }
+  })
+}

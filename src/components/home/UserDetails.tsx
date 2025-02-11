@@ -48,6 +48,10 @@ const UserDetails = () => {
     localStorage.clear();
   };
 
+  const handleNavigateToPublic = () => {
+    navigate("/publicplan");
+  }
+
   if (isLoading) return <Loader />;
 
   return (
@@ -82,7 +86,12 @@ const UserDetails = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            <Button onClick={handleNavigateToPublic} variant={"secondary"} className="">
+              Public Plans
+            </Button>
           </div>
+
         </div>
 
         {/* Profile Image */}
