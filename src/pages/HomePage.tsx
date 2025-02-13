@@ -32,7 +32,7 @@ const HomePage = () => {
               <div className="text-white">Loading...</div>
             ) : (
               data?.map((plan) => (
-                <WorkoutPlanCard planDetails={plan} key={plan.id} />
+                <WorkoutPlanCard key={plan.id} planDetails={plan}  />
               ))
             )}
           </div>

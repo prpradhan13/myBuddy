@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Loader from "./components/loaders/Loader";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const RegisterLayout = lazy(() => import("./layouts/RegisterLayout"));
 const RegisterPage = lazy(() => import("./pages/authPage/RegisterPage"));
@@ -58,6 +59,7 @@ function App() {
           </Routes>
         </Suspense>
       </BrowserRouter>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

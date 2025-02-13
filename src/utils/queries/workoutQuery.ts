@@ -65,9 +65,11 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
 
 export const useCreateWorkoutPlan = (
   setOpenCreateForm: Dispatch<SetStateAction<boolean>>,
+  { limit, offset }: WorkoutQueryParams = {}
 ) => {
   const { user } = useAuth();
   const userId = user?.id;
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ planFormData }: { planFormData: CreatePlanType }) => {
@@ -85,9 +87,9 @@ export const useCreateWorkoutPlan = (
         .select("*")
         .single();
 
-      if (error) {
-        toast.error(error.message || "Error while inserting workout");
-        return;
+      if (error || !workoutPlan) {
+        toast.error(error?.message || "Error while inserting workout");
+        throw new Error(error?.message || "Workout plan creation failed");
       }
 
       // Step 2: Create Days Entry
@@ -112,7 +114,7 @@ export const useCreateWorkoutPlan = (
 
       if (daysError || !workoutDayIds) {
         toast.error(daysError?.message || "Error while inserting workoutDay");
-        return;
+        throw new Error(daysError?.message || "Workout days creation failed");
       }
 
       // Step 3: Link workoutplan and workoutday
@@ -127,11 +129,22 @@ export const useCreateWorkoutPlan = (
 
       if (joinError) {
         toast.error(joinError.message || "Error while joining");
-        return;
+        throw new Error(
+          joinError.message || "Error linking workout plan and days"
+        );
       }
+
+      return { workoutPlan };
     },
-    onSuccess: () => {
-      window.location.reload();
+    onSuccess: ({ workoutPlan }: { workoutPlan: WorkoutPlansType }) => {
+      queryClient.setQueryData(
+        [`workoutPlans_${userId}_${limit}_${offset}`],
+        (oldData: WorkoutPlansType[] | undefined) => {
+          if (!oldData) return [workoutPlan];
+          return [{ ...workoutPlan }, ...oldData];
+        }
+      );
+
       toast.success("New Workout plan Created");
       setOpenCreateForm(false);
     },
@@ -140,7 +153,12 @@ export const useCreateWorkoutPlan = (
 
 export const useDeletePlan = (
   planId: number,
+  limit?: number,
+  offset?: number
 ) => {
+  const { user } = useAuth();
+  const userId = user?.id;
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
@@ -171,7 +189,14 @@ export const useDeletePlan = (
       if (deletePlanError) throw new Error(deletePlanError.message);
     },
     onSuccess: () => {
-      window.location.reload();
+      queryClient.setQueryData(
+        [`workoutPlans_${userId}_${limit}_${offset}`],
+        (oldData: WorkoutPlansType[] | undefined) => {
+          if (!oldData) return undefined;
+          const updatedData = oldData.filter((old) => old.id !== planId);
+          return updatedData;
+        }
+      );
       toast.success("Deleted Plan Successfully");
     },
     onError: (error) => {
@@ -249,10 +274,14 @@ export const useAddNewWeek = (planId: number) => {
   });
 };
 
-export const useTogglePlanVisibility = (planId: number) => {
+export const useTogglePlanVisibility = (planId: number, {limit = 5, offset}: WorkoutQueryParams) => {
+  const { user } = useAuth();
+  const userId = user?.id;
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (newStatus: boolean) => {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("workoutplan")
         .update({ is_public: newStatus })
         .eq("id", planId)
@@ -260,15 +289,29 @@ export const useTogglePlanVisibility = (planId: number) => {
         .single();
 
       if (error) throw new Error(error.message);
+
+      return { updatedPlan: data };
     },
-    onSuccess: () => {
-      window.location.reload();
+    onSuccess: ({ updatedPlan }: {updatedPlan: WorkoutPlansType}) => {
+      queryClient.setQueryData(
+        [`workoutPlans_${userId}_${limit}_${offset}`],
+        (oldData: WorkoutPlansType[] | undefined) => {
+          if (!oldData) return undefined;
+
+          return oldData.map((plan) =>
+            plan.id === planId ? { ...plan, is_public: updatedPlan.is_public } : plan
+          );
+        }
+      );
       toast.success("Visibility Updated Successfully");
     },
   });
 };
 
-export const useGetPublicPlans = ({ limit=5, offset=0 }: WorkoutQueryParams) => {
+export const useGetPublicPlans = ({
+  limit = 5,
+  offset = 0,
+}: WorkoutQueryParams) => {
   return useQuery({
     queryKey: ["public_plans", limit, offset],
     queryFn: async () => {
@@ -286,6 +329,6 @@ export const useGetPublicPlans = ({ limit=5, offset=0 }: WorkoutQueryParams) => 
       }
 
       return data || [];
-    }
-  })
-}
+    },
+  });
+};

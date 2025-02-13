@@ -46,7 +46,7 @@ const WorkoutPlanCard = ({
   planDetails: WorkoutPlansType;
 }) => {
   const [searchText, setSearchText] = useState("");
-  const { mutate, isPending } = useDeletePlan(planDetails.id);
+  const { mutate, isPending } = useDeletePlan(planDetails.id, 5);
 
   const debouncedSearch = useDebounce(searchText, 1000);
 
@@ -63,7 +63,7 @@ const WorkoutPlanCard = ({
     useCreateSharedPlan(planDetails.id);
 
   const { mutate: toggleVisibility, isPending: isToggling } =
-    useTogglePlanVisibility(planDetails.id);
+    useTogglePlanVisibility(planDetails.id, { limit: 5});
 
   const handleSharePlan = (userId: string) => {
     shareMutate(userId);
@@ -76,7 +76,7 @@ const WorkoutPlanCard = ({
           to={`/workoutPlanDetails/${planDetails.id}`}
           className="text-xl font-semibold capitalize text-[#ffffff]"
         >
-          {truncateText(planDetails.plan_name, 30)}
+          {truncateText(planDetails.plan_name ?? "", 30)}
         </Link>
 
         <DropdownMenu>

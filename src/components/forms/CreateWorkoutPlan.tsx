@@ -42,7 +42,7 @@ const CreateWorkoutPlan = ({
     };
   }, [openCreateForm]);
 
-  const { mutate, isPending } = useCreateWorkoutPlan(setOpenCreateForm);
+  const { mutate, isPending } = useCreateWorkoutPlan(setOpenCreateForm, {limit: 5});
 
   const handleCloseBtn = () => {
     setOpenCreateForm(false);
