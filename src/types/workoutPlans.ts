@@ -143,3 +143,18 @@ export type GetReviewDetailsType = {
   rating: number;
   review: string | null;
 }
+
+export type searchResultsType = {
+  id: number | string;
+  plan_name?: string;
+  description?: string;
+  is_public?: boolean;
+  difficulty_level?: string;
+  creator_id?: string;
+  created_at?: string;
+  avatar_url?: string;
+  bio?: string;
+  email?: string;
+  full_name?: string;
+  username?: string;
+}

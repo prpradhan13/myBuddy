@@ -5,6 +5,7 @@ export type UserProfileType = {
     email: string;
     bio: string | null;
     avatar_url: string | null;
+    stars: number;
 }
 
 export type UserProfileFormType = {

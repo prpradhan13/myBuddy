@@ -15,6 +15,7 @@ import CreateWorkoutPlan from "../forms/CreateWorkoutPlan";
 import { LogOut } from "lucide-react";
 import toast from "react-hot-toast";
 import { supabase } from "@/utils/supabase";
+import SearchSection from "../publicPlan/SearchSection";
 
 const UserDetails = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
@@ -48,10 +49,6 @@ const UserDetails = () => {
     localStorage.clear();
   };
 
-  const handleNavigateToPublic = () => {
-    navigate("/publicplan");
-  }
-
   if (isLoading) return <Loader />;
 
   return (
@@ -75,23 +72,27 @@ const UserDetails = () => {
                 <DropdownMenuItem onClick={handleEditBtnClick} className="">
                   Edit Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleCreatePlanBtnClick} className="">
+                <DropdownMenuItem
+                  onClick={handleCreatePlanBtnClick}
+                  className=""
+                >
                   Create Plan
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSharedBtnClick} className="">
                   Shared Plan
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout} className="text-red-500 hover:text-red-500">
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-red-500 hover:text-red-500"
+                >
                   Logout <LogOut color="#ef4444" />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button onClick={handleNavigateToPublic} variant={"secondary"} className="">
-              Public Plans
-            </Button>
+            
+            <SearchSection />
           </div>
-
         </div>
 
         {/* Profile Image */}

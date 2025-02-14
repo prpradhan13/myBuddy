@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Loader from "./components/loaders/Loader";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const RegisterLayout = lazy(() => import("./layouts/RegisterLayout"));
 const RegisterPage = lazy(() => import("./pages/authPage/RegisterPage"));
@@ -20,6 +19,7 @@ const AllWorkoutPlan = lazy(() => import("./pages/AllWorkoutPlan"));
 const SharedPlanDetails = lazy(() => import("./pages/SharedPlanDetails"));
 const RecipientAchivementsDetails = lazy(() => import("./pages/RecipientAchivements"));
 const PublicPlanPage = lazy(() => import("./pages/PublicPlanPage"));
+const ProfilePage = lazy(() => import("./pages/authPage/ProfilePage"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -55,11 +55,11 @@ function App() {
               <Route path="/sharedplandetails" element={<SharedPlanDetails />}/>
               <Route path="/recipientAchivementsDetails/:setId" element={<RecipientAchivementsDetails />}/>
               <Route path="/publicplan" element={<PublicPlanPage />}/>
+              <Route path="/profilePage/:profileId" element={<ProfilePage />}/>
             </Route>
           </Routes>
         </Suspense>
       </BrowserRouter>
-      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }
