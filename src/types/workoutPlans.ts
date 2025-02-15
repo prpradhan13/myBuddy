@@ -136,12 +136,11 @@ export type RecipientAchivementType = {
   created_at: string;
 };
 
-export type GetReviewDetailsType = {
+export type GetReviewStarType = {
   id: number;
-  plan_id: number;
-  reviewed_user: string;
   rating: number;
-  review: string | null;
+  reviewed_user: string;
+  review: string;
 }
 
 export type searchResultsType = {
@@ -158,3 +157,16 @@ export type searchResultsType = {
   full_name?: string;
   username?: string;
 }
+
+export type CommentType = {
+  created_at: string;
+  id: number;
+  parent_comment_id: number | null;
+  plan_id: number;
+  text: string;
+  user_id: string;
+}
+
+export type BuildCommentTreeType = CommentType & {
+  replies: BuildCommentTreeType[];
+};

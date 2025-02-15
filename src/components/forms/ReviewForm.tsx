@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/drawer";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import toast from "react-hot-toast";
-import { GetReviewDetailsType } from "@/types/workoutPlans";
+import { GetReviewStarType } from "@/types/workoutPlans";
 import Alert from "../extra/Alert";
 import { useAuth } from "@/context/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -41,7 +41,7 @@ const ReviewForm = memo(() => {
   const [star, setStar] = useState<number | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false);
-  const [userReview, setUserReview] = useState<GetReviewDetailsType | null>(
+  const [userReview, setUserReview] = useState<GetReviewStarType | null>(
     null
   );
   const navigate = useNavigate();
@@ -116,7 +116,7 @@ const ReviewForm = memo(() => {
 
   return (
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-      <DrawerTrigger className="bg-SecondaryBackgroundColor text-PrimaryTextColor text-sm p-2 rounded-md mt-2">
+      <DrawerTrigger className="bg-SecondaryBackgroundColor text-PrimaryTextColor text-sm p-2 rounded-md mt-2 ">
         Review
       </DrawerTrigger>
       {isLoading ? (

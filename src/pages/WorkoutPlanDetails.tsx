@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useAddNewWeek,
   useGetPlanWithDays,
@@ -20,6 +20,7 @@ const WorkoutPlanDetails = () => {
   const { planId } = useParams();
   const { planInfo, setPlanInfo, creatorOfPlan } = usePlan();
   const { isRecipient } = useRecipientPlan();
+  const navigate = useNavigate();
 
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
@@ -62,6 +63,10 @@ const WorkoutPlanDetails = () => {
     mutate();
   };
 
+  const handleOpenComment = () => {
+    navigate(`/comments/${planId}`)
+  }
+
   if (isLoading) return <WorkoutDayLoader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
@@ -84,8 +89,8 @@ const WorkoutPlanDetails = () => {
       {creatorOfPlan && (
         <Alert
           btnName="Add a week"
-          trigerBtnVarient={"link"}
-          triggerBtnClassName="text-blue-500 p-0"
+          trigerBtnVarient={"secondary"}
+          triggerBtnClassName="h-6 mt-2"
           pendingState={isPending}
           headLine="Are you want to add a new week?"
           descLine="This is add a new week in this plan."
@@ -94,8 +99,11 @@ const WorkoutPlanDetails = () => {
       )}
 
       {isRecipient && !creatorOfPlan && <ReviewForm />}
+      
+      <Button variant={"secondary"} onClick={handleOpenComment} className="mx-2 h-6">Comments</Button>
 
-      <h2 className="text-center text-lg text-PrimaryTextColor font-semibold">
+
+      <h2 className="text-center text-lg text-PrimaryTextColor font-semibold mt-4">
         Week {currentPage}
       </h2>
 

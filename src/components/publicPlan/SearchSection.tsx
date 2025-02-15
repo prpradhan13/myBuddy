@@ -46,14 +46,14 @@ const SearchSection = () => {
       <DrawerTrigger asChild>
         <Button variant="outline">Search</Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-SecondaryBackgroundColor border-none">
+      <DrawerContent className="bg-SecondaryBackgroundColor border-none h-[80%]">
         <DrawerHeader>
           <DrawerTitle className="text-PrimaryTextColor">Search</DrawerTitle>
           <DrawerDescription>Search creators, workout plans.</DrawerDescription>
         </DrawerHeader>
-        <div className="h-[85vh] p-4">
+        <div className="p-4">
           {/* Search bar */}
-          <form className="flex items-center border p-1 rounded-md">
+          <div className="flex items-center border p-1 rounded-md">
             <Search color="#fff" size={18} />
             <input
               type="text"
@@ -62,9 +62,9 @@ const SearchSection = () => {
               placeholder="Search anything..."
               className="bg-transparent w-full ml-2 text-PrimaryTextColor border-none outline-none"
             />
-          </form>
+          </div>
 
-          <div className="mt-2">
+          <div className="mt-3">
             <Button
               onClick={selectPlanBtn}
               className={`h-7 ${
@@ -90,7 +90,7 @@ const SearchSection = () => {
           {isFetching ? (
             <p>Loading...</p>
           ) : !searchResult ? (
-            <p className="text-SecondaryTextColor text-center">
+            <p className="text-SecondaryTextColor text-center mt-10">
               Search people, plans
             </p>
           ) : searchResult.length > 0 ? (
@@ -100,7 +100,11 @@ const SearchSection = () => {
                 className={`rounded-lg p-3 bg-[#3b3b3b] mt-4`}
               >
                 <Link
-                  to={selectedButton==="profiles" ? `/profilePage/${result.id}` : `/workoutPlanDetails/${result.id}`}
+                  to={
+                    selectedButton === "profiles"
+                      ? `/profilePage/${result.id}`
+                      : `/workoutPlanDetails/${result.id}`
+                  }
                   className={`${
                     selectedButton === "profiles"
                       ? "flex justify-between items-center"
@@ -114,7 +118,9 @@ const SearchSection = () => {
                     <Badge>{result.difficulty_level}</Badge>
                   )}
                   {result.description && (
-                    <p className="text-SecondaryTextColor">{truncateText(result.description, 50)}</p>
+                    <p className="text-SecondaryTextColor">
+                      {truncateText(result.description, 50)}
+                    </p>
                   )}
                   {selectedButton === "profiles" &&
                     (result.avatar_url ? (
