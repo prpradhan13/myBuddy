@@ -1,7 +1,7 @@
 import { ReactNode, useContext, createContext, useState, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthProvider";
 
-interface TSharedPlanInfo {
+export interface TSharedPlanInfo {
   recipientId?: string;
 }
 
@@ -24,11 +24,8 @@ export const SharedPlanProvider = ({ children }: { children: ReactNode }) => {
       return savedSharedPlan ? JSON.parse(savedSharedPlan) : {};
     }
   );
-  const [isRecipient, setIsRecipient] = useState(false);
 
-  useEffect(() => {
-    setIsRecipient(sharedPlanInfo.recipientId === user?.id)
-  }, [sharedPlanInfo.recipientId, user?.id])
+  const isRecipient = sharedPlanInfo.recipientId === user?.id;
 
   useEffect(() => {
     localStorage.setItem("sharedPlanInfo", JSON.stringify(sharedPlanInfo))

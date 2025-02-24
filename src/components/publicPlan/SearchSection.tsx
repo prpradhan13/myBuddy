@@ -42,7 +42,7 @@ const SearchSection = () => {
   };
 
   return (
-    <Drawer onOpenChange={setIsDrawerOpen}>
+    <Drawer onOpenChange={setIsDrawerOpen} >
       <DrawerTrigger asChild>
         <Button variant="outline">Search</Button>
       </DrawerTrigger>

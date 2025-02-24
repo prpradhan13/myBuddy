@@ -15,6 +15,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -39,6 +40,7 @@ import {
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { Badge } from "../ui/badge";
+import { Send } from "lucide-react";
 
 const WorkoutPlanCard = ({
   planDetails,
@@ -46,9 +48,10 @@ const WorkoutPlanCard = ({
   planDetails: WorkoutPlansType;
 }) => {
   const [searchText, setSearchText] = useState("");
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { mutate, isPending } = useDeletePlan(planDetails.id, 5);
 
-  const debouncedSearch = useDebounce(searchText, 1000);
+  const debouncedSearch = useDebounce(searchText, 500);
 
   const { data: searchData, isFetching } = useSearchUser(debouncedSearch);
   const { data: reviews } = useGetReviewDetails(planDetails.id);
@@ -63,7 +66,7 @@ const WorkoutPlanCard = ({
     useCreateSharedPlan(planDetails.id);
 
   const { mutate: toggleVisibility, isPending: isToggling } =
-    useTogglePlanVisibility(planDetails.id, { limit: 5});
+    useTogglePlanVisibility(planDetails.id, { limit: 5 });
 
   const handleSharePlan = (userId: string) => {
     shareMutate(userId);
@@ -103,84 +106,6 @@ const WorkoutPlanCard = ({
               </div>
             </DropdownMenuItem>
 
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="bg-transparent h-6 p-2 hover:bg-transparent"
-                >
-                  Share
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="bg-[#292929] text-PrimaryTextColor border-none rounded-l-xl">
-                <SheetHeader>
-                  <SheetTitle className="text-PrimaryTextColor">
-                    Search
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="mt-2">
-                  <Input
-                    id="username"
-                    placeholder="Search by username..."
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    className=""
-                  />
-                </div>
-
-                <div className="mt-3 flex flex-col gap-3">
-                  {isFetching ? (
-                    <p>Loading...</p>
-                  ) : !searchData ? (
-                    <p className="text-SecondaryTextColor text-center">
-                      Search People
-                    </p>
-                  ) : searchData.length > 0 ? (
-                    searchData.map((user) => (
-                      <div
-                        key={user.id}
-                        className="rounded-lg p-3 bg-SecondaryBackgroundColor flex justify-between items-center"
-                      >
-                        <div className="">
-                          <h1 className="text-base">{user.username}</h1>
-                          <h1 className="text-sm capitalize">
-                            {user.full_name}
-                          </h1>
-                          <Alert
-                            handleContinueBtn={() => handleSharePlan(user.id)}
-                            pendingState={shareIsPending}
-                            trigerBtnVarient={"ghost"}
-                            icon={MessageSquareShare}
-                            triggerBtnClassName="p-0 hover:bg-transparent"
-                            iconClassName="text-blue-500"
-                            headLine="Are you sure you want to share this plan?"
-                            descLine="You can remove shared user form this in future."
-                          />
-                        </div>
-                        <Avatar className="w-16 h-16">
-                          {user.avatar_url ? (
-                            <AvatarImage
-                              src={user.avatar_url}
-                              alt="profileImg"
-                              className="w-24 h-24"
-                            />
-                          ) : (
-                            <AvatarFallback className="bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] text-PrimaryTextColor">
-                              {getInitialLetter(user.full_name)}
-                            </AvatarFallback>
-                          )}
-                        </Avatar>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-SecondaryTextColor text-center">
-                      No User Found
-                    </p>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
-
             <Alert
               trigerBtnVarient="ghost"
               triggerBtnClassName="bg-transparent h-6 p-2 text-red-500 hover:text-red-500 hover:bg-transparent"
@@ -191,8 +116,94 @@ const WorkoutPlanCard = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Badge className="text-PrimaryTextColor self-start">{planDetails.is_public ? "Public" : "Private"}</Badge>
-      <p className="text-SecondaryTextColor text-sm">
+
+      <div className="flex gap-2 items-center">
+        <Badge
+          className={`text-black self-start ${
+            planDetails.is_public ? "bg-green-500" : "bg-blue-300"
+          }`}
+        >
+          {planDetails.is_public ? "Public" : "Private"}
+        </Badge>
+        <Sheet onOpenChange={() => setIsSheetOpen(false)}>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              className="bg-blue-500 text-white h-6 p-2 hover:bg-blue-500 rounded-full"
+            >
+              <Send />
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="bg-[#292929] text-PrimaryTextColor border-none rounded-l-xl">
+            <SheetHeader>
+              <SheetTitle className="text-PrimaryTextColor">Search</SheetTitle>
+              <SheetDescription className="text-SecondaryTextColor">
+                Search user to share this plan
+              </SheetDescription>
+            </SheetHeader>
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Search by username..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              autoFocus
+              className="text-white mt-2"
+            />
+
+            <div className="mt-3 flex flex-col gap-3">
+              {isFetching ? (
+                <p>Loading...</p>
+              ) : !searchData ? (
+                <p className="text-SecondaryTextColor text-center">
+                  Search People
+                </p>
+              ) : searchData.length > 0 ? (
+                searchData.map((user) => (
+                  <div
+                    key={user.id}
+                    className="rounded-lg p-3 bg-SecondaryBackgroundColor flex justify-between items-center"
+                  >
+                    <div className="">
+                      <h1 className="text-base">{user.username}</h1>
+                      <h1 className="text-sm capitalize">{user.full_name}</h1>
+                      <Alert
+                        handleContinueBtn={() => handleSharePlan(user.id)}
+                        pendingState={shareIsPending}
+                        trigerBtnVarient={"ghost"}
+                        icon={MessageSquareShare}
+                        triggerBtnClassName="p-0 hover:bg-transparent"
+                        iconClassName="text-blue-500"
+                        headLine="Are you sure you want to share this plan?"
+                        descLine="You can remove shared user form this in future."
+                      />
+                    </div>
+                    <Avatar className="w-16 h-16">
+                      {user.avatar_url ? (
+                        <AvatarImage
+                          src={user.avatar_url}
+                          alt="profileImg"
+                          className="w-24 h-24"
+                        />
+                      ) : (
+                        <AvatarFallback className="bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] text-PrimaryTextColor">
+                          {getInitialLetter(user.full_name)}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                  </div>
+                ))
+              ) : (
+                <p className="text-SecondaryTextColor text-center">
+                  No User Found
+                </p>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+      <p className="text-SecondaryTextColor text-sm mt-1">
         Created: {dayjs(planDetails.created_at).format("DD/MM/YY, dddd")}{" "}
       </p>
       <div className="flex items-center gap-3">
@@ -217,7 +228,6 @@ const WorkoutPlanCard = ({
           )}
         </div>
       </div>
-      <div className="mt-3 flex gap-2"></div>
     </div>
   );
 };

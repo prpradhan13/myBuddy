@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { calculateAverageRating, getInitialLetter } from "@/utils/helpingFunctions";
+import {
+  calculateAverageRating,
+  getInitialLetter,
+} from "@/utils/helpingFunctions";
 import dayjs from "dayjs";
 import { CalendarClock, Send, Star } from "lucide-react";
 import { useRecipientPlan } from "@/context/SharedPlanProvider";
@@ -29,15 +32,14 @@ const SharedPlanCard = ({
   const { isRecipient, sharedPlanInfo, setSharedPlanInfo } = useRecipientPlan();
 
   useEffect(() => {
-    if (recipientId) {
-      if (sharedPlanInfo.recipientId !== recipientId) {
-        setSharedPlanInfo({ recipientId });
-      }
+    if (recipientId && sharedPlanInfo.recipientId !== recipientId) {
+      setSharedPlanInfo({ recipientId });
     }
-  }, [recipientId, sharedPlanInfo.recipientId, setSharedPlanInfo]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { data: reviews } = useGetReviewDetails(workoutplanId);
-  const averageRating = calculateAverageRating(reviews)
+  const averageRating = calculateAverageRating(reviews);
 
   return (
     <div className="bg-SecondaryBackgroundColor mb-3 rounded-lg p-3">
@@ -48,16 +50,16 @@ const SharedPlanCard = ({
       </Link>
       <div className="flex mt-2">
         {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              size={16}
-              className={
-                index < averageRating
-                  ? "fill-yellow-500 text-yellow-500"
-                  : "text-gray-400"
-              }
-            />
-          ))}
+          <Star
+            key={index}
+            size={16}
+            className={
+              index < averageRating
+                ? "fill-yellow-500 text-yellow-500"
+                : "text-gray-400"
+            }
+          />
+        ))}
       </div>
       <div className="flex items-center gap-2 mt-2">
         {!isRecipient && (
