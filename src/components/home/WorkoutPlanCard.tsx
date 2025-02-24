@@ -125,11 +125,12 @@ const WorkoutPlanCard = ({
         >
           {planDetails.is_public ? "Public" : "Private"}
         </Badge>
-        <Sheet onOpenChange={() => setIsSheetOpen(false)}>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
             <Button
               variant="ghost"
               className="bg-blue-500 text-white h-6 p-2 hover:bg-blue-500 rounded-full"
+              onClick={() => setIsSheetOpen(true)}
             >
               <Send />
             </Button>
