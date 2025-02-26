@@ -1,21 +1,36 @@
 import WorkoutPlanCard from "@/components/home/WorkoutPlanCard";
 import Loader from "@/components/loaders/Loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
+import { WorkoutPlansType } from "@/types/workoutPlans";
 import { getInitialLetter } from "@/utils/helpingFunctions";
 import { getUserDetails } from "@/utils/queries/userProfileQuery";
-import { useUsersPublicPlans } from "@/utils/queries/workoutQuery";
+import { useOtherUsersAllPublicPlans } from "@/utils/queries/workoutQuery";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FixedSizeList as List } from "react-window";
 
 const ProfilePage = () => {
   const { profileId } = useParams();
   const { user } = useAuth();
 
+  const [page, setPage] = useState(1);
+  const limit = 5;
+
   const { data, isLoading: userDetailsLoading } = getUserDetails(profileId);
-  const { data: planData, isLoading: planLoad } = useUsersPublicPlans(
-    profileId!
+  const { data: newPlans, isLoading: planLoad } = useOtherUsersAllPublicPlans(
+    profileId!,
+    page,
+    limit
   );
+
+  const [planData, setPlanData] = useState<WorkoutPlansType[]>([]);
+
+  useEffect(() => {
+    if (newPlans) {
+      setPlanData((prev) => [...prev, ...newPlans]);
+    }
+  }, [newPlans]);
 
   if (userDetailsLoading) return <Loader />;
 
@@ -35,11 +50,14 @@ const ProfilePage = () => {
       <div className="flex justify-center flex-col items-center">
         {data?.avatar_url ? (
           <Avatar>
-            <AvatarImage src={data.avatar_url} className="h-24 w-24 rounded-full" />
+            <AvatarImage
+              src={data.avatar_url}
+              className="h-24 w-24 rounded-full"
+            />
             <AvatarFallback>{getInitialLetter(data.full_name)}</AvatarFallback>
           </Avatar>
         ) : (
-          <div className="h-24 w-24 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989]  rounded-full flex justify-center items-center text-PrimaryTextColor font-bold text-xl">
+          <div className="h-24 w-24 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-full flex justify-center items-center text-PrimaryTextColor font-bold text-xl">
             {getInitialLetter(data?.full_name)}
           </div>
         )}
@@ -51,29 +69,53 @@ const ProfilePage = () => {
         {data?.bio && (
           <p className="text-sm text-SecondaryTextColor">{data.bio}</p>
         )}
-        <p className="text-sm text-PrimaryTextColor font-medium">
-          Stars: {data?.stars}
-        </p>
       </div>
 
-      {planLoad ? (
-        <Loader />
-      ) : planData && planData.length > 0 ? (
-        <List
-          height={400}
-          itemCount={planData?.length || 0}
-          itemSize={120}
-          width="100%"
-        >
-          {({ index, style }) => (
-            <div style={style} className="mt-2">
-              <WorkoutPlanCard key={planData[index].id} planDetails={planData[index]} />
+      <div className="flex items-center mt-4 justify-between">
+        <h1 className="text-PrimaryTextColor text-lg font-medium">
+          Workout Plans
+        </h1>
+      </div>
+
+      <div>
+        {planLoad && page === 1 ? (
+          <Loader />
+        ) : planData && planData.length > 0 ? (
+          planData.map((plan, index) => (
+            <div key={index} className="mt-2">
+              <WorkoutPlanCard planDetails={plan} />
             </div>
-          )}
-        </List>
-      ) : (
-        <p className="text-SecondaryTextColor text-center">No Plans For Public</p>
+          ))
+        ) : (
+          <p className="text-SecondaryTextColor text-center">
+            No Plans For Public
+          </p>
+        )}
+      </div>
+
+      {newPlans && newPlans.length < limit && (
+        <p className="text-SecondaryTextColor font-medium text-center mt-4">
+          {" "}
+          No More Plans{" "}
+        </p>
       )}
+
+      <div className="flex justify-center">
+        {planData && planData.length >= limit ? (
+          <Button
+            variant={"secondary"}
+            onClick={() => setPage((prev) => prev + 1)}
+            className={`mt-4 px-4 py-2 rounded-lg ${
+              newPlans && newPlans.length < limit
+                ? "cursor-not-allowed opacity-70"
+                : ""
+            }`}
+            disabled={newPlans && newPlans.length < limit}
+          >
+            {planLoad ? "Loading..." : "Load More"}
+          </Button>
+        ) : null}
+      </div>
     </div>
   );
 };

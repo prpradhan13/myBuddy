@@ -15,11 +15,11 @@ const AllWorkoutPlan = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const { user } = useAuth();
   const { data, isLoading } = useGetUserWorkoutPlans(user?.id, {
-    limit: 10,
-    offset: currentPage * 10,
+    limit: 5,
+    offset: currentPage * 5,
   });
-
-  const isLastPage = !data || data.length < 10;
+  
+  const isLastPage = !data || data.length === 1;
   const isFirstPage = currentPage === 0;
 
   const handleNextBtn = () => {
@@ -56,7 +56,7 @@ const AllWorkoutPlan = () => {
           <PaginationItem>
             <PaginationNext
               onClick={isLastPage ? undefined : handleNextBtn}
-              className={`text-PrimaryTextColor hover:bg-transparent hover:text-PrimaryTextColor ${!data || data.length < 10 ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`text-PrimaryTextColor hover:bg-transparent hover:text-PrimaryTextColor ${!data || data.length < 5 ? "opacity-50 cursor-not-allowed" : ""}`}
             />
           </PaginationItem>
         </PaginationContent>

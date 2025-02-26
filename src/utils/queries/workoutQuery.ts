@@ -333,19 +333,27 @@ export const useGetPublicPlans = ({
   });
 };
 
-export const useUsersPublicPlans = (userId: string) => {
+export const useOtherUsersAllPublicPlans = (
+  userId: string,
+  page: number,
+  limit: number
+) => {
   return useQuery<WorkoutPlansType[]>({
-    queryKey: ["userPublicPlan", userId],
+    queryKey: ["userPublicPlan", userId, page],
     queryFn: async () => {
+      const from = (page - 1) * limit;
+      const to = from + limit - 1;
+
       const { data, error } = await supabase
         .from("workoutplan")
         .select("*")
         .eq("creator_id", userId)
-        .eq("is_public", true);
+        .eq("is_public", true)
+        .range(from, to);
 
       if (error) throw new Error(error.message);
 
       return data || [];
-    }
-  })
-}
+    },
+  });
+};

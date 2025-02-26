@@ -42,16 +42,16 @@ const SearchSection = () => {
   };
 
   return (
-    <Drawer onOpenChange={setIsDrawerOpen} >
+    <Drawer onOpenChange={setIsDrawerOpen}>
       <DrawerTrigger asChild>
         <Button variant="outline">Search</Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-SecondaryBackgroundColor border-none h-[80%]">
+      <DrawerContent className="bg-SecondaryBackgroundColor border-none min-h-[60vh]">
         <DrawerHeader>
           <DrawerTitle className="text-PrimaryTextColor">Search</DrawerTitle>
           <DrawerDescription>Search creators, workout plans.</DrawerDescription>
         </DrawerHeader>
-        <div className="p-4">
+        <div className="p-4 overflow-y-auto">
           {/* Search bar */}
           <div className="flex items-center border p-1 rounded-md">
             <Search color="#fff" size={18} />

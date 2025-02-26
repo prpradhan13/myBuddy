@@ -17,6 +17,7 @@ import ReviewForm from "@/components/forms/ReviewForm";
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
+  
   const { planId } = useParams();
   const { planInfo, setPlanInfo, creatorOfPlan } = usePlan();
   const { isRecipient } = useRecipientPlan();
