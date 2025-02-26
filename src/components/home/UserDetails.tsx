@@ -16,7 +16,7 @@ import { LogOut } from "lucide-react";
 import toast from "react-hot-toast";
 import { supabase } from "@/utils/supabase";
 import SearchSection from "../publicPlan/SearchSection";
-import { BookUser, Flame } from "lucide-react";
+import { BookUser } from "lucide-react";
 
 const UserDetails = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
@@ -78,11 +78,6 @@ const UserDetails = () => {
               />
             )}
           </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Flame color="#ef4444" size={20} />
-          <p className="text-PrimaryTextColor font-medium">Popularity {data?.stars} </p>
         </div>
 
         {data?.bio && (
