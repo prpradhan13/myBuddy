@@ -44,7 +44,6 @@ const AllWorkoutPlan = () => {
           <WorkoutPlanCard planDetails={item} key={item.id} />
         ))}
       </div>
-
       <Pagination className="mt-4">
         <PaginationContent className="w-full flex justify-between">
           <PaginationItem>
