@@ -39,14 +39,14 @@ const AllWorkoutPlan = () => {
   return (
     <div className="bg-MainBackgroundColor w-full min-h-screen p-4 font-poppins relative">
       <h1 className="text-PrimaryTextColor text-xl font-semibold">All Plans</h1>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="min-h-screen mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {data?.map((item) => (
           <WorkoutPlanCard planDetails={item} key={item.id} />
         ))}
       </div>
 
-      <Pagination className="absolute bottom-3 left-0 right-0">
-        <PaginationContent className="mt-4 w-full flex justify-between">
+      <Pagination className="mt-4">
+        <PaginationContent className="w-full flex justify-between">
           <PaginationItem>
             <PaginationPrevious
               onClick={isFirstPage ? undefined : handlePreviousBtn}
