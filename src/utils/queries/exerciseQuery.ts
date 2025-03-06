@@ -62,7 +62,7 @@ export const useCreateExerciseSets = (exerciseId: number) => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: `exercise_${exerciseId}` });
+      queryClient.invalidateQueries({ queryKey: [`exercise_${exerciseId}`] });
       toast.success("New Sets Created");
       navigate(-1);
     },
@@ -146,7 +146,7 @@ export const useRemoveSet = (exerciseId: number) => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: `exercise_${exerciseId}` });
+      queryClient.invalidateQueries({ queryKey: [`exercise_${exerciseId}`] });
       toast.success("Exercise set deleted");
       navigate(-1);
     },
