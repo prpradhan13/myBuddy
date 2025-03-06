@@ -55,7 +55,7 @@ const AllWorkoutPlan = () => {
         <h1 className="text-SecondaryTextColor text-center mt-10">No Plans Go Back</h1>
       )}
 
-      <Pagination className="mt-4 absolute left-0 right-0 bottom-0">
+      <Pagination className="mt-4">
         <PaginationContent className="w-full flex justify-between">
           <PaginationItem>
             <PaginationPrevious

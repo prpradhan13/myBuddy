@@ -13,17 +13,15 @@ const WorkoutExerciseCard = ({
   dayId: number | undefined;
 }) => {
   const { creatorOfPlan } = usePlan();
-  const { mutate, isPending } = useDeleteExercise(exerciseDetails.id, dayId!)
+  const { mutate, isPending } = useDeleteExercise(exerciseDetails.id, dayId!);
 
   const handleRemoveExercise = () => {
-    mutate()
-  }
+    mutate();
+  };
 
   return (
     <div className="bg-SecondaryBackgroundColor p-4 rounded-md">
-      <Link
-        to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}
-      >
+      <Link to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}>
         <h1 className="text-[#fca311] text-lg capitalize font-semibold">
           {" "}
           {exerciseDetails.exercise_name}{" "}
@@ -45,7 +43,13 @@ const WorkoutExerciseCard = ({
       )}
 
       {creatorOfPlan && (
-        <Alert btnName="Remove" triggerBtnClassName="mt-2" trigerBtnVarient={"destructive"} handleContinueBtn={handleRemoveExercise} pendingState={isPending} />
+        <Alert
+          btnName="Remove"
+          triggerBtnClassName="mt-2 h-6"
+          trigerBtnVarient={"destructive"}
+          handleContinueBtn={handleRemoveExercise}
+          pendingState={isPending}
+        />
       )}
     </div>
   );
