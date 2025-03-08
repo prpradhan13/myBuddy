@@ -23,6 +23,11 @@ export type WorkoutPlanWithDaysType = {
   plan_description: string | null;
   plan_difficulty: string;
   creator_id: string;
+  creator: {
+    full_name: string,
+    username: string,
+    avatar_url: string | null;
+  };
   workoutdays: WorkoutDayType[] | null;
   created_at: string | null;
 };

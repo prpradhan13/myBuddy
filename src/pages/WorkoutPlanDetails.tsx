@@ -13,11 +13,12 @@ import Alert from "@/components/extra/Alert";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import { useRecipientPlan } from "@/context/SharedPlanProvider";
 import ReviewForm from "@/components/forms/ReviewForm";
+import { getInitialLetter } from "@/utils/helpingFunctions";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
-  
+
   const { planId } = useParams();
   const { planInfo, setPlanInfo, creatorOfPlan } = usePlan();
   const { isRecipient } = useRecipientPlan();
@@ -26,7 +27,8 @@ const WorkoutPlanDetails = () => {
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
   );
-
+  const initialLetterOfName = getInitialLetter(data?.creator.full_name);
+  
   useEffect(() => {
     if (data?.workoutplan_id && data?.creator_id) {
       if (
@@ -65,8 +67,8 @@ const WorkoutPlanDetails = () => {
   };
 
   const handleOpenComment = () => {
-    navigate(`/comments/${planId}`)
-  }
+    navigate(`/comments/${planId}`);
+  };
 
   if (isLoading) return <WorkoutDayLoader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
@@ -79,6 +81,22 @@ const WorkoutPlanDetails = () => {
       <h2 className="text-base text-SecondaryTextColor capitalize">
         {data?.plan_difficulty}, {totalPages} week plan
       </h2>
+      <div className="flex items-center gap-2 my-2">
+        <div className="h-8 w-8 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989]  rounded-full flex justify-center items-center">
+          {!data?.creator.avatar_url ? (
+            <p className="text-PrimaryTextColor font-bold text-sm">{initialLetterOfName}</p>
+          ) : (
+            <img
+              src={data?.creator.avatar_url}
+              alt="Image Preview"
+              className="h-full w-full object-cover rounded-full"
+            />
+          )}
+        </div>
+        <h2 className="text-base text-SecondaryTextColor">
+          {data?.creator.username}
+        </h2>
+      </div>
 
       {data?.plan_description && (
         <div className="text-SecondaryTextColor">
@@ -100,9 +118,14 @@ const WorkoutPlanDetails = () => {
       )}
 
       {isRecipient && !creatorOfPlan && <ReviewForm />}
-      
-      <Button variant={"secondary"} onClick={handleOpenComment} className="mx-2 h-6">Comments</Button>
 
+      <Button
+        variant={"secondary"}
+        onClick={handleOpenComment}
+        className="mx-2 h-6"
+      >
+        Comments
+      </Button>
 
       <h2 className="text-center text-lg text-PrimaryTextColor font-semibold mt-4">
         Week {currentPage}
@@ -117,7 +140,6 @@ const WorkoutPlanDetails = () => {
               key={day.id}
             />
           ))}
-
         </div>
       ) : (
         <div className="h-96 flex justify-center items-center">

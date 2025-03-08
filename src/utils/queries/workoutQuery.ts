@@ -49,7 +49,7 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("workoutplan_with_days")
-        .select("*")
+        .select("*, creator: creator_id(full_name, username, avatar_url)")
         .eq("workoutplan_id", workoutPlanId)
         .single();
 

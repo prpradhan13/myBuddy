@@ -111,11 +111,11 @@ const SearchSection = () => {
                       : ""
                   }`}
                 >
-                  <h1 className="text-lg font-medium text-PrimaryTextColor ">
+                  <h1 className="text-lg font-medium text-PrimaryTextColor capitalize">
                     {result.plan_name || result.full_name}
                   </h1>
                   {result.difficulty_level && (
-                    <Badge>{result.difficulty_level}</Badge>
+                    <Badge className="capitalize">{result.difficulty_level}</Badge>
                   )}
                   {result.description && (
                     <p className="text-SecondaryTextColor">

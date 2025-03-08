@@ -42,7 +42,9 @@ const CreateWorkoutPlan = ({
     };
   }, [openCreateForm]);
 
-  const { mutate, isPending } = useCreateWorkoutPlan(setOpenCreateForm, {limit: 5});
+  const { mutate, isPending } = useCreateWorkoutPlan(setOpenCreateForm, {
+    limit: 5,
+  });
 
   const handleCloseBtn = () => {
     setOpenCreateForm(false);
@@ -50,10 +52,10 @@ const CreateWorkoutPlan = ({
 
   const onSubmit = (data: TCreateWorkout) => {
     mutate({
-        planFormData: {
-            ...data,
-            description: data.description ?? null,
-        }
+      planFormData: {
+        ...data,
+        description: data.description ?? null,
+      },
     });
 
     form.reset();
@@ -142,7 +144,12 @@ const CreateWorkoutPlan = ({
                     type="number"
                     {...field}
                     className="text-PrimaryTextColor w-[70px]"
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    onChange={(e) => {
+                      // Handle empty string case explicitly
+                      const value =
+                        e.target.value === "" ? "" : Number(e.target.value);
+                      field.onChange(value);
+                    }}
                     value={field.value ?? ""}
                   />
                 </FormControl>

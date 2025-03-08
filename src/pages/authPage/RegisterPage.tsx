@@ -67,7 +67,7 @@ const RegisterPage = () => {
                       placeholder="name@mail.com"
                       autoCapitalize="none"
                       {...field}
-                      className="text-white placeholder:text-[#c2c2c2] border-none p-0 focus-visible:ring-0"
+                      className="text-white placeholder:text-[#c2c2c2] border-none p-0 focus-visible:ring-0 overflow-hidden"
                     />
                   </div>
                 </FormControl>
