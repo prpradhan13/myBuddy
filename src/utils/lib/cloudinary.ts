@@ -30,7 +30,7 @@ export const openCloudinaryUploadWidget = (
       showAdvancedOptions: true, // ✅ Enable advanced options (like trimming)
       cropping: false,
       maxFileSize: 100000000,
-      maxDuration: 16,
+      maxDuration: 30,
     },
     (error: unknown, result: unknown) => {
       if (error && error instanceof Error) {
