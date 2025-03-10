@@ -4,6 +4,10 @@ import { truncateText } from "../../utils/helpingFunctions";
 import Alert from "../extra/Alert";
 import { useDeleteExercise } from "@/utils/queries/exerciseQuery";
 import { usePlan } from "@/context/WorkoutPlanProvider";
+import { Button } from "../ui/button";
+import { useAddExerciseVisual, useHasExerciseVisual } from "@/utils/queries/exerciseVisuals";
+import { openCloudinaryUploadWidget } from "@/utils/lib/cloudinary";
+import { useNavigate } from 'react-router-dom'
 
 const WorkoutExerciseCard = ({
   exerciseDetails,
@@ -14,9 +18,24 @@ const WorkoutExerciseCard = ({
 }) => {
   const { creatorOfPlan } = usePlan();
   const { mutate, isPending } = useDeleteExercise(exerciseDetails.id, dayId!);
+  const navigate = useNavigate();
+
+  const { data: hasVisuals, isLoading: isCheckingVisuals } =
+    useHasExerciseVisual(exerciseDetails.id);
 
   const handleRemoveExercise = () => {
     mutate();
+  };
+
+  const { mutate: addVisual, isPending: isUploading } = useAddExerciseVisual();
+
+  const handleUploadVisual = () => {
+    openCloudinaryUploadWidget((publicId) => {
+      addVisual(
+        { exerciseId: exerciseDetails.id, videoUrl: publicId },
+        { onSuccess: () => navigate(-1) }
+      );
+    });
   };
 
   return (
@@ -27,6 +46,7 @@ const WorkoutExerciseCard = ({
           {exerciseDetails.exercise_name}{" "}
         </h1>
       </Link>
+
       <h1 className="text-PrimaryTextColor text-[1rem] capitalize font-medium">
         {" "}
         {exerciseDetails.target_muscle}{" "}
@@ -41,6 +61,19 @@ const WorkoutExerciseCard = ({
           {truncateText(exerciseDetails.description, 40)}{" "}
         </p>
       )}
+      {isCheckingVisuals ? (
+        <p>Loading...</p>
+      ) : hasVisuals ? (
+        <Link to={`/exerciseVisuals/${exerciseDetails.id}`}>
+          <Button variant={"secondary"} className="h-6 mr-3">
+            Visuals
+          </Button>
+        </Link>
+      ) : creatorOfPlan ? (
+        <Button onClick={handleUploadVisual} variant={"outline"} className="h-6 mr-3">
+          {isUploading ? "Uploading..." : "Add Visual"}
+        </Button>
+      ) : ("")}
 
       {creatorOfPlan && (
         <Alert

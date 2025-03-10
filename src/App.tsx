@@ -21,6 +21,7 @@ const RecipientAchivementsDetails = lazy(() => import("./pages/RecipientAchiveme
 const PublicPlanPage = lazy(() => import("./pages/PublicPlanPage"));
 const ProfilePage = lazy(() => import("./pages/authPage/ProfilePage"));
 const CommentsPage = lazy(() => import("./pages/CommentPage"));
+const ExerciseVisuals = lazy(() => import("./pages/ExerciseVisuals"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -58,6 +59,7 @@ function App() {
               <Route path="/publicplan" element={<PublicPlanPage />}/>
               <Route path="/profilePage/:profileId" element={<ProfilePage />}/>
               <Route path="/comments/:planId" element={<CommentsPage />}/>
+              <Route path="/exerciseVisuals/:exerciseId" element={<ExerciseVisuals />}/>
             </Route>
           </Routes>
         </Suspense>

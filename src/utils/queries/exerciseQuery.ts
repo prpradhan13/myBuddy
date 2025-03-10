@@ -69,7 +69,10 @@ export const useCreateExerciseSets = (exerciseId: number) => {
   });
 };
 
-export const useAddExercises = (workoutdayId: number, setOpenAddExerciseForm: Dispatch<SetStateAction<boolean>>) => {
+export const useAddExercises = (
+  workoutdayId: number,
+  setOpenAddExerciseForm: Dispatch<SetStateAction<boolean>>
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -111,7 +114,9 @@ export const useAddExercises = (workoutdayId: number, setOpenAddExerciseForm: Di
         (oldData: WorkoutDayWithExerciseType | undefined) => {
           if (!oldData) return undefined;
 
-          const updatedExercises = oldData.dayexercises ? [...oldData.dayexercises, ...data] : data
+          const updatedExercises = oldData.dayexercises
+            ? [...oldData.dayexercises, ...data]
+            : data;
 
           return {
             ...oldData,
@@ -131,7 +136,7 @@ export const useRemoveSet = (exerciseId: number) => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: async ({ setId }: {setId: number}) => {
+    mutationFn: async ({ setId }: { setId: number }) => {
       const { data, error } = await supabase
         .from("exercise_set")
         .delete()
@@ -156,22 +161,14 @@ export const useRemoveSet = (exerciseId: number) => {
   });
 };
 
-export const useUpdateAchives = (
-  exerciseId: number,
-  setId: number,
-) => {
+export const useUpdateAchives = (exerciseId: number, setId: number) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: async ({
-      formData,
-    }: {
-      formData: TAchiveSchema;
-    }) => {
-
-      const currentDateTime = new Date().toISOString()
-      const sendingData = {...formData, achive_date_time: currentDateTime}
+    mutationFn: async ({ formData }: { formData: TAchiveSchema }) => {
+      const currentDateTime = new Date().toISOString();
+      const sendingData = { ...formData, achive_date_time: currentDateTime };
 
       const { error } = await supabase
         .from("exercise_set")
@@ -185,7 +182,7 @@ export const useUpdateAchives = (
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`exercise_${exerciseId}`]});
+      queryClient.invalidateQueries({ queryKey: [`exercise_${exerciseId}`] });
       toast.success("Update Success");
       navigate(-1);
     },
@@ -203,12 +200,12 @@ export const useDeleteExercise = (exerciseId: number, workoutDayId: number) => {
       const { error } = await supabase
         .from("exercise")
         .delete()
-        .eq("id", exerciseId)
+        .eq("id", exerciseId);
 
-        if (error) {
-          toast.error(error.message || "Failed to delete exercise");
-          throw new Error(error.message);
-        }
+      if (error) {
+        toast.error(error.message || "Failed to delete exercise");
+        throw new Error(error.message);
+      }
     },
     onSuccess: () => {
       queryClient.setQueryData(
@@ -216,9 +213,10 @@ export const useDeleteExercise = (exerciseId: number, workoutDayId: number) => {
         (oldData: WorkoutDayWithExerciseType | undefined) => {
           if (!oldData) return undefined;
 
-          const updatedExercises = oldData.dayexercises?.filter(
-            (exercise) => exercise.id !== exerciseId
-          ) || [];
+          const updatedExercises =
+            oldData.dayexercises?.filter(
+              (exercise) => exercise.id !== exerciseId
+            ) || [];
 
           return {
             ...oldData,
@@ -230,6 +228,6 @@ export const useDeleteExercise = (exerciseId: number, workoutDayId: number) => {
     },
     onError: (error) => {
       toast.error(error.message || "Failed to delete exercise");
-    }
-  })
-}
+    },
+  });
+};
