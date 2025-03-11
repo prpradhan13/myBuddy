@@ -16,7 +16,6 @@ import { LogOut } from "lucide-react";
 import toast from "react-hot-toast";
 import { supabase } from "@/utils/supabase";
 import SearchSection from "../publicPlan/SearchSection";
-import { BookUser } from "lucide-react";
 
 const UserDetails = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
@@ -85,9 +84,10 @@ const UserDetails = () => {
         </div>
 
         {data?.bio && (
-          <div className=" flex items-center gap-2 mt-1">
-            <BookUser color="#fff" size={18} />
-            <p className="text-SecondaryTextColor text-sm">{data.bio}</p>
+          <div className="mt-2">
+            <h2 className="text-white font-semibold">About me</h2>
+            <div className="bg-[#fff] h-1 w-10 rounded-full"></div>
+            <p className="text-SecondaryTextColor text-sm mt-2 whitespace-pre-line">{data.bio}</p>
           </div>
         )}
 
