@@ -46,7 +46,7 @@ const SearchSection = () => {
       <DrawerTrigger asChild>
         <Button variant="outline">Search</Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-SecondaryBackgroundColor border-none min-h-[60vh]">
+      <DrawerContent className="bg-SecondaryBackgroundColor border-none min-h-[50vh]">
         <DrawerHeader>
           <DrawerTitle className="text-PrimaryTextColor">Search</DrawerTitle>
           <DrawerDescription>Search creators, workout plans.</DrawerDescription>

@@ -6,6 +6,7 @@ export type WorkoutPlansType = {
   description: string | null;
   created_at: string | null;
   is_public: boolean;
+  image_content: string | null;
 };
 
 export type WorkoutDayType = {

@@ -24,7 +24,7 @@ const ExerciseVisuals = () => {
   }
 
   return (
-    <div className="w-full h-screen relative scrollbar-hidden-y">
+    <div className="w-full h-screen relative">
       <div className="fixed inset-0 -z-10">
         <AdvancedVideo
           cldVid={myVideo}
@@ -36,7 +36,7 @@ const ExerciseVisuals = () => {
       </div>
 
       {/* Scrollable Text Content */}
-      <div className="absolute top-0 left-0 overflow-y-auto text-white">
+      <div className="w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y">
         <div className="bg-transparent h-[60vh]"></div>
         <div className="w-full bg-gradient-to-t from-black to-transparent p-6">
           <h1 className="text-4xl font-bold">{exerciseWithSets?.exercise_name}</h1>

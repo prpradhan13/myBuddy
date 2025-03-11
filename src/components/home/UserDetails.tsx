@@ -41,6 +41,10 @@ const UserDetails = () => {
     navigate("/sharedplandetails");
   };
 
+  const handleExploreBtnClick = () => {
+    navigate("/publicplan");
+  };
+
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -112,6 +116,10 @@ const UserDetails = () => {
           </DropdownMenu>
 
           <SearchSection />
+
+          <Button variant={"secondary"} onClick={handleExploreBtnClick}>
+            Explore Plans
+          </Button>
         </div>
       </div>
 
