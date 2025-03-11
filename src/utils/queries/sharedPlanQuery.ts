@@ -30,7 +30,7 @@ export const useGetSharedPlan = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("workoutplan_shared")
-        .select("*, workoutplan:workoutplan_id (plan_name, creator_id), profiles:user_id (full_name, username, email, avatar_url)")
+        .select("*, workoutplan:workoutplan_id (plan_name, creator_id, image_content), profiles:user_id (full_name, username, email, avatar_url)")
         .eq("user_id", currentUserId)
         .order("created_at", { ascending: false });
 
@@ -97,7 +97,7 @@ export const useSendedPlan = () => {
     queryFn: async () => {
        const { data, error } = await supabase
         .from("workoutplan_shared")
-        .select("*, workoutplan:workoutplan_id (plan_name), profiles:user_id (full_name, username, email, avatar_url)")
+        .select("*, workoutplan:workoutplan_id (plan_name, image_content), profiles:user_id (full_name, username, email, avatar_url)")
         .eq("sender_id", currentUserId)
         .order("created_at", { ascending: false });
 

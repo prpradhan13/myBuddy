@@ -56,6 +56,7 @@ const SharedPlanDetails = () => {
                   workoutplanId={item.workoutplan_id}
                   workoutplanName={item.workoutplan.plan_name}
                   recipientId={item.user_id}
+                  plan_image={item.workoutplan.image_content}
                 />
               ))
             ) : (
@@ -78,6 +79,7 @@ const SharedPlanDetails = () => {
                   workoutplanName={sendPlan.workoutplan.plan_name}
                   userFullname={sendPlan.profiles.full_name}
                   recipientId={sendPlan.user_id}
+                  plan_image={sendPlan.workoutplan.image_content}
                 />
               ))
             ) : (

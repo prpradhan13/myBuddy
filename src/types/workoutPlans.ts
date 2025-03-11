@@ -114,6 +114,7 @@ export type SendedPlanType = {
   user_id: string; // This userId is shared with whom
   workoutplan: {
     plan_name: string;
+    image_content: string | null;
   };
   profiles: {
     full_name: string;
