@@ -12,7 +12,7 @@ const WorkoutDayDetails = () => {
   const [openAddExerciseForm, setOpenAddExerciseForm] = useState(false);
   const { dayId } = useParams();
   const { creatorOfPlan, planInfo, setPlanInfo } = usePlan();
-  
+
   const { data, isLoading, isError, error } = useGetWorkoutDay(Number(dayId));
   const validDayId = Number(dayId);
 
@@ -35,22 +35,23 @@ const WorkoutDayDetails = () => {
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-montserrat">
       <div className="">
+        <h2 className=" text-sm font-medium text-SecondaryTextColor capitalize">
+          {data?.day_name}, {data?.day_difficulty}
+        </h2>
         <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
           {data?.workout_name}
         </h1>
-        <h2 className=" text-base text-SecondaryTextColor capitalize">
-          {data?.day_name}, {data?.day_difficulty}
-        </h2>
       </div>
       {data?.day_description && (
-        <div className="text-SecondaryTextColor">
-          <p className="font-semibold">Tips:</p>
-          <p className="text-sm leading-5 whitespace-pre-line">{data.day_description}</p>
+        <div className="text-SecondaryTextColor my-2">
+          <p className="text-sm leading-5 whitespace-pre-line font-medium">
+            {data.day_description}
+          </p>
         </div>
       )}
 
       {creatorOfPlan && (
-        <Button onClick={handleClickAddBtn} variant="outline" className="mt-2">
+        <Button onClick={handleClickAddBtn} variant={"secondary"} className="mb-2 rounded-full bg-white px-4 flex">
           Add Exercise
         </Button>
       )}

@@ -133,38 +133,34 @@ const WorkoutDayCard = ({
                   {truncateText(dayDetails.workout_name!, 25)}
                 </h1>
               </Link>
-              {creatorOfPlan && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <EllipsisVertical color="#fff" size={20} />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={handleEditClick}
-                      className="font-medium"
-                    >
-                      Edit
-                    </DropdownMenuItem>
-                    <Alert
-                      trigerBtnVarient={"ghost"}
-                      btnName="Rest Day"
-                      triggerBtnClassName="hover:bg-transparent px-2"
-                      handleContinueBtn={handleToggleRestDay}
-                      headLine="Are you absolutely sure make this Rest day?"
-                      descLine="Don't worry you can change this."
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                {creatorOfPlan && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <EllipsisVertical color="#fff" size={20} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={handleEditClick}
+                        className="font-medium"
+                      >
+                        Edit
+                      </DropdownMenuItem>
+                      <Alert
+                        trigerBtnVarient={"ghost"}
+                        btnName="Rest Day"
+                        triggerBtnClassName="hover:bg-transparent px-2"
+                        handleContinueBtn={handleToggleRestDay}
+                        headLine="Are you absolutely sure make this Rest day?"
+                        descLine="Don't worry you can change this."
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
             </div>
-            <h1 className="text-SecondaryTextColor font-medium text-lg capitalize">
+
+            <h1 className="text-SecondaryTextColor font-medium mt-1 capitalize">
               {dayDetails.difficulty_level}
             </h1>
-            {dayDetails.description && (
-              <p className="text-SecondaryTextColor text-sm">
-                {truncateText(dayDetails.description, 35)}
-              </p>
-            )}
           </div>
         </div>
       )}

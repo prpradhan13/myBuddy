@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { ExerciseType } from "../../types/workoutPlans";
-import { truncateText } from "../../utils/helpingFunctions";
 import Alert from "../extra/Alert";
 import { useDeleteExercise } from "@/utils/queries/exerciseQuery";
 import { usePlan } from "@/context/WorkoutPlanProvider";
@@ -8,6 +7,7 @@ import { Button } from "../ui/button";
 import { useAddExerciseVisual, useHasExerciseVisual } from "@/utils/queries/exerciseVisuals";
 import { openCloudinaryUploadWidget } from "@/utils/lib/cloudinary";
 import { useNavigate } from 'react-router-dom'
+import { Play } from 'lucide-react';
 
 const WorkoutExerciseCard = ({
   exerciseDetails,
@@ -39,51 +39,45 @@ const WorkoutExerciseCard = ({
   };
 
   return (
-    <div className="bg-SecondaryBackgroundColor p-4 rounded-md">
-      <Link to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}>
-        <h1 className="text-[#fca311] text-lg capitalize font-semibold">
-          {" "}
-          {exerciseDetails.exercise_name}{" "}
-        </h1>
-      </Link>
-
-      <h1 className="text-PrimaryTextColor text-[1rem] capitalize font-medium">
-        {" "}
-        {exerciseDetails.target_muscle}{" "}
-      </h1>
-      <h1 className="text-PrimaryTextColor text-[0.9rem]">
-        {" "}
-        Rest After Set: {exerciseDetails.rest}{" "}
-      </h1>
-      {exerciseDetails.description && (
-        <p className="text-SecondaryTextColor text-sm">
-          {" "}
-          {truncateText(exerciseDetails.description, 40)}{" "}
-        </p>
-      )}
-      {isCheckingVisuals ? (
-        <p>Loading...</p>
-      ) : hasVisuals ? (
-        <Link to={`/exerciseVisuals/${exerciseDetails.id}`}>
-          <Button variant={"secondary"} className="h-6 mr-3">
-            Visuals
-          </Button>
+    <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex justify-between items-center">
+      <div className="">
+        <Link to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}>
+          <h1 className="text-[#fca311] text-lg capitalize font-semibold">
+            {" "}
+            {exerciseDetails.exercise_name}{" "}
+          </h1>
         </Link>
-      ) : creatorOfPlan ? (
-        <Button onClick={handleUploadVisual} variant={"outline"} className="h-6 mr-3">
-          {isUploading ? "Uploading..." : "Add Visual"}
-        </Button>
-      ) : ("")}
 
-      {creatorOfPlan && (
-        <Alert
-          btnName="Remove"
-          triggerBtnClassName="mt-2 h-6"
-          trigerBtnVarient={"destructive"}
-          handleContinueBtn={handleRemoveExercise}
-          pendingState={isPending}
-        />
-      )}
+        {isCheckingVisuals ? (
+          <p>Loading...</p>
+        ) : !hasVisuals && creatorOfPlan ? (
+          <Button onClick={handleUploadVisual} variant={"outline"} className="h-6 mr-3">
+            {isUploading ? "Uploading..." : "Add Visual"}
+          </Button>
+        ) : ("")}
+
+        {creatorOfPlan && (
+          <Alert
+            btnName="Remove"
+            triggerBtnClassName="mt-2 h-6"
+            trigerBtnVarient={"destructive"}
+            handleContinueBtn={handleRemoveExercise}
+            pendingState={isPending}
+          />
+        )}
+      </div>
+
+      <div className="flex justify-center items-center">
+        {isCheckingVisuals ? (
+          <p>Loading...</p>
+        ) : hasVisuals ? (
+          <Link to={`/exerciseVisuals/${exerciseDetails.id}`}>
+            <button className="mr-3 p-3 bg-white rounded-full">
+              <Play color="#000" size={20} />
+            </button>
+          </Link>
+        ): ""}
+      </div>
     </div>
   );
 };
