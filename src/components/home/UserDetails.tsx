@@ -70,7 +70,7 @@ const UserDetails = () => {
           </div>
 
           {/* Profile Image */}
-          <div className="h-24 w-24 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989]  rounded-full flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
+          <div className="h-24 w-24 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-full border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
             {!data?.avatar_url ? (
               <p className="font-montserrat">{initialLetterOfName}</p>
             ) : (

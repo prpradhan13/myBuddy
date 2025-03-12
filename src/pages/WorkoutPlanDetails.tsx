@@ -101,7 +101,7 @@ const WorkoutPlanDetails = () => {
       {data?.plan_description && (
         <div className="text-SecondaryTextColor">
           <p className="font-semibold">Note:</p>
-          <p className="text-sm leading-5">{data.plan_description}</p>
+          <p className="text-sm leading-5 whitespace-pre-line">{data.plan_description}</p>
         </div>
       )}
 

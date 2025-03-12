@@ -41,7 +41,7 @@ const ExerciseVisuals = () => {
         <div className="w-full bg-gradient-to-t from-black to-transparent p-6">
           <h1 className="text-4xl font-bold">{exerciseWithSets?.exercise_name}</h1>
           <h2 className="text-lg font-semibold mt-1">{exerciseWithSets?.target_muscle}</h2>
-          <p className="mt-4">{exerciseWithSets?.exercise_description}</p>
+          <p className="mt-4 whitespace-pre-line">{exerciseWithSets?.exercise_description}</p>
           {exerciseWithSets?.exercise_sets?.map((item, index) => (
               <div key={item.id} className="my-4">
                   <h3 className="text-lg font-medium">Set {index + 1}</h3>

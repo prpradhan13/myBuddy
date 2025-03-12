@@ -122,7 +122,7 @@ const ExercisePage = () => {
           <p className="text-PrimaryTextColor font-medium text-sm capitalize flex items-center gap-1">
             <NotebookPen size={16} /> Important Note
           </p>
-          <p className="text-SecondaryTextColor font- text-sm capitalize">
+          <p className="text-SecondaryTextColor font- text-sm capitalize whitespace-pre-line">
             {data?.exercise_description}
           </p>
         </div>

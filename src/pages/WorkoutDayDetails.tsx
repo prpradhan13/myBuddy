@@ -45,7 +45,7 @@ const WorkoutDayDetails = () => {
       {data?.day_description && (
         <div className="text-SecondaryTextColor">
           <p className="font-semibold">Tips:</p>
-          <p className="text-sm leading-5">{data.day_description}</p>
+          <p className="text-sm leading-5 whitespace-pre-line">{data.day_description}</p>
         </div>
       )}
 

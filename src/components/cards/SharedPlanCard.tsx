@@ -48,12 +48,12 @@ const SharedPlanCard = ({
   const averageRating = calculateAverageRating(reviews);
 
   return (
-    <div className="rounded-md font-poppins relative h-36 w-full overflow-hidden">
+    <div className="rounded-md font-poppins relative h-40 w-full overflow-hidden mb-4">
       {planBGImage && (
         <div className="w-full absolute">
           <AdvancedImage
             cldImg={planBGImage}
-            className="h-36 w-full object-cover rounded-md"
+            className="h-40 w-full object-cover rounded-md"
           />
         </div>
       )}
@@ -77,9 +77,9 @@ const SharedPlanCard = ({
             />
           ))}
         </div>
-        <div className="flex items-center gap-2 mt-2">
+        <div className="mt-2">
           {!isRecipient && (
-            <>
+            <div className="flex items-center gap-2">
               <Avatar>
                 {!avatarUrl ? (
                   <AvatarFallback className="w-10 h-10 bg-gradient-to-t from-[#000000] via-[#1b1b1b] to-[#3a3a3a] text-PrimaryTextColor text-xs font-semibold">
@@ -93,12 +93,11 @@ const SharedPlanCard = ({
                   />
                 )}
               </Avatar>
-              <h1 className="text-SecondaryTextColor">{username}</h1>
-
-              <Send color="#1c86ff" size={16} />
-            </>
+              <h1 className="text-SecondaryTextColor font-semibold">{username}</h1>
+            </div>
           )}
-          <p className="text-SecondaryTextColor text-sm flex items-center gap-1">
+          <p className="text-SecondaryTextColor text-sm flex items-center gap-1 mt-1">
+            <Send color="#1c86ff" size={16} />
             {dayjs(createdAt).format("DD-MM-YYYY h:mm A")}{" "}
             <CalendarClock size={16} color="#36ff23" />
           </p>
