@@ -5,7 +5,7 @@ function RegisterLayout() {
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
-    return <Navigate to="/" />; // Redirect logged-in users to home
+    return <Navigate to="/" />;
   }
 
   return <Outlet />;

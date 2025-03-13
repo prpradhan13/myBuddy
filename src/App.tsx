@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Loader from "./components/loaders/Loader";
 
+const NotAuthLandingPage = lazy(() => import("./pages/authPage/NotAuthLandingPage"))
 const RegisterLayout = lazy(() => import("./layouts/RegisterLayout"));
 const RegisterPage = lazy(() => import("./pages/authPage/RegisterPage"));
 const SignUpPage = lazy(() => import("./pages/authPage/SignUpPage"));
@@ -34,6 +35,7 @@ function App() {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route element={<RegisterLayout />}>
+              <Route path="/notAuthLandingPage" element={<NotAuthLandingPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/signUp" element={<SignUpPage />} />
             </Route>

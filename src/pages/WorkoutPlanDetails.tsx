@@ -28,7 +28,7 @@ const WorkoutPlanDetails = () => {
     Number(planId)
   );
   const initialLetterOfName = getInitialLetter(data?.creator.full_name);
-  
+
   useEffect(() => {
     if (data?.workoutplan_id && data?.creator_id) {
       if (
@@ -75,16 +75,12 @@ const WorkoutPlanDetails = () => {
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-poppins">
-      <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
-        {data?.plan_name}
-      </h1>
-      <h2 className="text-base text-SecondaryTextColor capitalize">
-        {data?.plan_difficulty}, {totalPages} week plan
-      </h2>
-      <div className="flex items-center gap-2 my-2">
+      <div className="flex items-center gap-2">
         <div className="h-8 w-8 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989]  rounded-full flex justify-center items-center">
           {!data?.creator.avatar_url ? (
-            <p className="text-PrimaryTextColor font-bold text-sm">{initialLetterOfName}</p>
+            <p className="text-PrimaryTextColor font-bold text-sm">
+              {initialLetterOfName}
+            </p>
           ) : (
             <img
               src={data?.creator.avatar_url}
@@ -97,11 +93,19 @@ const WorkoutPlanDetails = () => {
           {data?.creator.username}
         </h2>
       </div>
+      <h1 className="text-2xl mt-2 font-semibold capitalize text-PrimaryTextColor">
+        {data?.plan_name}
+      </h1>
+      <h2 className="text-sm text-SecondaryTextColor capitalize">
+        {data?.plan_difficulty}, {totalPages} week plan
+      </h2>
 
       {data?.plan_description && (
-        <div className="text-SecondaryTextColor">
+        <div className="text-SecondaryTextColor mt-2">
           <p className="font-semibold">Note:</p>
-          <p className="text-sm leading-5 whitespace-pre-line">{data.plan_description}</p>
+          <p className="text-sm leading-5 whitespace-pre-line">
+            {data.plan_description}
+          </p>
         </div>
       )}
 
@@ -109,7 +113,7 @@ const WorkoutPlanDetails = () => {
         <Alert
           btnName="Add a week"
           trigerBtnVarient={"secondary"}
-          triggerBtnClassName="rounded-full mt-2"
+          triggerBtnClassName="rounded-full my-4"
           pendingState={isPending}
           headLine="Are you want to add a new week?"
           descLine="This is add a new week in this plan."

@@ -39,7 +39,7 @@ const WorkoutExerciseCard = ({
   };
 
   return (
-    <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex justify-between items-center">
+    <div className="bg-SecondaryBackgroundColor p-4 rounded-lg flex justify-between items-center">
       <div className="">
         <Link to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}>
           <h1 className="text-[#fca311] text-lg capitalize font-semibold">
@@ -59,8 +59,8 @@ const WorkoutExerciseCard = ({
         {creatorOfPlan && (
           <Alert
             btnName="Remove"
-            triggerBtnClassName="mt-2 h-6"
-            trigerBtnVarient={"destructive"}
+            trigerBtnVarient={"secondary"}
+            triggerBtnClassName="mt-4 h-6 p-0 bg-transparent hover:bg-transparent text-[#ef4444]"
             handleContinueBtn={handleRemoveExercise}
             pendingState={isPending}
           />

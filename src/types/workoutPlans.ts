@@ -67,6 +67,7 @@ export type ExerciseWithSetsType = {
   exercise_description: string | null;
   target_muscle: string | null;
   rest: string | null;
+  image_content: string | null;
   exercise_sets: SetType[] | null;
 };
 

@@ -3,7 +3,7 @@ import { IoEyeOutline, IoEyeOffOutline, IoMailOutline } from "react-icons/io5";
 import { TbLockPassword } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { supabase } from "../../utils/supabase";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { loginSchema, LoginSchemaTypes } from "../../validations/register";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 
 const RegisterPage = () => {
   const form = useForm<LoginSchemaTypes>({
@@ -42,8 +42,15 @@ const RegisterPage = () => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  }
+
   return (
-    <div className="w-full h-screen flex flex-col bg-MainBackgroundColor justify-center items-center px-8">
+    <div className="w-full h-screen flex flex-col bg-MainBackgroundColor justify-center items-center px-8 relative">
+      <button onClick={handleGoBack} className="absolute top-8 left-8 bg-[#656565] rounded-lg p-1">
+        <ArrowLeft color="#fff" size={24} />
+      </button>
       <h1 className="text-2xl text-PrimaryTextColor font-semibold">
         Login to your Account
       </h1>
@@ -126,12 +133,6 @@ const RegisterPage = () => {
           </Button>
         </form>
       </Form>
-
-      <h3 className="text-[#dfdfdf] text-xl my-5 font-semibold"> Or </h3>
-
-      <Link to={"/signUp"} className="text-blue-500 font-medium">
-        Create an account?
-      </Link>
     </div>
   );
 };

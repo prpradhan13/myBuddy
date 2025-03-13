@@ -11,13 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  ChevronDown,
-  ChevronsUpDown,
-  BicepsFlexed,
-  NotebookPen,
-  Plus,
-} from "lucide-react";
+import { ChevronDown, ChevronsUpDown, Plus } from "lucide-react";
 import Alert from "@/components/extra/Alert";
 import AchiveForm from "@/components/forms/AchiveForm";
 import {
@@ -29,6 +23,8 @@ import dayjs from "dayjs";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import { useRecipientPlan } from "@/context/SharedPlanProvider";
 import RecipientAchiveForm from "@/components/forms/RecipientAchiveForm";
+import { cld } from "@/utils/lib/cloudinary";
+import { AdvancedImage } from "@cloudinary/react";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
@@ -67,11 +63,13 @@ const ExercisePage = () => {
   };
 
   const handleNavigateToRecipientAchive = (setId: number) => {
-    navigate(`/recipientAchivementsDetails/${setId}`)
-  }
+    navigate(`/recipientAchivementsDetails/${setId}`);
+  };
 
   if (isLoading) return <Loader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
+
+  const exerciseImage = data?.image_content && cld.image(data.image_content);
 
   return !data ||
     Object.keys(data).length === 0 ||
@@ -110,172 +108,192 @@ const ExercisePage = () => {
       )}
     </div>
   ) : (
-    <div className="w-full min-h-screen bg-MainBackgroundColor p-4 font-poppins">
-      <h1 className="text-[#ef233c] font-bold text-lg capitalize flex items-center gap-1">
-        <BicepsFlexed size={22} /> {data?.exercise_name}
-      </h1>
-      <p className="text-[#0aefff] font-semibold capitalize">
-        {data?.target_muscle}
-      </p>
-      {data?.exercise_description && (
-        <div className="mt-2 flex flex-col gap-1">
-          <p className="text-PrimaryTextColor font-medium text-sm capitalize flex items-center gap-1">
-            <NotebookPen size={16} /> Important Note
-          </p>
-          <p className="text-SecondaryTextColor font- text-sm capitalize whitespace-pre-line">
-            {data?.exercise_description}
-          </p>
+    <div className={exerciseImage ? "w-full h-screen relative" : ""}>
+      {exerciseImage && (
+        <div className="fixed inset-0 -z-10">
+          <AdvancedImage
+            cldImg={exerciseImage}
+            className="h-full w-full object-cover"
+          />
         </div>
       )}
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sortedExerciseSets.map((set, index) => (
-          <div className="border p-4 rounded-md" key={set.id}>
-            <div className="flex gap-2 items-center">
-              <h1 className="text-SecondaryTextColor text-[1rem] capitalize font-semibold">
-                Set {index + 1}
-              </h1>
-
-              {creatorOfPlan && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <ChevronDown color="#fff" size={20} />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      onClick={() => setOpenSetAchivesForm(set.id)}
-                      className="cursor-pointer"
-                    >
-                      Edit Your Achives
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                      onClick={() => handleNavigateToRecipientAchive(set.id)}
-                      className="cursor-pointer"
-                    >
-                      Recipient Achives
-                    </DropdownMenuItem>
-
-                    <Alert
-                      btnName="Remove"
-                      trigerBtnVarient={"ghost"}
-                      triggerBtnClassName="px-2 text-red-500 font-normal hover:text-red-500 hover:bg-transparent"
-                      handleContinueBtn={() => handleRemoveSetBtnClick(set.id)}
-                      pendingState={isPending}
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+      <div
+        className={`${
+          exerciseImage
+            ? "w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y"
+            : "w-full min-h-screen bg-MainBackgroundColor p-4 font-poppins"
+        }`}
+      >
+        {exerciseImage && <div className="bg-transparent h-[50vh]"></div>}
+        
+        <div className={`${exerciseImage ? "w-full bg-gradient-to-t from-black via-[#000] to-transparent p-6" : ""}`}>
+          <h1 className="text-[#fff] font-bold text-2xl capitalize flex items-center gap-1">
+            {data?.exercise_name}
+          </h1>
+          <p className="text-[#d6d6d6] font-medium capitalize">
+            {data?.target_muscle}
+          </p>
+          {data?.exercise_description && (
+            <div className={`${exerciseImage ? "bg-transparent" : "bg-[#2f2f2f] p-4 rounded-lg"} mt-2`}>
+              <p className="text-white capitalize whitespace-pre-line">
+                {data?.exercise_description}
+              </p>
             </div>
+          )}
 
-            <h1 className="text-PrimaryTextColor capitalize font-medium mt-2">
-              Target Repetitions:{" "}
-              <span className="text-[#0aefff] text-[1rem]">
-                {set.target_repetitions}
-              </span>
-            </h1>
-            <h1 className="text-PrimaryTextColor capitalize font-medium">
-              Target Weight:{" "}
-              <span className="text-[#ef233c] text-[1rem]">
-                {set.target_weight}
-              </span>
-            </h1>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sortedExerciseSets.map((set, index) => (
+              <div className="border p-4 rounded-lg" key={set.id}>
+                <div className="flex gap-2 items-center">
+                  <h1 className="text-SecondaryTextColor text-[1rem] capitalize font-semibold">
+                    Set {index + 1}
+                  </h1>
 
-            {creatorOfPlan &&
-              !!set.achive_repetitions &&
-              !!set.achive_weight && (
-                <div className="">
-                  <Collapsible>
-                    <div className="flex gap-1 items-center">
-                      <CollapsibleTrigger>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-[#0aefff] p-0 hover:bg-transparent hover:text-white"
+                  {creatorOfPlan && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <ChevronDown color="#fff" size={20} />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          onClick={() => setOpenSetAchivesForm(set.id)}
+                          className="cursor-pointer"
                         >
-                          <h4 className="text-[#0aefff] text-sm">
-                            My Achivements
-                          </h4>
-                          <ChevronsUpDown className="h-4 w-4" />
-                        </Button>
-                      </CollapsibleTrigger>
-                    </div>
+                          Edit Your Achives
+                        </DropdownMenuItem>
 
-                    <CollapsibleContent>
-                      <p className="text-SecondaryTextColor">
-                        {dayjs(set.achive_date_time).format(
-                          "dddd, DD MMM YYYY"
-                        )}{" "}
-                        You perform{" "}
-                        <span className="font-semibold text-[1rem]">
-                          {set.achive_repetitions}
-                        </span>{" "}
-                        with weight{" "}
-                        <span className="font-semibold text-[1rem]">
-                          {set.achive_weight}
-                        </span>
-                        .
-                      </p>
-                    </CollapsibleContent>
-                  </Collapsible>
+                        <DropdownMenuItem
+                          onClick={() => handleNavigateToRecipientAchive(set.id)}
+                          className="cursor-pointer"
+                        >
+                          Recipient Achives
+                        </DropdownMenuItem>
+
+                        <Alert
+                          btnName="Remove"
+                          trigerBtnVarient={"ghost"}
+                          triggerBtnClassName="px-2 text-red-500 font-normal hover:text-red-500 hover:bg-transparent"
+                          handleContinueBtn={() =>
+                            handleRemoveSetBtnClick(set.id)
+                          }
+                          pendingState={isPending}
+                        />
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
-              )}
 
-            {(isRecipient && !creatorOfPlan) && (
-              <Button
-                onClick={() => handleUpdateSetByRecipient(set.id)}
-                variant={"secondary"}
-                className="text-xs h-7 px-2 mt-2"
-              >
-                Edit
-              </Button>
-            )}
+                <h1 className="text-PrimaryTextColor capitalize font-medium mt-2">
+                  Target Repetitions:{" "}
+                  <span className="text-[#0aefff] text-[1rem]">
+                    {set.target_repetitions}
+                  </span>
+                </h1>
+                <h1 className="text-PrimaryTextColor capitalize font-medium">
+                  Target Weight:{" "}
+                  <span className="text-[#ef233c] text-[1rem]">
+                    {set.target_weight}
+                  </span>
+                </h1>
 
-            {(isRecipient && !creatorOfPlan) && (
-              <Button
-                onClick={() => handleNavigateToRecipientAchive(set.id)}
-                variant={"secondary"}
-                className="text-xs h-7 px-2 mt-2 ml-3"
-              >
-                Achievement
-              </Button>
-            )}
+                {creatorOfPlan &&
+                  !!set.achive_repetitions &&
+                  !!set.achive_weight && (
+                    <div className="">
+                      <Collapsible>
+                        <div className="flex gap-1 items-center">
+                          <CollapsibleTrigger>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-[#0aefff] p-0 hover:bg-transparent hover:text-white"
+                            >
+                              <h4 className="text-[#0aefff] text-sm">
+                                My Achivements
+                              </h4>
+                              <ChevronsUpDown className="h-4 w-4" />
+                            </Button>
+                          </CollapsibleTrigger>
+                        </div>
+
+                        <CollapsibleContent>
+                          <p className="text-SecondaryTextColor">
+                            {dayjs(set.achive_date_time).format(
+                              "dddd, DD MMM YYYY"
+                            )}{" "}
+                            You perform{" "}
+                            <span className="font-semibold text-[1rem]">
+                              {set.achive_repetitions}
+                            </span>{" "}
+                            with weight{" "}
+                            <span className="font-semibold text-[1rem]">
+                              {set.achive_weight}
+                            </span>
+                            .
+                          </p>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                  )}
+
+                {isRecipient && !creatorOfPlan && (
+                  <Button
+                    onClick={() => handleUpdateSetByRecipient(set.id)}
+                    variant={"secondary"}
+                    className="text-xs h-7 px-2 mt-2"
+                  >
+                    Edit
+                  </Button>
+                )}
+
+                {isRecipient && !creatorOfPlan && (
+                  <Button
+                    onClick={() => handleNavigateToRecipientAchive(set.id)}
+                    variant={"secondary"}
+                    className="text-xs h-7 px-2 mt-2 ml-3"
+                  >
+                    Achievement
+                  </Button>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+
+          {creatorOfPlan && (
+            <Button
+              onClick={handleAddSetBtnClick}
+              variant="secondary"
+              className="mt-3"
+            >
+              Add Set <Plus />
+            </Button>
+          )}
+
+          {openSetForm && (
+            <SetsForm
+              exerciseId={data.exercise_id}
+              setOpenSetsCreateForm={setOpenSetForm}
+            />
+          )}
+
+          {openSetAchivesForm && (
+            <AchiveForm
+              exerciseId={data.exercise_id}
+              openSetAchivesForm={openSetAchivesForm}
+              setOpenSetAchivesForm={setOpenSetAchivesForm}
+            />
+          )}
+
+          {exerciseSetIdForUpdate && (
+            <RecipientAchiveForm
+              exerciseId={Number(exerciseId)}
+              exerciseSetIdForUpdate={exerciseSetIdForUpdate}
+              setExerciseSetIdForUpdate={setExerciseSetIdForUpdate}
+            />
+          )}
+        </div>
       </div>
-
-      {creatorOfPlan && (
-        <Button
-          onClick={handleAddSetBtnClick}
-          variant="outline"
-          className="mt-3"
-        >
-          Add Set <Plus />
-        </Button>
-      )}
-
-      {openSetForm && (
-        <SetsForm
-          exerciseId={data.exercise_id}
-          setOpenSetsCreateForm={setOpenSetForm}
-        />
-      )}
-
-      {openSetAchivesForm && (
-        <AchiveForm
-          exerciseId={data.exercise_id}
-          openSetAchivesForm={openSetAchivesForm}
-          setOpenSetAchivesForm={setOpenSetAchivesForm}
-        />
-      )}
-
-      {exerciseSetIdForUpdate && (
-        <RecipientAchiveForm 
-          exerciseId={Number(exerciseId)}
-          exerciseSetIdForUpdate={exerciseSetIdForUpdate}
-          setExerciseSetIdForUpdate={setExerciseSetIdForUpdate}
-        />
-      )}
     </div>
   );
 };

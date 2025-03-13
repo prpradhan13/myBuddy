@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 const SignUpPage = () => {
   const form = useForm<SignUpSchemaTypes>({
@@ -59,6 +59,12 @@ const SignUpPage = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-MainBackgroundColor justify-center items-center px-8">
+      <button
+        onClick={handleGoBack}
+        className="absolute top-8 left-8 bg-[#656565] rounded-lg p-1"
+      >
+        <ArrowLeft color="#fff" size={24} />
+      </button>
       <h1 className="text-2xl text-PrimaryTextColor font-semibold">
         Create your Account
       </h1>
@@ -162,11 +168,7 @@ const SignUpPage = () => {
             )}
           />
 
-          <Button
-            type="submit"
-            variant={"secondary"}
-            className="w-full mt-4"
-          >
+          <Button type="submit" variant={"secondary"} className="w-full mt-4">
             {form.formState.isSubmitting ? (
               <>
                 <Loader2 className="animate-spin" />
@@ -178,14 +180,6 @@ const SignUpPage = () => {
           </Button>
         </form>
       </Form>
-
-      <button
-        type="button"
-        onClick={handleGoBack}
-        className="text-blue-500 font-medium mt-4"
-      >
-        Back to Login
-      </button>
     </div>
   );
 };

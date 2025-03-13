@@ -5,7 +5,7 @@ const PrivateRoute = () => {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to={"/register"} />
+    return <Navigate to={"/notAuthLandingPage"} />
   }
   
   return <Outlet />

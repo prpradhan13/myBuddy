@@ -43,7 +43,7 @@ const WorkoutDayDetails = () => {
         </h1>
       </div>
       {data?.day_description && (
-        <div className="text-SecondaryTextColor my-2">
+        <div className="text-SecondaryTextColor my-4">
           <p className="text-sm leading-5 whitespace-pre-line font-medium">
             {data.day_description}
           </p>
@@ -57,7 +57,7 @@ const WorkoutDayDetails = () => {
       )}
 
       {sortedWorkoutDays && sortedWorkoutDays.length > 0 ? (
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sortedWorkoutDays.map((exercise, index) => (
             <WorkoutExerciseCard
               key={`${index}_${exercise.id}`}
