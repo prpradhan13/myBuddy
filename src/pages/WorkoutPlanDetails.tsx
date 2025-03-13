@@ -109,7 +109,7 @@ const WorkoutPlanDetails = () => {
         <Alert
           btnName="Add a week"
           trigerBtnVarient={"secondary"}
-          triggerBtnClassName="h-6 mt-2"
+          triggerBtnClassName="rounded-full mt-2"
           pendingState={isPending}
           headLine="Are you want to add a new week?"
           descLine="This is add a new week in this plan."
@@ -122,7 +122,7 @@ const WorkoutPlanDetails = () => {
       <Button
         variant={"secondary"}
         onClick={handleOpenComment}
-        className="mx-2 h-6"
+        className="mx-2 rounded-full"
       >
         Comments
       </Button>

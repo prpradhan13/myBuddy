@@ -8,6 +8,7 @@ import { Loader2, Reply } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { SendHorizontal } from 'lucide-react';
 
 const CommentPage = () => {
     const [replyText, setReplyText] = useState("");
@@ -27,22 +28,24 @@ const CommentPage = () => {
   if (isFetching) return <Loader />;
 
   return (
-    <div className="bg-MainBackgroundColor p-4 min-h-screen w-full text-PrimaryTextColor">
-      <h1 className="text-xl font-bold mb-4">Comments</h1>
+    <div className="bg-[#1e1e1e] p-4 min-h-screen w-full text-PrimaryTextColor">
+      <h1 className="text-xl text-center font-bold mb-4">Comments</h1>
 
       {commentTree.map((cmt) => (
         <Comment key={cmt.id} comment={cmt} planId={planId} />
       ))}
 
       <form onSubmit={handleSubmit} className="mt-10">
-        <Input
-          value={replyText}
-          onChange={(e) => setReplyText(e.target.value)}
-        />
-
-        <Button variant={"secondary"} type="submit" className="h-6">
-          {isPending ? <Loader2 /> : "Send"}
-        </Button>
+        <div className="border flex rounded-lg p-2 justify-between">
+          <input
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            className="w-[90%] outline-none border-none bg-transparent"
+          />
+          <button type="submit" disabled={isPending || replyText === ""} className={isPending || replyText === "" ? "cursor-not-allowed" : ""}>
+            <SendHorizontal color={`${isPending || replyText === "" ? "#c5c5c5" : "#fff"}`} />
+          </button>
+        </div>
       </form>
     </div>
   );

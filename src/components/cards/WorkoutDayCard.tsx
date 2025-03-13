@@ -120,7 +120,7 @@ const WorkoutDayCard = ({
         <div className="bg-SecondaryBackgroundColor p-4 rounded-md flex gap-3">
           <Link
             to={`/workoutDayDetails/${dayDetails.id}`}
-            className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#232323] rounded-md flex justify-center items-center"
+            className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-md flex justify-center items-center"
           >
             <h1 className="capitalize font-bold text-PrimaryTextColor">
               {firstThreeLetter}

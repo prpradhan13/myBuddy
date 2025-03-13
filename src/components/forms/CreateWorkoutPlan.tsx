@@ -62,7 +62,7 @@ const CreateWorkoutPlan = ({
   };
 
   return (
-    <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
+    <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat z-50">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
