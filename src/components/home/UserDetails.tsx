@@ -46,12 +46,21 @@ const UserDetails = () => {
   };
 
   const handleLogout = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      toast.error("No active session to log out");
+      return;
+    }
+  
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast.error(`Logout error: ${error.message}`);
       throw new Error(error.message);
     }
+  
     localStorage.clear();
+    toast.success("Logged out successfully!");
   };
 
   if (isLoading) return <Loader />;

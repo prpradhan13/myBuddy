@@ -10,7 +10,7 @@ export default {
         poppins: ["Poppins", "sans-serif"],
       },
       backgroundImage: {
-        "notAuthPageBg": "url('/public/notAuthPageBg.jpg')",
+        "notAuthPageBg": "url('/notAuthPageBg.jpg')",
       },
       colors: {
         MainBackgroundColor: "#000000",
