@@ -8,6 +8,7 @@ import { useAddExerciseVisual, useHasExerciseVisual } from "@/utils/queries/exer
 import { openCloudinaryUploadWidget } from "@/utils/lib/cloudinary";
 import { useNavigate } from 'react-router-dom'
 import { Play } from 'lucide-react';
+import { ClipLoader } from "react-spinners";
 
 const WorkoutExerciseCard = ({
   exerciseDetails,
@@ -69,7 +70,7 @@ const WorkoutExerciseCard = ({
 
       <div className="flex justify-center items-center">
         {isCheckingVisuals ? (
-          <p>Loading...</p>
+          <ClipLoader color="#fff" />
         ) : hasVisuals ? (
           <Link to={`/exerciseVisuals/${exerciseDetails.id}`}>
             <button className="mr-3 p-3 bg-white rounded-full">

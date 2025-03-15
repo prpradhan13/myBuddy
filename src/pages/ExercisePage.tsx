@@ -128,12 +128,12 @@ const ExercisePage = () => {
         {exerciseImage && <div className="bg-transparent h-[50vh]"></div>}
         
         <div className={`${exerciseImage ? "w-full bg-gradient-to-t from-black via-[#000] to-transparent p-6" : ""}`}>
-          <h1 className="text-[#fff] font-bold text-2xl capitalize flex items-center gap-1">
-            {data?.exercise_name}
-          </h1>
           <p className="text-[#d6d6d6] font-medium capitalize">
             {data?.target_muscle}
           </p>
+          <h1 className="text-[#fff] font-bold text-2xl capitalize flex items-center gap-1">
+            {data?.exercise_name}
+          </h1>
           {data?.exercise_description && (
             <div className={`${exerciseImage ? "bg-transparent" : "bg-[#2f2f2f] p-4 rounded-lg"} mt-2`}>
               <p className="text-white capitalize whitespace-pre-line">
