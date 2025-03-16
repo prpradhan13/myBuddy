@@ -3,7 +3,6 @@ import UserDetails from "../components/home/UserDetails";
 import { useGetUserWorkoutPlans } from "../utils/queries/workoutQuery";
 import { useAuth } from "../context/AuthProvider";
 import WorkoutPlanCard from "../components/home/WorkoutPlanCard";
-import { motion } from "motion/react";
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -14,21 +13,15 @@ const HomePage = () => {
       <UserDetails />
 
       {data?.length === 0 ? (
-        <motion.div
-          initial={{ x: 100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.9, ease: "easeOut" }}
+        <div
           className="bg-[#444] p-2 rounded-xl mt-4 h-36 flex justify-center items-center"
         >
           <p className="text-SecondaryTextColor font-semibold">
             You have no plans
           </p>
-        </motion.div>
+        </div>
       ) : (
-        <motion.div
-          initial={{ x: 100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.9, ease: "easeOut" }}
+        <div
           className="bg-[#444] p-2 rounded-xl mt-4"
         >
           <div className="w-full mt-6 flex justify-between items-center">
@@ -49,7 +42,7 @@ const HomePage = () => {
               ))
             )}
           </div>
-        </motion.div>
+        </div>
       )}
     </div>
   );

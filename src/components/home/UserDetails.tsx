@@ -16,7 +16,6 @@ import {
   LogOut,
   Telescope,
 } from "lucide-react";
-import { motion } from "motion/react";
 
 const UserDetails = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
@@ -62,10 +61,7 @@ const UserDetails = () => {
       <div className="w-full lg:w-[40vw] md:w-[60vw]">
         <div className="w-full font-ubuntu flex gap-3">
           {/* Profile Image */}
-          <motion.div
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+          <div
             className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative"
           >
             {!data?.avatar_url ? (
@@ -77,12 +73,9 @@ const UserDetails = () => {
                 className="h-full w-full object-cover rounded-xl"
               />
             )}
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+          <div
             className="bg-[#444444] p-2 rounded-xl w-[70%]"
           >
             <h1 className="text-PrimaryTextColor font-semibold text-xl">
@@ -92,14 +85,11 @@ const UserDetails = () => {
               {data?.username}
             </h3>
             <p className="text-SecondaryTextColor text-sm">{data?.email}</p>
-          </motion.div>
+          </div>
         </div>
 
         <div className="flex mt-3 gap-3">
-          <motion.div
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
+          <div
             className="h-60 bg-black w-[70%] rounded-xl overflow-hidden aspect-square"
           >
             <img src="/logoImg.jpg" className="h-full w-full object-cover" />
@@ -110,11 +100,8 @@ const UserDetails = () => {
               loop
               className="h-full w-full object-cover"
             /> */}
-          </motion.div>
-          <motion.div
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+          </div>
+          <div
             className="h-60 bg-[#444444] rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center"
           >
             {iconButtons.map(({ Icon, action }, index) => (
@@ -126,14 +113,11 @@ const UserDetails = () => {
                 <Icon color="#fff" size={24} />
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {data?.bio ? (
-          <motion.div
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.9, ease: "easeOut" }}
+          <div
             className="mt-3 bg-[#444444] p-2 rounded-xl"
           >
             <h2 className="text-white text-lg font-semibold">About me</h2>
@@ -141,16 +125,13 @@ const UserDetails = () => {
             <p className="text-SecondaryTextColor leading-5 mt-2 whitespace-pre-line">
               {data.bio}
             </p>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.9, ease: "easeOut" }}
+          <div
             className="mt-3 min-h-32 bg-[#444444] p-2 rounded-xl flex justify-center items-center"
           >
             <p className="text-SecondaryTextColor font-medium"> No Bio </p>
-          </motion.div>
+          </div>
         )}
       </div>
 
