@@ -7,7 +7,6 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
   getInitialLetter,
@@ -19,18 +18,22 @@ import { Badge } from "../ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link } from "react-router-dom";
 
-const SearchSection = () => {
+interface SearchSectionProps {
+  isSearchOpen: boolean;
+  setIsSearchOpen: (value: boolean) => void;
+}
+
+const SearchSection = ({ isSearchOpen = false, setIsSearchOpen }: SearchSectionProps) => {
   const [searchText, setSearchText] = useState("");
   const [selectedButton, setSelectedButton] = useState<
     "workoutplan" | "profiles"
   >("workoutplan");
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const debouncedSearch = useDebounce(searchText, 1000);
   const { data: searchResult, isFetching } = useSearches({
     searchText: debouncedSearch,
     selectedButton,
-    enabled: isDrawerOpen,
+    enabled: isSearchOpen,
   });
 
   const selectCreatorBtn = () => {
@@ -42,10 +45,7 @@ const SearchSection = () => {
   };
 
   return (
-    <Drawer onOpenChange={setIsDrawerOpen}>
-      <DrawerTrigger asChild>
-        <Button variant="outline">Search</Button>
-      </DrawerTrigger>
+    <Drawer open={isSearchOpen} onOpenChange={setIsSearchOpen}>
       <DrawerContent className="bg-SecondaryBackgroundColor border-none min-h-[50vh]">
         <DrawerHeader>
           <DrawerTitle className="text-PrimaryTextColor">Search</DrawerTitle>
@@ -115,7 +115,9 @@ const SearchSection = () => {
                     {result.plan_name || result.full_name}
                   </h1>
                   {result.difficulty_level && (
-                    <Badge className="capitalize">{result.difficulty_level}</Badge>
+                    <Badge className="capitalize">
+                      {result.difficulty_level}
+                    </Badge>
                   )}
                   {result.description && (
                     <p className="text-SecondaryTextColor">
