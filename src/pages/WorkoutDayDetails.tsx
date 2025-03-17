@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useGetWorkoutDay } from "../utils/queries/dayQuery";
-import ErrorPage from "../components/loaders/ErrorPage";
 import WorkoutExerciseCard from "../components/cards/WorkoutExerciseCard";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -13,7 +12,7 @@ const WorkoutDayDetails = () => {
   const { dayId } = useParams();
   const { creatorOfPlan, planInfo, setPlanInfo } = usePlan();
 
-  const { data, isLoading, isError, error } = useGetWorkoutDay(Number(dayId));
+  const { data, isLoading } = useGetWorkoutDay(Number(dayId));
   const validDayId = Number(dayId);
 
   useEffect(() => {
@@ -25,12 +24,35 @@ const WorkoutDayDetails = () => {
   const validDAyExercises = data?.dayexercises || [];
   const sortedWorkoutDays = validDAyExercises.sort((a, b) => a.id - b.id);
 
-  if (isLoading) return <WorkoutDayLoader />;
-  if (isError) return <ErrorPage errorMessage={error.message} />;
-
   const handleClickAddBtn = () => {
     setOpenAddExerciseForm(true);
   };
+
+  if (isLoading) return <WorkoutDayLoader />;
+  if (!data) {
+    return (
+      <div className="bg-MainBackgroundColor min-h-screen w-full flex justify-center items-center">
+        <div className="">
+          <p className="text-PrimaryTextColor text-xl">No Exercises Added</p>
+          {creatorOfPlan && (
+            <Button
+              onClick={handleClickAddBtn}
+              variant={"secondary"}
+              className="my-2 rounded-xl bg-white px-4 flex"
+            >
+              Add Exercise
+            </Button>
+          )}
+          {openAddExerciseForm && (
+            <AddExercise
+              workoutId={Number(dayId)}
+              setOpenAddExerciseForm={setOpenAddExerciseForm}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-montserrat">
@@ -41,43 +63,47 @@ const WorkoutDayDetails = () => {
         <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
           {data?.workout_name}
         </h1>
+        {data?.day_description && (
+          <div className="text-SecondaryTextColor my-4">
+            <p className="text-sm leading-5 whitespace-pre-line font-medium">
+              {data.day_description}
+            </p>
+          </div>
+        )}
+
+        {creatorOfPlan && (
+          <Button
+            onClick={handleClickAddBtn}
+            variant={"secondary"}
+            className="mb-2 rounded-xl bg-white px-4 flex"
+          >
+            Add Exercise
+          </Button>
+        )}
+
+        {sortedWorkoutDays && sortedWorkoutDays.length > 0 ? (
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sortedWorkoutDays.map((exercise, index) => (
+              <WorkoutExerciseCard
+                key={`${index}_${exercise.id}`}
+                exerciseDetails={exercise}
+                dayId={data?.workoutday_id}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="h-96 text-center text-SecondaryTextColor">
+            <p>No exercises for this day</p>
+          </div>
+        )}
+
+        {openAddExerciseForm && (
+          <AddExercise
+            workoutId={Number(dayId)}
+            setOpenAddExerciseForm={setOpenAddExerciseForm}
+          />
+        )}
       </div>
-      {data?.day_description && (
-        <div className="text-SecondaryTextColor my-4">
-          <p className="text-sm leading-5 whitespace-pre-line font-medium">
-            {data.day_description}
-          </p>
-        </div>
-      )}
-
-      {creatorOfPlan && (
-        <Button onClick={handleClickAddBtn} variant={"secondary"} className="mb-2 rounded-full bg-white px-4 flex">
-          Add Exercise
-        </Button>
-      )}
-
-      {sortedWorkoutDays && sortedWorkoutDays.length > 0 ? (
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sortedWorkoutDays.map((exercise, index) => (
-            <WorkoutExerciseCard
-              key={`${index}_${exercise.id}`}
-              exerciseDetails={exercise}
-              dayId={data?.workoutday_id}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="h-96 text-center text-SecondaryTextColor">
-          <p>No exercises for this day</p>
-        </div>
-      )}
-
-      {openAddExerciseForm && (
-        <AddExercise
-          workoutId={Number(dayId)}
-          setOpenAddExerciseForm={setOpenAddExerciseForm}
-        />
-      )}
     </div>
   );
 };

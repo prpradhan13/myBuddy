@@ -11,19 +11,26 @@ import SearchSection from "../publicPlan/SearchSection";
 import {
   UserPen,
   LandPlot,
-  Forward,
+  Send,
   Search,
   LogOut,
-  Telescope,
+  Users,
 } from "lucide-react";
+import EditUserDetails from "../forms/EditUserDetails";
+import { AdvancedImage, AdvancedVideo } from "@cloudinary/react";
+import { cld } from "@/utils/lib/cloudinary";
+import EditBanner from "../forms/EditBanner";
 
 const UserDetails = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isEditUserDetailsOpen, setIsEditUserDetailsOpen] = useState(false);
+  const [isBannerDrawerOpen, setIsBannerDrawerOpen] = useState(false);
+
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { data, isLoading } = getUserDetails(user?.id);
   const initialLetterOfName = getInitialLetter(data?.full_name);
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     const {
@@ -46,15 +53,27 @@ const UserDetails = () => {
   };
 
   const iconButtons = [
-    { Icon: UserPen, action: () => navigate("/editProfile") },
+    { Icon: UserPen, action: () => setIsEditUserDetailsOpen(true) },
     { Icon: LandPlot, action: () => setOpenCreateForm(true) },
-    { Icon: Forward, action: () => navigate("/sharedplandetails") },
+    { Icon: Send, action: () => navigate("/sharedplandetails") },
     { Icon: Search, action: () => setIsSearchOpen(true) },
-    { Icon: Telescope, action: () => navigate("/publicplan") },
+    { Icon: Users, action: () => navigate("/publicplan") },
     { Icon: LogOut, action: () => handleLogout() },
   ];
 
+  const handleClickBanner = () => {
+    setIsBannerDrawerOpen(true);
+  }
+
   if (isLoading) return <Loader />;
+  if (!data) {
+    return <div className="h-screen w-full flex justify-center items-center">
+      <h1>No User data</h1>
+    </div>
+  }
+
+  const bannerVideo = cld.video(data.profile_banner?.content_path)
+  const bannerImage = cld.image(data.profile_banner?.content_path)
 
   return (
     <div className="w-full md:flex justify-center">
@@ -64,11 +83,11 @@ const UserDetails = () => {
           <div
             className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative"
           >
-            {!data?.avatar_url ? (
+            {!data.avatar_url ? (
               <p className="font-montserrat">{initialLetterOfName}</p>
             ) : (
               <img
-                src={data?.avatar_url}
+                src={data.avatar_url}
                 alt="Image Preview"
                 className="h-full w-full object-cover rounded-xl"
               />
@@ -79,44 +98,54 @@ const UserDetails = () => {
             className="bg-[#444444] p-2 rounded-xl w-[70%]"
           >
             <h1 className="text-PrimaryTextColor font-semibold text-xl">
-              {data?.full_name}
+              {data.full_name}
             </h1>
             <h3 className="text-PrimaryTextColor font-semibold">
-              {data?.username}
+              {data.username}
             </h3>
-            <p className="text-SecondaryTextColor text-sm">{data?.email}</p>
+            <p className="text-SecondaryTextColor text-sm">{data.email}</p>
           </div>
         </div>
 
         <div className="flex mt-3 gap-3">
           <div
+            onClick={handleClickBanner}
             className="h-60 bg-black w-[70%] rounded-xl overflow-hidden aspect-square"
           >
-            <img src="/logoImg.jpg" className="h-full w-full object-cover" />
-            {/* <video 
-              src="/glith_pr.mp4"
-              autoPlay
-              muted
-              loop
-              className="h-full w-full object-cover"
-            /> */}
+            {!data.profile_banner ? (
+              <img src="/logoImg.jpg" className="h-full w-full object-cover" />
+            ) : data.profile_banner.content_type === "video" ? (
+              <AdvancedVideo 
+                cldVid={bannerVideo}
+                autoPlay
+                muted
+                loop
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <AdvancedImage
+                cldImg={bannerImage}
+                className="h-full w-full object-cover"
+              />
+            )}
           </div>
+
           <div
             className="h-60 bg-[#444444] rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center"
           >
             {iconButtons.map(({ Icon, action }, index) => (
               <div
                 key={index}
-                className="bg-[#242424] rounded-full w-14 h-14 flex justify-center items-center hover:scale-105 transition"
+                className="bg-[#242424] rounded-xl w-14 h-14 flex justify-center items-center hover:scale-105 transition"
                 onClick={action}
               >
-                <Icon color="#fff" size={24} />
+                <Icon color={"#fff"} size={24} />
               </div>
             ))}
           </div>
         </div>
 
-        {data?.bio ? (
+        {data.bio ? (
           <div
             className="mt-3 bg-[#444444] p-2 rounded-xl"
           >
@@ -145,6 +174,20 @@ const UserDetails = () => {
       <SearchSection
         isSearchOpen={isSearchOpen}
         setIsSearchOpen={setIsSearchOpen}
+      />
+
+      <EditUserDetails
+        isEditUserDetailsOpen={isEditUserDetailsOpen}
+        setIsEditUserDetailsOpen={setIsEditUserDetailsOpen}
+        userAvatar={data.avatar_url}
+        userBio={data.bio}
+        userFullName={data.full_name}
+        userName={data.username}
+      />
+
+      <EditBanner 
+        isBannerDrawerOpen={isBannerDrawerOpen}
+        setIsBannerDrawerOpen={setIsBannerDrawerOpen}
       />
     </div>
   );

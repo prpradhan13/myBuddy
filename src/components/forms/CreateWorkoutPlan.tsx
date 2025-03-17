@@ -16,6 +16,14 @@ import { Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import Alert from "../extra/Alert";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface CreateWorkoutPlanProps {
   openCreateForm: boolean;
@@ -57,52 +65,31 @@ const CreateWorkoutPlan = ({
         description: data.description ?? null,
       },
     });
-
+    
     form.reset();
   };
 
   return (
-    <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat z-50">
+    <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-poppins z-50">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="bg-SecondaryBackgroundColor border w-full md:w-[50vw] rounded-md p-3 flex flex-col gap-4"
+          className="bg-SecondaryBackgroundColor w-full md:w-[50vw] rounded-xl p-4 flex flex-col gap-4"
         >
           <FormField
             control={form.control}
             name="plan_name"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel className="text-PrimaryTextColor text-lg">
                   Your Plan Name
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder=""
+                  <input
+                    placeholder="Write your workout plan name."
                     {...field}
                     value={field.value ?? ""}
-                    className="text-PrimaryTextColor"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="difficulty_level"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-PrimaryTextColor text-lg">
-                  What is the difficulty level of your plan?
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder=""
-                    {...field}
-                    value={field.value ?? ""}
-                    className="text-PrimaryTextColor"
+                    className="text-PrimaryTextColor border-b pb-2 px-2 bg-transparent placeholder:text-[#6c6c6c] outline-none"
                   />
                 </FormControl>
                 <FormMessage />
@@ -120,11 +107,43 @@ const CreateWorkoutPlan = ({
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder=""
+                    placeholder="Optional"
                     {...field}
-                    className="text-PrimaryTextColor"
+                    className="text-PrimaryTextColor h-28 placeholder:text-[#6c6c6c]"
                     value={field.value ?? ""}
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="difficulty_level"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-PrimaryTextColor text-lg">
+                  Level
+                </FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className={`w-[180px] ${field.value ? "text-white" : "text-muted-foreground"}`}>
+                      <SelectValue placeholder="Select Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="beginners">Beginners</SelectItem>
+                        <SelectItem value="intermediates">
+                          Intermediates
+                        </SelectItem>
+                        <SelectItem value="advance">Advance</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -137,7 +156,7 @@ const CreateWorkoutPlan = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-PrimaryTextColor text-lg">
-                  How many week has your plan?
+                  How many week ?
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -145,7 +164,6 @@ const CreateWorkoutPlan = ({
                     {...field}
                     className="text-PrimaryTextColor w-[70px]"
                     onChange={(e) => {
-                      // Handle empty string case explicitly
                       const value =
                         e.target.value === "" ? "" : Number(e.target.value);
                       field.onChange(value);

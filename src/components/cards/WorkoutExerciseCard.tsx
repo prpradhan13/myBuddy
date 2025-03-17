@@ -40,7 +40,7 @@ const WorkoutExerciseCard = ({
   };
 
   return (
-    <div className="bg-SecondaryBackgroundColor p-4 rounded-lg flex justify-between items-center">
+    <div className="bg-SecondaryBackgroundColor p-4 rounded-xl flex justify-between items-center">
       <div className="">
         <Link to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}>
           <h1 className="text-[#fca311] text-lg capitalize font-semibold">

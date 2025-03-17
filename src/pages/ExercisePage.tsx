@@ -135,7 +135,7 @@ const ExercisePage = () => {
             {data?.exercise_name}
           </h1>
           {data?.exercise_description && (
-            <div className={`${exerciseImage ? "bg-transparent" : "bg-[#2f2f2f] p-4 rounded-lg"} mt-2`}>
+            <div className={`${exerciseImage ? "bg-transparent" : "bg-[#2f2f2f] p-4 rounded-xl"} mt-2`}>
               <p className="text-white capitalize whitespace-pre-line">
                 {data?.exercise_description}
               </p>
@@ -144,7 +144,7 @@ const ExercisePage = () => {
 
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sortedExerciseSets.map((set, index) => (
-              <div className="border p-4 rounded-lg" key={set.id}>
+              <div className="border p-4 rounded-xl" key={set.id}>
                 <div className="flex gap-2 items-center">
                   <h1 className="text-SecondaryTextColor text-[1rem] capitalize font-semibold">
                     Set {index + 1}

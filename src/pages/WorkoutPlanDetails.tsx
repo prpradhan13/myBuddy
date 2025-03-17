@@ -93,27 +93,31 @@ const WorkoutPlanDetails = () => {
           {data?.creator.username}
         </h2>
       </div>
-      <h1 className="text-2xl mt-2 font-semibold capitalize text-PrimaryTextColor">
-        {data?.plan_name}
-      </h1>
-      <h2 className="text-sm text-SecondaryTextColor capitalize">
-        {data?.plan_difficulty}, {totalPages} week plan
-      </h2>
 
-      {data?.plan_description && (
-        <div className="text-SecondaryTextColor mt-2">
-          <p className="font-semibold">Note:</p>
-          <p className="text-sm leading-5 whitespace-pre-line">
-            {data.plan_description}
-          </p>
-        </div>
-      )}
+      <div className="bg-[#444444] p-2 rounded-xl mt-2">
+        <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
+          {data?.plan_name}
+        </h1>
+        <h2 className="text-sm text-PrimaryTextColor capitalize">
+          {data?.plan_difficulty}, {totalPages} week plan
+        </h2>
 
-      {creatorOfPlan && (
+        {data?.plan_description && (
+          <div className="text-SecondaryTextColor mt-2">
+            <p className="text-sm leading-5 whitespace-pre-line">
+              {data.plan_description}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {creatorOfPlan && totalPages === 6 ? (
+        <p className="text-red-500 my-2">You can add more than 6 weeks!</p>
+      ) : (
         <Alert
           btnName="Add a week"
           trigerBtnVarient={"secondary"}
-          triggerBtnClassName="rounded-full my-4"
+          triggerBtnClassName="rounded-xl my-4"
           pendingState={isPending}
           headLine="Are you want to add a new week?"
           descLine="This is add a new week in this plan."
@@ -126,7 +130,7 @@ const WorkoutPlanDetails = () => {
       <Button
         variant={"secondary"}
         onClick={handleOpenComment}
-        className="mx-2 rounded-full"
+        className="mx-2 rounded-xl"
       >
         Comments
       </Button>

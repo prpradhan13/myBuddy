@@ -15,7 +15,6 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const WorkOutPlanDetails = lazy(() => import("./pages/WorkoutPlanDetails"));
 const WorkOutDayDetails = lazy(() => import("./pages/WorkoutDayDetails"));
 const ExercisePage = lazy(() => import("./pages/ExercisePage"));
-const EditProfilePage = lazy(() => import("./pages/EditProfilePage"));
 const AllWorkoutPlan = lazy(() => import("./pages/AllWorkoutPlan"));
 const SharedPlanDetails = lazy(() => import("./pages/SharedPlanDetails"));
 const RecipientAchivementsDetails = lazy(() => import("./pages/RecipientAchivements"));
@@ -42,7 +41,6 @@ function App() {
 
             <Route element={<PrivateRoute />}>
               <Route path="/" element={<HomePage />} />
-              <Route path="/editProfile" element={<EditProfilePage />} />
               <Route
                 path="/workoutPlanDetails/:planId"
                 element={<WorkOutPlanDetails />}

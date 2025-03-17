@@ -24,7 +24,7 @@ const HomePage = () => {
         <div
           className="bg-[#444] p-2 rounded-xl mt-4"
         >
-          <div className="w-full mt-6 flex justify-between items-center">
+          <div className="w-full mt-4 flex justify-between items-center">
             <h1 className="text-SecondaryTextColor font-semibold text-xl">
               Your Plans
             </h1>

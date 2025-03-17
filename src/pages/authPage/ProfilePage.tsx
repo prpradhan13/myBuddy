@@ -1,6 +1,5 @@
 import WorkoutPlanCard from "@/components/home/WorkoutPlanCard";
 import Loader from "@/components/loaders/Loader";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
 import { WorkoutPlansType } from "@/types/workoutPlans";
@@ -32,6 +31,8 @@ const ProfilePage = () => {
     }
   }, [newPlans]);
 
+  const initialLetterOfName = getInitialLetter(data?.full_name);
+
   if (userDetailsLoading) return <Loader />;
 
   if (user?.id?.toString() === profileId) {
@@ -47,53 +48,76 @@ const ProfilePage = () => {
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4">
-      <div className="flex justify-center flex-col items-center">
-        {data?.avatar_url ? (
-          <Avatar>
-            <AvatarImage
-              src={data.avatar_url}
-              className="h-24 w-24 rounded-full"
+      <div className="w-full font-ubuntu flex gap-3">
+        <div className="h-32 w-32 bg-gradient-to-t from-[#000000] via-[#1c1c1c] to-[#3e3e3e] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
+          {!data?.avatar_url ? (
+            <p className="font-montserrat">{initialLetterOfName}</p>
+          ) : (
+            <img
+              src={data?.avatar_url}
+              alt="Image Preview"
+              className="h-full w-full object-cover rounded-xl"
             />
-            <AvatarFallback>{getInitialLetter(data.full_name)}</AvatarFallback>
-          </Avatar>
-        ) : (
-          <div className="h-24 w-24 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-full flex justify-center items-center text-PrimaryTextColor font-bold text-xl">
-            {getInitialLetter(data?.full_name)}
-          </div>
-        )}
+          )}
+        </div>
 
-        <h1 className="text-PrimaryTextColor text-lg font-medium mt-2">
-          {data?.full_name}
-        </h1>
-        <h1 className="text-PrimaryTextColor font-medium">{data?.username}</h1>
-        {data?.bio && (
-          <p className="text-sm text-SecondaryTextColor">{data.bio}</p>
-        )}
+        <div className="bg-[#444444] p-2 rounded-xl w-[70%]">
+          <h1 className="text-PrimaryTextColor font-semibold text-xl">
+            {data?.full_name}
+          </h1>
+          <h3 className="text-PrimaryTextColor font-semibold">
+            {data?.username}
+          </h3>
+          <p className="text-SecondaryTextColor text-sm">{data?.email}</p>
+        </div>
       </div>
 
-      <div className="flex items-center mt-4 justify-between">
-        <h1 className="text-PrimaryTextColor text-lg font-medium">
-          Workout Plans
-        </h1>
+      <div className="flex mt-3 gap-3">
+        <div className="h-60 bg-black w-[70%] rounded-xl overflow-hidden aspect-square">
+          <img src="/logoImg.jpg" className="h-full w-full object-cover" />
+        </div>
       </div>
 
-      <div>
-        {planLoad && page === 1 ? (
-          <Loader />
-        ) : planData && planData.length > 0 ? (
-          planData.map((plan, index) => (
-            <div key={index} className="mt-2">
-              <WorkoutPlanCard planDetails={plan} />
-            </div>
-          ))
-        ) : (
-          <p className="text-SecondaryTextColor text-center">
-            No Plans For Public
+      {data?.bio ? (
+        <div className="mt-3 bg-[#444444] p-2 rounded-xl">
+          <h2 className="text-white text-lg font-semibold">About me</h2>
+          <div className="bg-[#fff] h-1 w-10 rounded-full"></div>
+          <p className="text-SecondaryTextColor leading-5 mt-2 whitespace-pre-line">
+            {data.bio}
           </p>
+        </div>
+      ) : (
+        <div className="mt-3 min-h-32 bg-[#444444] p-2 rounded-xl flex justify-center items-center">
+          <p className="text-SecondaryTextColor font-medium"> No Bio </p>
+        </div>
+      )}
+
+      <div className="mt-4 justify-between bg-[#444] p-2 rounded-xl">
+        {planData && planData.length > 0 && (
+          <h1 className="text-PrimaryTextColor text-lg font-medium">
+            Workout Plans
+          </h1>
         )}
+
+        <div>
+          {planLoad && page === 1 ? (
+            <Loader />
+          ) : planData && planData.length > 0 ? (
+            planData.map((plan, index) => (
+              <div key={index} className="mt-2">
+                <WorkoutPlanCard planDetails={plan} />
+              </div>
+            ))
+          ) : (
+            <p className="text-SecondaryTextColor text-center">
+              No Plans For Public
+            </p>
+          )}
+        </div>
       </div>
 
-      {newPlans && newPlans.length < limit && (
+
+      {newPlans && (newPlans.length < limit && newPlans?.length > 0 ) && (
         <p className="text-SecondaryTextColor font-medium text-center mt-4">
           {" "}
           No More Plans{" "}

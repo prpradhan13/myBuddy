@@ -20,10 +20,7 @@ export const useGetWorkoutDay = (workoutDayId: number) => {
         .single();
 
       if (error) {
-        toast.error(
-          error.message || "Can not find workout day with exercise id"
-        );
-        return;
+        throw new Error(error.message);
       }
 
       return data || {};

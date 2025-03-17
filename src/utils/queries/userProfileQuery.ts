@@ -2,9 +2,8 @@
 import { UserProfileFormType, UserProfileType } from "../../types/userType";
 import toast from "react-hot-toast";
 import { supabase } from "../supabase";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthProvider";
-import { useNavigate } from "react-router-dom";
 
 export const getUserDetails = (userId?: string) => {
   if (!userId) {
@@ -16,25 +15,23 @@ export const getUserDetails = (userId?: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select("*, profile_banner(*)")
         .eq("id", userId)
         .single();
 
       if (error) {
         toast.error(error.message || "User profile not found");
       }
-
-      return data || [];
+      
+      return data;
     },
     enabled: !!userId,
   });
 };
 
-export const updateProfiePicture = () => {
-  const queryClient = useQueryClient();
+export const updateProfieDetails = () => {
   const { user } = useAuth();
   const userId = user?.id;
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async ({
@@ -46,6 +43,7 @@ export const updateProfiePicture = () => {
     }) => {
 
       const formData = { ...profileForm };
+      console.log(formData);
 
       if (selectedImage) {
         const fileName = `${userId}/${new Date().getTime()}_${selectedImage.name}`;
@@ -75,18 +73,15 @@ export const updateProfiePicture = () => {
           bio: formData.bio,
           avatar_url: formData.avatar_url
         })
-        .eq("id", userId);
+        .eq("id", userId)
+        .select("*")
+        .single();
 
       if (error) {
         throw new Error(error.message);
       }
 
       return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`user_profile_${userId}`] });
-      toast.success("Profile picture updated successfully");
-      navigate(-1);
     },
     onError: (error: Error) => {
       toast.error(error.message);

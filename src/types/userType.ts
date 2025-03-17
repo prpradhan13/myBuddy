@@ -5,6 +5,13 @@ export type UserProfileType = {
     email: string;
     bio: string | null;
     avatar_url: string | null;
+    profile_banner: {
+        id: number;
+        user_id: string;
+        content_type: string;
+        content_path: string;
+        created_at: string;
+    } | null;
 }
 
 export type UserProfileFormType = {
