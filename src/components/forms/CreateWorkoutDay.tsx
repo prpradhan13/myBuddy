@@ -134,20 +134,16 @@ const CreateWorkoutDay = ({
               )}
             />
 
-          <div className="flex gap-3 justify-evenly">
-            <Alert 
-              handleContinueBtn={handleCloseBtn}
-              trigerBtnVarient="destructive"
-              triggerBtnClassName="w-1/2 text-lg font-semibold"
-            />
-            <Button
-              type="submit"
-              variant="secondary"
-              className="w-1/2"
-            >
-              NEXT
-            </Button>
-          </div>
+            <div className="flex gap-3 justify-evenly">
+              <Alert
+                handleContinueBtn={handleCloseBtn}
+                trigerBtnVarient="destructive"
+                triggerBtnClassName="w-1/2 text-lg font-semibold"
+              />
+              <Button type="submit" variant="secondary" className="w-1/2">
+                NEXT
+              </Button>
+            </div>
           </form>
         </Form>
       )}
@@ -158,7 +154,12 @@ const CreateWorkoutDay = ({
 
       {step === 3 && (
         <FinalStep
-          workoutDetail={{ ...form.watch(), exercises: exerciseData }}
+          workoutDetail={{
+            ...form.watch(),
+            exercises: exerciseData,
+            difficulty_level: form.watch("difficulty_level") ?? null,
+            description: form.watch("description") ?? null,
+          }}
           setExerciseData={setExerciseData}
           setStep={setStep}
           workoutDayId={workoutDayId}

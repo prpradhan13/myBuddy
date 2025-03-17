@@ -44,7 +44,15 @@ const AddExercise = ({
   };
 
   const onSubmit = (data: TExerciseForm) => {
-    setExerciseData((prev) => [...prev, { ...data }]);
+    setExerciseData((prev) => [
+      ...prev,
+      {
+        ...data,
+        target_muscle: data.target_muscle ?? null,
+        exercise_description: data.exercise_description ?? null,
+        rest: data.rest ?? null,
+      },
+    ]);
     setStep(2);
     form.reset();
   };
@@ -141,7 +149,7 @@ const AddExercise = ({
             />
 
             <div className="w-full flex gap-3">
-              <Alert 
+              <Alert
                 trigerBtnVarient={"destructive"}
                 triggerBtnClassName="w-1/2"
                 handleContinueBtn={handleCloseBtn}
