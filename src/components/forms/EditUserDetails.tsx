@@ -215,6 +215,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <div className="flex items-center gap-2 border border-[#fff] rounded-xl p-2 mt-2">
             <textarea
               {...register("bio")}
+              placeholder="Write somthing about yourself..."
               id="bio"
               className="text-white bg-transparent w-full h-36 focus:outline-none placeholder:text-[#c2c2c2]"
             />

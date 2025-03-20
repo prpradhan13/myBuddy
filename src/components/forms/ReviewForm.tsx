@@ -116,8 +116,8 @@ const ReviewForm = memo(() => {
 
   return (
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-      <DrawerTrigger className="bg-SecondaryBackgroundColor text-PrimaryTextColor text-sm p-2 rounded-md mt-2 ">
-        Review
+      <DrawerTrigger className="bg-[#cbcbcb] text-PrimaryTextColor text-sm p-2 rounded-md">
+        <Star color="black" size={20} />
       </DrawerTrigger>
       {isLoading ? (
         <DrawerContent>
@@ -126,7 +126,7 @@ const ReviewForm = memo(() => {
           </DrawerHeader>
         </DrawerContent>
       ) : hasReviewed && userReview ? (
-        <DrawerContent className="px-4">
+        <DrawerContent className="px-4 pb-4">
           <DrawerHeader>
             <DrawerTitle>Reviewed</DrawerTitle>
             <DrawerDescription>
@@ -145,7 +145,8 @@ const ReviewForm = memo(() => {
               />
             ))}
           </div>
-          <p className="text-center mt-2">{userReview.review}</p>
+
+          <p className="text-center my-3">{userReview.review}</p>
 
           <DrawerClose asChild>
             <Alert

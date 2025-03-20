@@ -274,7 +274,10 @@ export const useAddNewWeek = (planId: number) => {
   });
 };
 
-export const useTogglePlanVisibility = (planId: number, {limit = 5, offset}: WorkoutQueryParams) => {
+export const useTogglePlanVisibility = (
+  planId: number,
+  { limit = 5, offset }: WorkoutQueryParams
+) => {
   const { user } = useAuth();
   const userId = user?.id;
   const queryClient = useQueryClient();
@@ -292,14 +295,16 @@ export const useTogglePlanVisibility = (planId: number, {limit = 5, offset}: Wor
 
       return { updatedPlan: data };
     },
-    onSuccess: ({ updatedPlan }: {updatedPlan: WorkoutPlansType}) => {
+    onSuccess: ({ updatedPlan }: { updatedPlan: WorkoutPlansType }) => {
       queryClient.setQueryData(
         [`workoutPlans_${userId}_${limit}_${offset}`],
         (oldData: WorkoutPlansType[] | undefined) => {
           if (!oldData) return undefined;
 
           return oldData.map((plan) =>
-            plan.id === planId ? { ...plan, is_public: updatedPlan.is_public } : plan
+            plan.id === planId
+              ? { ...plan, is_public: updatedPlan.is_public }
+              : plan
           );
         }
       );

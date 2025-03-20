@@ -30,6 +30,7 @@ interface AlertProps {
   pendingState?: boolean;
   headLine?: string;
   descLine?: string;
+  asChild? : boolean;
 }
 
 const Alert = ({
@@ -42,6 +43,7 @@ const Alert = ({
   pendingState=false,
   headLine,
   descLine,
+  asChild=false,
 }: AlertProps) => {
   return (
     <AlertDialog>
@@ -49,8 +51,15 @@ const Alert = ({
         <Button
           variant={trigerBtnVarient}
           className={triggerBtnClassName || ""}
+          asChild={asChild}
         >
-          {Icon ? <Icon className={iconClassName || ""} /> : btnName ? btnName : "Close"}
+          {Icon ? (
+            <Icon
+              className={`${iconClassName || ""}`}
+            />
+          ) : (
+            btnName || "Close"
+          )}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

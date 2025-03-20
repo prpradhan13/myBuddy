@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
 import { WorkoutPlansType } from "@/types/workoutPlans";
 import { getInitialLetter } from "@/utils/helpingFunctions";
+import { cld } from "@/utils/lib/cloudinary";
 import { getUserDetails } from "@/utils/queries/userProfileQuery";
 import { useOtherUsersAllPublicPlans } from "@/utils/queries/workoutQuery";
+import { AdvancedImage, AdvancedVideo } from "@cloudinary/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -46,16 +48,27 @@ const ProfilePage = () => {
     );
   }
 
+  if (!data) {
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <h1>No User data</h1>
+      </div>
+    );
+  }
+
+  const bannerVideo = cld.video(data?.profile_banner?.content_path);
+  const bannerImage = cld.image(data?.profile_banner?.content_path);
+
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4">
       <div className="w-full font-ubuntu flex gap-3">
         <div className="h-32 w-32 bg-gradient-to-t from-[#000000] via-[#1c1c1c] to-[#3e3e3e] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
-          {!data?.avatar_url ? (
+          {!data.avatar_url ? (
             <p className="font-montserrat">{initialLetterOfName}</p>
           ) : (
             <img
-              src={data?.avatar_url}
-              alt="Image Preview"
+              src={data.avatar_url}
+              alt="Profile Image"
               className="h-full w-full object-cover rounded-xl"
             />
           )}
@@ -63,22 +76,37 @@ const ProfilePage = () => {
 
         <div className="bg-[#444444] p-2 rounded-xl w-[70%]">
           <h1 className="text-PrimaryTextColor font-semibold text-xl">
-            {data?.full_name}
+            {data.full_name}
           </h1>
           <h3 className="text-PrimaryTextColor font-semibold">
-            {data?.username}
+            {data.username}
           </h3>
-          <p className="text-SecondaryTextColor text-sm">{data?.email}</p>
+          <p className="text-SecondaryTextColor text-sm">{data.email}</p>
         </div>
       </div>
 
       <div className="flex mt-3 gap-3">
         <div className="h-60 bg-black w-[70%] rounded-xl overflow-hidden aspect-square">
-          <img src="/logoImg.jpg" className="h-full w-full object-cover" />
+          {!data.profile_banner ? (
+            <img src="/logoImg.jpg" className="h-full w-full object-cover" />
+          ) : data.profile_banner.content_type === "video" ? (
+            <AdvancedVideo
+              cldVid={bannerVideo}
+              autoPlay
+              muted
+              loop
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <AdvancedImage
+              cldImg={bannerImage}
+              className="h-full w-full object-cover"
+            />
+          )}
         </div>
       </div>
 
-      {data?.bio ? (
+      {data.bio ? (
         <div className="mt-3 bg-[#444444] p-2 rounded-xl">
           <h2 className="text-white text-lg font-semibold">About me</h2>
           <div className="bg-[#fff] h-1 w-10 rounded-full"></div>
@@ -116,8 +144,7 @@ const ProfilePage = () => {
         </div>
       </div>
 
-
-      {newPlans && (newPlans.length < limit && newPlans?.length > 0 ) && (
+      {newPlans && newPlans.length < limit && newPlans?.length > 0 && (
         <p className="text-SecondaryTextColor font-medium text-center mt-4">
           {" "}
           No More Plans{" "}

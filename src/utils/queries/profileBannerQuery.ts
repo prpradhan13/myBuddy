@@ -14,7 +14,7 @@ export const useAddBanner = () => {
       content_type: string;
       content_path: string;
     }) => {
-      const { data, error } = await supabase
+      const { data: banner, error: bannerError } = await supabase
         .from("banners")
         .upsert(
             { user_id: userId, content_type, content_path },
@@ -23,9 +23,16 @@ export const useAddBanner = () => {
         .select("*")
         .single();
 
-      if (error) throw new Error(error.message);
+      if (bannerError) throw new Error(bannerError.message);
 
-      return data;
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({ profile_banner: banner.id })
+        .eq("id", userId);
+
+      if (profileError) throw new Error(profileError.message);
+
+      return banner;
     },
   });
 };

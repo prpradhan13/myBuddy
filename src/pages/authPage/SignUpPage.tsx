@@ -49,7 +49,14 @@ const SignUpPage = () => {
     if (error) {
       toast.error(error.message || "Error during sign-up");
     } else if (!session) {
-      toast.success("Please check your inbox for email verification!");
+      toast("Please check your inbox for email verification!", {
+        duration: 4000,
+        position: "bottom-right",
+        style: {
+          backgroundColor: "greenyellow",
+          color: "#000"
+        }
+      });
       form.reset();
       navigate("/register");
     } else {

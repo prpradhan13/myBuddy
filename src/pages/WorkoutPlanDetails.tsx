@@ -6,14 +6,12 @@ import {
 import WorkoutDayCard from "../components/cards/WorkoutDayCard";
 import { useEffect, useState } from "react";
 import ErrorPage from "../components/loaders/ErrorPage";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
 import Alert from "@/components/extra/Alert";
 import { usePlan } from "@/context/WorkoutPlanProvider";
-import { useRecipientPlan } from "@/context/SharedPlanProvider";
 import ReviewForm from "@/components/forms/ReviewForm";
 import { getInitialLetter } from "@/utils/helpingFunctions";
+import { CalendarDays, CalendarPlus, MessageCircle } from "lucide-react";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +19,6 @@ const WorkoutPlanDetails = () => {
 
   const { planId } = useParams();
   const { planInfo, setPlanInfo, creatorOfPlan } = usePlan();
-  const { isRecipient } = useRecipientPlan();
   const navigate = useNavigate();
 
   const { data, isLoading, isError, error } = useGetPlanWithDays(
@@ -51,14 +48,6 @@ const WorkoutPlanDetails = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
 
   const { mutate, isPending } = useAddNewWeek(Number(planId));
 
@@ -94,7 +83,7 @@ const WorkoutPlanDetails = () => {
         </h2>
       </div>
 
-      <div className="bg-[#444444] p-2 rounded-xl mt-2">
+      <div className="bg-[#444444] p-2 rounded-xl my-2">
         <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
           {data?.plan_name}
         </h1>
@@ -109,35 +98,55 @@ const WorkoutPlanDetails = () => {
             </p>
           </div>
         )}
+
+        <div className="mt-2 flex gap-2">
+          <button
+            onClick={handleOpenComment}
+            className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+          >
+            <MessageCircle size={20} color="#000" />
+          </button>
+
+          {!creatorOfPlan && <ReviewForm />}
+        </div>
       </div>
 
-      {creatorOfPlan && totalPages === 6 ? (
-        <p className="text-red-500 my-2">You can add more than 6 weeks!</p>
-      ) : (
-        <Alert
-          btnName="Add a week"
-          trigerBtnVarient={"secondary"}
-          triggerBtnClassName="rounded-xl my-4"
-          pendingState={isPending}
-          headLine="Are you want to add a new week?"
-          descLine="This is add a new week in this plan."
-          handleContinueBtn={handleAddWeek}
-        />
-      )}
 
-      {isRecipient && !creatorOfPlan && <ReviewForm />}
 
-      <Button
-        variant={"secondary"}
-        onClick={handleOpenComment}
-        className="mx-2 rounded-xl"
-      >
-        Comments
-      </Button>
+      <div className="flex gap-3 justify-center my-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            onClick={() => setCurrentPage(index + 1)}
+            className={`flex flex-col flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
+              currentPage === index + 1
+                ? "bg-[#898989] text-white"
+                : "bg-[#cbcbcb]"
+            }`}
+            key={index}
+          >
+            <span className="font-bold">{index + 1}</span>
+            <CalendarDays size={20} />
+          </button>
+        ))}
 
-      <h2 className="text-center text-lg text-PrimaryTextColor font-semibold mt-4">
-        Week {currentPage}
-      </h2>
+        {creatorOfPlan && totalPages <= 6 && (
+          <button className="bg-[#cbcbcb] h-14 w-14 flex flex-col items-center justify-center rounded-xl overflow-hidden">
+            <Alert
+              trigerBtnVarient={"default"}
+              icon={CalendarPlus}
+              triggerBtnClassName="w-full h-full bg-[#cbcbcb] hover:bg-[#cbcbcb] text-black"
+              asChild={true}
+              pendingState={isPending}
+              headLine="Are you want to add a new week?"
+              descLine="This is add a new week in this plan."
+              handleContinueBtn={handleAddWeek}
+            />
+          </button>
+        )}
+      </div>
+
+      {/* <h2 className="text-center text-lg text-PrimaryTextColor font-semibold mt-4">
+      </h2> */}
 
       {validWorkoutDays.length > 0 ? (
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -154,30 +163,6 @@ const WorkoutPlanDetails = () => {
           <p className="text-PrimaryTextColor font-semibold">
             No workout days found
           </p>
-        </div>
-      )}
-
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="pagination-controls flex items-center justify-between mt-6">
-          <Button
-            variant={"secondary"}
-            onClick={handlePrevious}
-            disabled={currentPage === 1}
-            className="text-sm font-semibold disabled:opacity-50"
-          >
-            <ChevronLeft />
-            Previous
-          </Button>
-          <Button
-            variant={"secondary"}
-            onClick={handleNext}
-            disabled={currentPage === totalPages}
-            className="text-sm font-semibold disabled:opacity-50"
-          >
-            Next
-            <ChevronRight />
-          </Button>
         </div>
       )}
     </div>

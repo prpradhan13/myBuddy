@@ -108,7 +108,7 @@ const UserDetails = () => {
         </div>
 
         <div className="flex mt-3 gap-3">
-          <div
+          <button
             onClick={handleClickBanner}
             className="h-60 bg-black w-[70%] rounded-xl overflow-hidden aspect-square"
           >
@@ -128,7 +128,7 @@ const UserDetails = () => {
                 className="h-full w-full object-cover"
               />
             )}
-          </div>
+          </button>
 
           <div
             className="h-60 bg-[#444444] rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center"

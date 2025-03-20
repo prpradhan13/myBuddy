@@ -96,7 +96,7 @@ const BannerForm: React.FC<BannerFormProps> = ({ setIsBannerDrawerOpen }) => {
           );
 
           setIsBannerDrawerOpen(false);
-          toast.success("Your profile banner has been updated 🎉");
+          toast.success("Your profile banner has been updated!");
         },
         onError: () => {
           toast.error("An error has occurred");
