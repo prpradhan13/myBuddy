@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { WorkoutPlansType } from "../../types/workoutPlans";
 import {
   calculateAverageRating,
@@ -53,6 +53,7 @@ const WorkoutPlanCard = ({
   const [searchText, setSearchText] = useState("");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { mutate, isPending } = useDeletePlan(planDetails.id, 5);
 
@@ -79,6 +80,10 @@ const WorkoutPlanCard = ({
     shareMutate(userId);
   };
 
+  const handlePlanClick = () => {
+    navigate(`/workoutPlanDetails/${planDetails.id}`)
+  }
+
   const planBGImage = planDetails.image_content && cld.image(planDetails.image_content)
 
   return (
@@ -94,12 +99,12 @@ const WorkoutPlanCard = ({
 
       <div className={`absolute ${planBGImage ? "bg-black/30" : "bg-[#2d2d2d]"} p-4 text-SecondaryTextColor flex flex-col w-full h-full`}>
         <div className="flex justify-between">
-          <Link
-            to={`/workoutPlanDetails/${planDetails.id}`}
+          <button
+            onClick={handlePlanClick}
             className="text-xl font-semibold capitalize text-[#ffffff]"
           >
             {truncateText(planDetails.plan_name ?? "", 30)}
-          </Link>
+          </button>
 
           {isLogedInUserCreator && (
             <DropdownMenu>

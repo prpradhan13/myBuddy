@@ -169,3 +169,44 @@ export const useGetRecipientAchivement = (setId: number) => {
     enabled: !!setId
   })
 }
+
+export const useTotalSharedCount = (senderId: string) => {
+  return useQuery<{count: number} | undefined>({
+    queryKey: ["totalSharedCount", senderId],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("workoutplan_shared")
+        .select(undefined, { count: "exact", head: true })
+        .eq("sender_id", senderId);
+
+      if (error) throw new Error(error.message);
+
+      return { count: count ?? 0 };
+    },
+    enabled: !!senderId
+  })
+};
+
+export const useHasReceivedPlan = (planId: number) => {
+  const { user } = useAuth();
+  const userId = user?.id;
+
+  return useQuery({
+    queryKey: ["hasReceivedPlan", userId, planId],
+    queryFn: async () => {
+      if (!userId) return false;
+
+      const { data, error } = await supabase
+        .from("workoutplan_shared")
+        .select("user_id")
+        .eq("workoutplan_id", planId)
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (error) throw new Error(error.message);
+
+      return !!data;
+    },
+    enabled: !!userId && !!planId,
+  });
+};

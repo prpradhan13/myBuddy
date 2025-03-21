@@ -363,6 +363,31 @@ export const useOtherUsersAllPublicPlans = (
   });
 };
 
+export const useOtherUsersAllPrivatePlans = (
+  userId: string,
+  page: number,
+  limit: number
+) => {
+  return useQuery<WorkoutPlansType[]>({
+    queryKey: ["userPrivatePlan", userId, page],
+    queryFn: async () => {
+      const from = (page - 1) * limit;
+      const to = from + limit - 1;
+
+      const { data, error } = await supabase
+        .from("workoutplan")
+        .select("*")
+        .eq("creator_id", userId)
+        .eq("is_public", false)
+        .range(from, to);
+
+      if (error) throw new Error(error.message);
+
+      return data || [];
+    },
+  });
+};
+
 export const useUsersTotalPlanCount = (userId: string) => {
   return useQuery<{count: number} | undefined>({
     queryKey: ["userTotalPlanCount", userId],
@@ -379,3 +404,39 @@ export const useUsersTotalPlanCount = (userId: string) => {
     enabled: !!userId,
   });
 }
+
+export const useUserTotalPublicPlanCount = (userId: string) => {
+  return useQuery<{count: number} | undefined>({
+    queryKey: ["userTotalPublicPlanCount", userId],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("workoutplan")
+        .select(undefined, { count: "exact", head: true })
+        .eq("creator_id", userId)
+        .eq("is_public", true);
+
+      if (error) throw new Error(error.message);
+
+      return { count: count ?? 0 };
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useUserTotalPrivatePlanCount = (userId: string) => {
+  return useQuery<{count: number} | undefined>({
+    queryKey: ["userTotalPrivatePlanCount", userId],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("workoutplan")
+        .select(undefined, { count: "exact", head: true })
+        .eq("creator_id", userId)
+        .eq("is_public", false);
+
+      if (error) throw new Error(error.message);
+
+      return { count: count ?? 0 };
+    },
+    enabled: !!userId,
+  });
+};

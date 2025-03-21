@@ -22,6 +22,8 @@ const PublicPlanPage = lazy(() => import("./pages/PublicPlanPage"));
 const ProfilePage = lazy(() => import("./pages/authPage/ProfilePage"));
 const CommentsPage = lazy(() => import("./pages/CommentPage"));
 const ExerciseVisuals = lazy(() => import("./pages/ExerciseVisuals"));
+const UserPrivatePlan = lazy(() => import("./pages/UserPrivatePlan"));
+const UserPublicPlanPage = lazy(() => import("./pages/UserPublicPlanPage"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -60,6 +62,8 @@ function App() {
               <Route path="/profilePage/:profileId" element={<ProfilePage />}/>
               <Route path="/comments/:planId" element={<CommentsPage />}/>
               <Route path="/exerciseVisuals/:exerciseId" element={<ExerciseVisuals />}/>
+              <Route path="/userPublicPlan/:userId" element={<UserPublicPlanPage />}/>
+              <Route path="/userPrivatePlan/:userId" element={<UserPrivatePlan />}/>
             </Route>
           </Routes>
         </Suspense>

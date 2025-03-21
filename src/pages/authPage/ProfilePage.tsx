@@ -1,8 +1,6 @@
-import WorkoutPlanCard from "@/components/home/WorkoutPlanCard";
 import Loader from "@/components/loaders/Loader";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
-import { WorkoutPlansType } from "@/types/workoutPlans";
 import { getInitialLetter } from "@/utils/helpingFunctions";
 import { cld } from "@/utils/lib/cloudinary";
 import {
@@ -10,32 +8,30 @@ import {
   useFollowers,
   useFollowings,
 } from "@/utils/queries/followQuery";
+import { useTotalSharedCount } from "@/utils/queries/sharedPlanQuery";
 import { getUserDetails } from "@/utils/queries/userProfileQuery";
 import {
-  useOtherUsersAllPublicPlans,
-  useUsersTotalPlanCount,
+  useUserTotalPrivatePlanCount,
+  useUserTotalPublicPlanCount,
 } from "@/utils/queries/workoutQuery";
 import { AdvancedImage, AdvancedVideo } from "@cloudinary/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 
 const ProfilePage = () => {
   const { profileId } = useParams();
   const { user } = useAuth();
-
-  const [page, setPage] = useState(1);
-  const limit = 5;
+  const navigate = useNavigate();
 
   const { data, isLoading: userDetailsLoading } = getUserDetails(profileId);
-  const { data: newPlans, isLoading: planLoad } = useOtherUsersAllPublicPlans(
-    profileId!,
-    page,
-    limit
-  );
-  const { data: planCount, isLoading: planCountLoad } = useUsersTotalPlanCount(
+  const { data: totalPublicPlan, isLoading: countingPublicPlan } =
+    useUserTotalPublicPlanCount(profileId!);
+  const { data: totalPrivatePlan, isLoading: countingPrivatePlan } =
+    useUserTotalPrivatePlanCount(profileId!);
+
+  const { data: totalShares, isLoading: countingTotalShares } = useTotalSharedCount(
     profileId!
   );
   const { data: userFollowers, isLoading: followersLoad } = useFollowers(
@@ -46,14 +42,6 @@ const ProfilePage = () => {
   );
   const { mutate, isPending } = useCreateFollow();
   const queryClient = useQueryClient();
-
-  const [planData, setPlanData] = useState<WorkoutPlansType[]>([]);
-
-  useEffect(() => {
-    if (newPlans) {
-      setPlanData((prev) => [...prev, ...newPlans]);
-    }
-  }, [newPlans]);
 
   const initialLetterOfName = getInitialLetter(data?.full_name);
 
@@ -101,22 +89,32 @@ const ProfilePage = () => {
         onSuccess: () => {
           queryClient.setQueryData(
             ["followerAndCount", profileId],
-            (oldData: {count: number; followerIds: string[]} | undefined) => {
+            (oldData: { count: number; followerIds: string[] } | undefined) => {
               if (!oldData) return { count: 1, followerIds: [user.id] };
 
               return {
                 ...oldData,
                 count: userFollow ? oldData.count - 1 : oldData.count + 1,
-                followerIds: userFollow ? oldData.followerIds.filter((id) => id !== user.id) : [...oldData.followerIds, user.id],
-              }
+                followerIds: userFollow
+                  ? oldData.followerIds.filter((id) => id !== user.id)
+                  : [...oldData.followerIds, user.id],
+              };
             }
           );
         },
         onError: () => {
           toast.error("Failed to follow the user");
-        }
+        },
       }
     );
+  };
+
+  const onClickPublicBtn = () => {
+    navigate(`/userPublicPlan/${profileId}`);
+  };
+
+  const onClickPrivateBtn = () => {
+    navigate(`/userPrivatePlan/${profileId}`);
   };
 
   return (
@@ -188,16 +186,14 @@ const ProfilePage = () => {
 
         <div className="h-60 bg-[#444444] w-[27%] rounded-xl p-2 grid gap-3">
           <div className="bg-MainBackgroundColor w-full p-2 rounded-xl flex flex-col justify-center items-center">
-            {planCountLoad ? (
+            {countingTotalShares ? (
               <ClipLoader size={20} color="#fff" />
             ) : (
               <span className="text-white font-medium text-lg">
-                {planCount?.count}
+                {totalShares?.count}
               </span>
             )}
-            <span className="text-white font-medium leading-5">
-              Public Plans
-            </span>
+            <span className="text-white font-medium leading-5">Plan Share</span>
           </div>
 
           <div className="bg-MainBackgroundColor w-full p-2 rounded-xl flex flex-col justify-center items-center">
@@ -238,52 +234,34 @@ const ProfilePage = () => {
         </div>
       )}
 
-      <div className="mt-4 justify-between bg-[#444] p-2 rounded-xl">
-        {planData && planData.length > 0 && (
-          <h1 className="text-PrimaryTextColor text-lg font-medium">
-            Workout Plans
-          </h1>
-        )}
-
-        <div>
-          {planLoad && page === 1 ? (
-            <Loader />
-          ) : planData && planData.length > 0 ? (
-            planData.map((plan, index) => (
-              <div key={index} className="mt-2">
-                <WorkoutPlanCard planDetails={plan} />
-              </div>
-            ))
+      <div className="mt-4 bg-[#444] p-2 rounded-xl flex gap-3">
+        <button
+          onClick={onClickPublicBtn}
+          className="bg-MainBackgroundColor p-2 rounded-xl"
+        >
+          {countingPublicPlan ? (
+            <ClipLoader size={20} color="#fff" />
           ) : (
-            <p className="text-SecondaryTextColor text-center">
-              No Plans For Public
+            <p className="text-white font-medium text-lg">
+              {totalPublicPlan?.count}
             </p>
           )}
-        </div>
-      </div>
-
-      {newPlans && newPlans.length < limit && newPlans?.length > 0 && (
-        <p className="text-SecondaryTextColor font-medium text-center mt-4">
-          {" "}
-          No More Plans{" "}
-        </p>
-      )}
-
-      <div className="flex justify-center">
-        {planData && planData.length >= limit ? (
-          <Button
-            variant={"secondary"}
-            onClick={() => setPage((prev) => prev + 1)}
-            className={`mt-4 px-4 py-2 rounded-lg ${
-              newPlans && newPlans.length < limit
-                ? "cursor-not-allowed opacity-70"
-                : ""
-            }`}
-            disabled={newPlans && newPlans.length < limit}
-          >
-            {planLoad ? "Loading..." : "Load More"}
-          </Button>
-        ) : null}
+          <p className="text-white font-medium leading-5">Public Plans</p>
+        </button>
+        <button
+          disabled={countingPrivatePlan || totalPrivatePlan?.count === 0}
+          onClick={onClickPrivateBtn}
+          className="bg-MainBackgroundColor p-2 rounded-xl"
+        >
+          {countingPrivatePlan ? (
+            <ClipLoader size={20} color="#fff" />
+          ) : (
+            <p className="text-white font-medium text-lg">
+              {totalPrivatePlan?.count}
+            </p>
+          )}
+          <p className="text-white font-medium leading-5">Private Plans</p>
+        </button>
       </div>
     </div>
   );
