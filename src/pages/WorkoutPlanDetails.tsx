@@ -12,6 +12,11 @@ import { usePlan } from "@/context/WorkoutPlanProvider";
 import ReviewForm from "@/components/forms/ReviewForm";
 import { getInitialLetter } from "@/utils/helpingFunctions";
 import { CalendarDays, CalendarPlus, MessageCircle } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem
+} from "@/components/ui/carousel";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,6 +63,10 @@ const WorkoutPlanDetails = () => {
   const handleOpenComment = () => {
     navigate(`/comments/${planId}`);
   };
+
+  const handleClickWeek = (index: number) => {
+    setCurrentPage(index + 1);
+  }
 
   if (isLoading) return <WorkoutDayLoader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
@@ -111,42 +120,47 @@ const WorkoutPlanDetails = () => {
         </div>
       </div>
 
-
-
-      <div className="flex gap-3 justify-center my-4">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            onClick={() => setCurrentPage(index + 1)}
-            className={`flex flex-col flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
-              currentPage === index + 1
-                ? "bg-[#898989] text-white"
-                : "bg-[#cbcbcb]"
-            }`}
-            key={index}
-          >
-            <span className="font-bold">{index + 1}</span>
-            <CalendarDays size={20} />
-          </button>
-        ))}
-
-        {creatorOfPlan && totalPages <= 6 && (
-          <button className="bg-[#cbcbcb] h-14 w-14 flex flex-col items-center justify-center rounded-xl overflow-hidden">
-            <Alert
-              trigerBtnVarient={"default"}
-              icon={CalendarPlus}
-              triggerBtnClassName="w-full h-full bg-[#cbcbcb] hover:bg-[#cbcbcb] text-black"
-              asChild={true}
-              pendingState={isPending}
-              headLine="Are you want to add a new week?"
-              descLine="This is add a new week in this plan."
-              handleContinueBtn={handleAddWeek}
-            />
-          </button>
-        )}
-      </div>
-
-      {/* <h2 className="text-center text-lg text-PrimaryTextColor font-semibold mt-4">
-      </h2> */}
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full my-5"
+      >
+        <CarouselContent>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <CarouselItem key={index} className="basis-1/6">
+              <button
+                onClick={() => handleClickWeek(index)}
+                className={`flex flex-col flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
+                  currentPage === index + 1
+                    ? "bg-[#898989] text-white"
+                    : "bg-[#cbcbcb]"
+                }`}
+                key={index}
+              >
+                <span className="font-bold">{index + 1}</span>
+                <CalendarDays size={20} />
+              </button>
+            </CarouselItem>
+          ))}
+          <CarouselItem className="">
+            {creatorOfPlan && totalPages < 6 && (
+              <button className="bg-[#cbcbcb] h-14 w-14 flex flex-col items-center justify-center rounded-xl overflow-hidden">
+                <Alert
+                  trigerBtnVarient={"default"}
+                  icon={CalendarPlus}
+                  triggerBtnClassName="w-full h-full bg-[#cbcbcb] hover:bg-[#cbcbcb] text-black"
+                  asChild={true}
+                  pendingState={isPending}
+                  headLine="Are you want to add a new week?"
+                  descLine="This is add a new week in this plan."
+                  handleContinueBtn={handleAddWeek}
+                />
+              </button>
+            )}
+          </CarouselItem>
+        </CarouselContent>
+      </Carousel>
 
       {validWorkoutDays.length > 0 ? (
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

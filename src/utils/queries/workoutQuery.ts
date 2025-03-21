@@ -362,3 +362,20 @@ export const useOtherUsersAllPublicPlans = (
     },
   });
 };
+
+export const useUsersTotalPlanCount = (userId: string) => {
+  return useQuery<{count: number} | undefined>({
+    queryKey: ["userTotalPlanCount", userId],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("workoutplan")
+        .select("id", { count: "exact" })
+        .eq("creator_id", userId);
+
+      if (error) throw new Error(error.message);
+
+      return { count: count ?? 0 };
+    },
+    enabled: !!userId,
+  });
+}

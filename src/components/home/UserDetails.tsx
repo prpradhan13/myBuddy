@@ -8,18 +8,13 @@ import CreateWorkoutPlan from "../forms/CreateWorkoutPlan";
 import toast from "react-hot-toast";
 import { supabase } from "@/utils/supabase";
 import SearchSection from "../publicPlan/SearchSection";
-import {
-  UserPen,
-  LandPlot,
-  Send,
-  Search,
-  LogOut,
-  Users,
-} from "lucide-react";
+import { UserPen, LandPlot, Send, Search, LogOut, Users } from "lucide-react";
 import EditUserDetails from "../forms/EditUserDetails";
 import { AdvancedImage, AdvancedVideo } from "@cloudinary/react";
 import { cld } from "@/utils/lib/cloudinary";
 import EditBanner from "../forms/EditBanner";
+import { useFollowers, useFollowings } from "@/utils/queries/followQuery";
+import { ClipLoader } from "react-spinners";
 
 const UserDetails = () => {
   const [openCreateForm, setOpenCreateForm] = useState(false);
@@ -28,8 +23,17 @@ const UserDetails = () => {
   const [isBannerDrawerOpen, setIsBannerDrawerOpen] = useState(false);
 
   const { user } = useAuth();
+  const userId = user && user.id;
   const navigate = useNavigate();
+
   const { data, isLoading } = getUserDetails(user?.id);
+  const { data: userFollowers, isLoading: followersLoad } = useFollowers(
+    userId!
+  );
+  const { data: userFollowings, isLoading: followingLoad } = useFollowings(
+    userId!
+  );
+
   const initialLetterOfName = getInitialLetter(data?.full_name);
 
   const handleLogout = async () => {
@@ -63,26 +67,26 @@ const UserDetails = () => {
 
   const handleClickBanner = () => {
     setIsBannerDrawerOpen(true);
-  }
+  };
 
   if (isLoading) return <Loader />;
   if (!data) {
-    return <div className="h-screen w-full flex justify-center items-center">
-      <h1>No User data</h1>
-    </div>
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <h1>No User data</h1>
+      </div>
+    );
   }
 
-  const bannerVideo = cld.video(data.profile_banner?.content_path)
-  const bannerImage = cld.image(data.profile_banner?.content_path)
+  const bannerVideo = cld.video(data.profile_banner?.content_path);
+  const bannerImage = cld.image(data.profile_banner?.content_path);
 
   return (
     <div className="w-full md:flex justify-center">
       <div className="w-full lg:w-[40vw] md:w-[60vw]">
         <div className="w-full font-ubuntu flex gap-3">
           {/* Profile Image */}
-          <div
-            className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative"
-          >
+          <div className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
             {!data.avatar_url ? (
               <p className="font-montserrat">{initialLetterOfName}</p>
             ) : (
@@ -94,9 +98,7 @@ const UserDetails = () => {
             )}
           </div>
 
-          <div
-            className="bg-[#444444] p-2 rounded-xl w-[70%]"
-          >
+          <div className="bg-[#444444] p-2 rounded-xl w-[70%]">
             <h1 className="text-PrimaryTextColor font-semibold text-xl">
               {data.full_name}
             </h1>
@@ -104,6 +106,34 @@ const UserDetails = () => {
               {data.username}
             </h3>
             <p className="text-SecondaryTextColor text-sm">{data.email}</p>
+
+            <div className="flex gap-3">
+              <div className="bg-transparent">
+                {followersLoad ? (
+                  <ClipLoader size={14} color="#fff" />
+                ) : (
+                  <span className="text-white font-medium">
+                    {userFollowers?.count}
+                  </span>
+                )}
+                <span className="text-white font-medium leading-5 text-sm ml-1">
+                  Follower
+                </span>
+              </div>
+
+              <div className="bg-transparent">
+                {followingLoad ? (
+                  <ClipLoader size={20} color="#fff" />
+                ) : (
+                  <span className="text-white font-medium">
+                    {userFollowings?.count}
+                  </span>
+                )}
+                <span className="text-white font-medium leading-5 text-sm ml-1">
+                  Following
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -115,7 +145,7 @@ const UserDetails = () => {
             {!data.profile_banner ? (
               <img src="/logoImg.jpg" className="h-full w-full object-cover" />
             ) : data.profile_banner.content_type === "video" ? (
-              <AdvancedVideo 
+              <AdvancedVideo
                 cldVid={bannerVideo}
                 autoPlay
                 muted
@@ -130,9 +160,7 @@ const UserDetails = () => {
             )}
           </button>
 
-          <div
-            className="h-60 bg-[#444444] rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center"
-          >
+          <div className="h-60 bg-[#444444] rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center">
             {iconButtons.map(({ Icon, action }, index) => (
               <div
                 key={index}
@@ -146,9 +174,7 @@ const UserDetails = () => {
         </div>
 
         {data.bio ? (
-          <div
-            className="mt-3 bg-[#444444] p-2 rounded-xl"
-          >
+          <div className="mt-3 bg-[#444444] p-2 rounded-xl">
             <h2 className="text-white text-lg font-semibold">About me</h2>
             <div className="bg-[#fff] h-1 w-10 rounded-full"></div>
             <p className="text-SecondaryTextColor leading-5 mt-2 whitespace-pre-line">
@@ -156,9 +182,7 @@ const UserDetails = () => {
             </p>
           </div>
         ) : (
-          <div
-            className="mt-3 min-h-32 bg-[#444444] p-2 rounded-xl flex justify-center items-center"
-          >
+          <div className="mt-3 min-h-32 bg-[#444444] p-2 rounded-xl flex justify-center items-center">
             <p className="text-SecondaryTextColor font-medium"> No Bio </p>
           </div>
         )}
@@ -185,7 +209,7 @@ const UserDetails = () => {
         userName={data.username}
       />
 
-      <EditBanner 
+      <EditBanner
         isBannerDrawerOpen={isBannerDrawerOpen}
         setIsBannerDrawerOpen={setIsBannerDrawerOpen}
       />

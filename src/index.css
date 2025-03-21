@@ -33,6 +33,7 @@
 .scrollbar-hidden-y {
   scrollbar-width: none; /* Hide scrollbar */
 }
+
 @layer base {
   :root {
     --background: 0 0% 100%;

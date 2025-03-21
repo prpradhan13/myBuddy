@@ -5,11 +5,22 @@ import { useAuth } from "@/context/AuthProvider";
 import { WorkoutPlansType } from "@/types/workoutPlans";
 import { getInitialLetter } from "@/utils/helpingFunctions";
 import { cld } from "@/utils/lib/cloudinary";
+import {
+  useCreateFollow,
+  useFollowers,
+  useFollowings,
+} from "@/utils/queries/followQuery";
 import { getUserDetails } from "@/utils/queries/userProfileQuery";
-import { useOtherUsersAllPublicPlans } from "@/utils/queries/workoutQuery";
+import {
+  useOtherUsersAllPublicPlans,
+  useUsersTotalPlanCount,
+} from "@/utils/queries/workoutQuery";
 import { AdvancedImage, AdvancedVideo } from "@cloudinary/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 const ProfilePage = () => {
   const { profileId } = useParams();
@@ -24,6 +35,17 @@ const ProfilePage = () => {
     page,
     limit
   );
+  const { data: planCount, isLoading: planCountLoad } = useUsersTotalPlanCount(
+    profileId!
+  );
+  const { data: userFollowers, isLoading: followersLoad } = useFollowers(
+    profileId!
+  );
+  const { data: userFollowings, isLoading: followingLoad } = useFollowings(
+    profileId!
+  );
+  const { mutate, isPending } = useCreateFollow();
+  const queryClient = useQueryClient();
 
   const [planData, setPlanData] = useState<WorkoutPlansType[]>([]);
 
@@ -36,6 +58,17 @@ const ProfilePage = () => {
   const initialLetterOfName = getInitialLetter(data?.full_name);
 
   if (userDetailsLoading) return <Loader />;
+
+  if (!user) {
+    return (
+      <div className="bg-MainBackgroundColor min-h-screen w-full p-4">
+        <p className="text-center text-PrimaryTextColor text-lg">Oops!!!</p>
+        <p className="text-SecondaryTextColor text-center">
+          You need to login to access this page.
+        </p>
+      </div>
+    );
+  }
 
   if (user?.id?.toString() === profileId) {
     return (
@@ -56,8 +89,35 @@ const ProfilePage = () => {
     );
   }
 
+  const userFollow = userFollowers?.followerIds.includes(user.id);
+
   const bannerVideo = cld.video(data?.profile_banner?.content_path);
   const bannerImage = cld.image(data?.profile_banner?.content_path);
+
+  const onClickFollowBtn = () => {
+    mutate(
+      { isFollow: userFollow, profileId: profileId! },
+      {
+        onSuccess: () => {
+          queryClient.setQueryData(
+            ["followerAndCount", profileId],
+            (oldData: {count: number; followerIds: string[]} | undefined) => {
+              if (!oldData) return { count: 1, followerIds: [user.id] };
+
+              return {
+                ...oldData,
+                count: userFollow ? oldData.count - 1 : oldData.count + 1,
+                followerIds: userFollow ? oldData.followerIds.filter((id) => id !== user.id) : [...oldData.followerIds, user.id],
+              }
+            }
+          );
+        },
+        onError: () => {
+          toast.error("Failed to follow the user");
+        }
+      }
+    );
+  };
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4">
@@ -81,11 +141,32 @@ const ProfilePage = () => {
           <h3 className="text-PrimaryTextColor font-semibold">
             {data.username}
           </h3>
-          <p className="text-SecondaryTextColor text-sm">{data.email}</p>
+
+          <div className="">
+            {userFollow ? (
+              <Button
+                variant={"secondary"}
+                disabled={isPending}
+                className="mt-2 px-4 py-2 rounded-lg bg-red-500"
+                onClick={onClickFollowBtn}
+              >
+                Unfollow
+              </Button>
+            ) : (
+              <Button
+                variant={"secondary"}
+                disabled={isPending}
+                className="mt-2 px-4 py-2 rounded-lg"
+                onClick={onClickFollowBtn}
+              >
+                Follow
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="flex mt-3 gap-3">
+      <div className="flex mt-3 justify-between">
         <div className="h-60 bg-black w-[70%] rounded-xl overflow-hidden aspect-square">
           {!data.profile_banner ? (
             <img src="/logoImg.jpg" className="h-full w-full object-cover" />
@@ -103,6 +184,43 @@ const ProfilePage = () => {
               className="h-full w-full object-cover"
             />
           )}
+        </div>
+
+        <div className="h-60 bg-[#444444] w-[27%] rounded-xl p-2 grid gap-3">
+          <div className="bg-MainBackgroundColor w-full p-2 rounded-xl flex flex-col justify-center items-center">
+            {planCountLoad ? (
+              <ClipLoader size={20} color="#fff" />
+            ) : (
+              <span className="text-white font-medium text-lg">
+                {planCount?.count}
+              </span>
+            )}
+            <span className="text-white font-medium leading-5">
+              Public Plans
+            </span>
+          </div>
+
+          <div className="bg-MainBackgroundColor w-full p-2 rounded-xl flex flex-col justify-center items-center">
+            {followersLoad ? (
+              <ClipLoader size={20} color="#fff" />
+            ) : (
+              <span className="text-white font-medium text-lg">
+                {userFollowers?.count}
+              </span>
+            )}
+            <span className="text-white font-medium leading-5">Follower</span>
+          </div>
+
+          <div className="bg-MainBackgroundColor w-full p-2 rounded-xl flex flex-col justify-center items-center">
+            {followingLoad ? (
+              <ClipLoader size={20} color="#fff" />
+            ) : (
+              <span className="text-white font-medium text-lg">
+                {userFollowings?.count}
+              </span>
+            )}
+            <span className="text-white font-medium leading-5">Following</span>
+          </div>
         </div>
       </div>
 
