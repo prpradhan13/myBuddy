@@ -231,3 +231,39 @@ export const useDeleteExercise = (exerciseId: number, workoutDayId: number) => {
     },
   });
 };
+
+export const useGetPreviousExercises = (planId: number) => {
+  return useQuery({
+    queryKey: ["previous_exercises", planId],
+    queryFn: async () => {
+      if (!planId) return [];
+
+      const { data, error } = await supabase
+        .from("workoutplan_with_days")
+        .select("workoutdays")
+        .eq("workoutplan_id", planId)
+        .single();
+
+      if (error) {
+        console.log(error.message || "Error fetching exercises");
+        return [];
+      }
+
+      const workoutDays = data?.workoutdays || [];
+      
+      // Fetch exercises
+      const { data: exercises, error: exerciseError } = await supabase
+        .from("workoutday_exercise")
+        .select("exercise_id, exercise:exercise_id(*)")
+        .in("workoutday_id",  workoutDays.map((day: { id: number }) => day.id));
+
+      if (exerciseError) {
+        console.error("Error fetching exercises:", exerciseError);
+        return [];
+      }
+
+      return exercises.map((e) => e.exercise).flat();
+    },
+    enabled: !!planId,
+  });
+};
