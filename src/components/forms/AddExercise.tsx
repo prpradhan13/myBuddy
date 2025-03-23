@@ -12,14 +12,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddExerciseFinal from "./AddExerciseFinal";
-import { ExercisesFormType } from "@/types/workoutPlans";
+import { ExercisesFormType, ExerciseType } from "@/types/workoutPlans";
 import { Dispatch, SetStateAction } from "react";
 import Alert from "../extra/Alert";
 import { useGetPreviousExercises } from "@/utils/queries/exerciseQuery";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../ui/collapsible";
+import { ChevronsUpDown } from "lucide-react";
 
 interface AddExerciseProps {
   workoutId: number;
@@ -47,16 +53,7 @@ const AddExercise = ({
   const { data: previousExercisesData, isLoading } = useGetPreviousExercises(
     planId!
   );
-  const [previousExercises, setPreviousExercises] = useState<
-    ExercisesFormType[]
-  >([]);
   const [selectPreviousBoxOpen, setSelectPreviousBoxOpen] = useState(false);
-
-  useEffect(() => {
-    if (!isLoading && previousExercisesData) {
-      setPreviousExercises(previousExercisesData.flat());
-    }
-  }, [previousExercisesData, isLoading]);
 
   const handleCloseBtn = () => {
     setOpenAddExerciseForm(false);
@@ -66,8 +63,15 @@ const AddExercise = ({
     setSelectPreviousBoxOpen(false);
   };
 
-  const handleSelectPreviousExercise = (exercise: ExercisesFormType) => {
-    setExerciseData((prev) => [...prev, exercise]);
+  const handleSelectPreviousExercise = (exercise: ExerciseType) => {
+    const formattedExercise: ExercisesFormType = {
+      exercise_name: exercise.exercise_name,
+      target_muscle: exercise.target_muscle ?? null,
+      exercise_description: exercise.description ?? "",
+      rest: exercise.rest ?? null,
+    };
+
+    setExerciseData((prev) => [...prev, formattedExercise]);
     setStep(2);
   };
 
@@ -204,29 +208,76 @@ const AddExercise = ({
             </form>
           </Form>
         ) : (
-          <div className="bg-SecondaryBackgroundColor rounded-xl p-3">
+          <div className="bg-SecondaryBackgroundColor rounded-xl p-3 w-full">
             <ScrollArea className="w-full h-[80vh] rounded-xl bg-SecondaryBackgroundColor overflow-hidden">
               <h2 className="text-PrimaryTextColor text-lg text-center">
-                This Plan's previous exercises
+                Previous exercises
               </h2>
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className="w-full gap-2 mt-2">
                 {isLoading ? (
-                  <p className="text-PrimaryTextColor">Loading...</p>
-                ) : previousExercises.length > 0 ? (
-                  previousExercises.map((exercise, index) => (
-                    <Button
-                      key={index}
-                      onClick={() => handleSelectPreviousExercise(exercise)}
-                      variant="secondary"
-                      className="bg-black text-white"
-                    >
-                      {exercise.exercise_name}
-                    </Button>
-                  ))
+                  <div className="flex w-full justify-center">
+                    <p className="text-PrimaryTextColor text-center text-lg font-medium">
+                      Loading...
+                    </p>
+                  </div>
+                ) : previousExercisesData &&
+                  Object.keys(previousExercisesData).length > 0 ? (
+                  Object.entries(previousExercisesData).map(
+                    ([category, exercises]) => (
+                      <div key={category} className="mb-3">
+                        <h2 className="text-white font-bold capitalize">
+                          {category}
+                        </h2>
+
+                        <div className="flex flex-wrap gap-2">
+                          {exercises.map((exercise: ExerciseType) => (
+                            <Collapsible
+                              key={exercise.id}
+                              className="bg-[#d5d5d5] text-black capitalize rounded-lg"
+                            >
+                              <div className="flex justify-between items-center">
+                                <button
+                                  onClick={() =>
+                                    handleSelectPreviousExercise(exercise)
+                                  }
+                                  className="text-sm p-2 capitalize font-semibold"
+                                >
+                                  {exercise.exercise_name}
+                                </button>
+                                {(exercise.target_muscle ||
+                                  exercise.description) && (
+                                  <CollapsibleTrigger asChild className="z-50">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="text-black hover:bg-transparent hover:text-black"
+                                    >
+                                      <ChevronsUpDown className="h-4 w-4" />
+                                      <span className="sr-only">Toggle</span>
+                                    </Button>
+                                  </CollapsibleTrigger>
+                                )}
+                              </div>
+                              <CollapsibleContent className="px-2 pb-2 text-sm">
+                                <p className="">
+                                  Rest: {exercise.rest}
+                                </p>
+                                <p className="text-xs whitespace-pre-line">
+                                  {exercise.description}
+                                </p>
+                              </CollapsibleContent>
+                            </Collapsible>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  )
                 ) : (
-                  <p className="text-PrimaryTextColor">
-                    No previous exercises found.
-                  </p>
+                  <div className="flex justify-center">
+                    <p className="text-PrimaryTextColor text-lg font-medium">
+                      No previous exercises found.
+                    </p>
+                  </div>
                 )}
               </div>
             </ScrollArea>

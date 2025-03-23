@@ -3,8 +3,10 @@ import { supabase } from "../supabase";
 import toast from "react-hot-toast";
 import {
   ExercisesFormType,
+  ExerciseType,
   ExerciseWithSetsType,
   SetsFormType,
+  WorkoutDayType,
   WorkoutDayWithExerciseType,
 } from "../../types/workoutPlans";
 import { useNavigate } from "react-router-dom";
@@ -232,6 +234,8 @@ export const useDeleteExercise = (exerciseId: number, workoutDayId: number) => {
   });
 };
 
+type CategorizedExercisesType = Record<string, ExerciseType[]>
+
 export const useGetPreviousExercises = (planId: number) => {
   return useQuery({
     queryKey: ["previous_exercises", planId],
@@ -250,19 +254,41 @@ export const useGetPreviousExercises = (planId: number) => {
       }
 
       const workoutDays = data?.workoutdays || [];
-      
+      const exerciseIds = workoutDays
+        .flatMap((day: WorkoutDayType) => day.id)
+        .filter((id: number) => id !== undefined);
+
+      if (exerciseIds.length === 0) return [];
+
       // Fetch exercises
       const { data: exercises, error: exerciseError } = await supabase
         .from("workoutday_exercise")
         .select("exercise_id, exercise:exercise_id(*)")
-        .in("workoutday_id",  workoutDays.map((day: { id: number }) => day.id));
+        .in("workoutday_id",  exerciseIds);
 
       if (exerciseError) {
         console.error("Error fetching exercises:", exerciseError);
         return [];
       }
 
-      return exercises.map((e) => e.exercise).flat();
+      const extractedExercises: ExerciseType[] = exercises.flatMap((arr) => arr.exercise);
+
+      // Remove duplicate exercises (keep only one per name)
+      const uniqueExercises: ExerciseType[] = Array.from(
+        new Map(extractedExercises.map((e) => [e.exercise_name, e])).values()
+      );
+
+      const categorizedExercises: CategorizedExercisesType = {};
+
+      uniqueExercises.forEach((exercise) => {
+        const category = exercise.target_muscle || "Other";
+        if (!categorizedExercises[category]) {
+          categorizedExercises[category] = [];
+        }
+        categorizedExercises[category].push(exercise);
+      });
+
+      return categorizedExercises;
     },
     enabled: !!planId,
   });

@@ -77,6 +77,9 @@ const AddExerciseFinal = ({
               Target Muscle: {exercise.target_muscle}
             </h1>
             <p className="text-SecondaryTextColor">
+              Rest: {exercise.rest}
+            </p>
+            <p className="text-SecondaryTextColor mt-2">
               {exercise.exercise_description}
             </p>
           </CollapsibleContent>
