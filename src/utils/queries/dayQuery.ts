@@ -163,8 +163,7 @@ export const useAddWorkoutDay = (
   });
 };
 
-export const useUpdateDayDetails = ({ planId, dayId, setOpenUpdateForm }: { planId: number, dayId: number, setOpenUpdateForm: Dispatch<SetStateAction<boolean>> }) => {
-  const queryClient = useQueryClient();
+export const useUpdateDayDetails = ({ dayId }: { dayId: number}) => {
 
   return useMutation({
     mutationFn: async (formData: TUpdateDayDetails) => {
@@ -187,30 +186,5 @@ export const useUpdateDayDetails = ({ planId, dayId, setOpenUpdateForm }: { plan
 
       return data;
     },
-    onSuccess: (data: TUpdateDayDetails) => {
-      queryClient.setQueryData(
-        [`workoutplan_days_${planId}`],
-        (oldData: WorkoutPlanWithDaysType | undefined) => {
-          if (!oldData) return undefined;
-
-          // Update the specific day in the list
-          const updatedDays = oldData?.workoutdays?.map((day) =>
-            day.id === dayId ? { ...day, ...data } : day
-          );
-
-          return {
-            ...oldData,
-            workoutdays: updatedDays,
-          };
-        }
-      );
-
-      toast.success("Update Success");
-      setOpenUpdateForm(false);
-    },
-    onError: (error) => {
-      setOpenUpdateForm(false);
-      toast.error(error.message || "Failed to update!");
-    }
   })
 };

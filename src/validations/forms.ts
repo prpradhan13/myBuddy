@@ -77,11 +77,7 @@ export const updateDayDetails = z.object({
     .string()
     .min(3, "Workout Name must be at least 3 characters")
     .trim(),
-  difficulty_level: z
-    .string()
-    .nullable()
-    .optional()
-    .transform((val) => (typeof val === "string" ? val.trim() : val)),
+  difficulty_level: z.string().min(1, "Please select a difficulty level"),
   description: z
     .string()
     .nullable()
@@ -108,3 +104,17 @@ export const reviewForm = z.object({
 });
 
 export type TReviewForm = z.infer<typeof reviewForm>;
+
+export const editPlanDetails = z.object({
+  plan_name: z
+    .string()
+    .min(3, "Workout Name must be at least 3 characters")
+    .trim(),
+  difficulty_level: z.string().min(1, "Please select a difficulty level"),
+  description: z
+    .string()
+    .optional()
+    .transform((val) => (typeof val === "string" ? val.trim() : val)),
+})
+
+export type TEditPlanDetails = z.infer<typeof editPlanDetails>;

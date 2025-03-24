@@ -9,6 +9,8 @@ import {
 } from "../../types/workoutPlans";
 import { useAuth } from "../../context/AuthProvider";
 import { Dispatch, SetStateAction } from "react";
+import { TEditPlanDetails } from "@/validations/forms";
+import { usePlan } from "@/context/WorkoutPlanProvider";
 
 interface WorkoutQueryParams {
   limit?: number;
@@ -439,4 +441,26 @@ export const useUserTotalPrivatePlanCount = (userId: string) => {
     },
     enabled: !!userId,
   });
+};
+
+export const useUpadatePlanDetails = () => {
+  const { planInfo } = usePlan();
+
+  return useMutation({
+    mutationFn: async ({ plan_name, difficulty_level, description }: TEditPlanDetails) => {
+      const { error } = await supabase
+        .from("workoutplan")
+        .update({
+          plan_name,
+          difficulty_level,
+          description,
+        })
+        .eq("id", planInfo.planId)
+
+      if (error) {
+        toast.error(error.message || "Error while updating plan details");
+        throw new Error(error.message || "Error while updating plan details");
+      }
+    }
+  })
 };

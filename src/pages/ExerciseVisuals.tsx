@@ -55,15 +55,18 @@ const ExerciseVisuals = () => {
       <div className="w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y">
         <div className="bg-transparent h-[60vh]"></div>
         <div className="w-full bg-gradient-to-t from-black to-transparent p-6">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-bold capitalize">
             {exerciseWithSets?.exercise_name}
           </h1>
-          <h2 className="text-lg font-semibold mt-1">
+          <h2 className="text-lg font-semibold mt-1 capitalize">
             {exerciseWithSets?.target_muscle}
           </h2>
           <p className="mt-4 whitespace-pre-line">
             {exerciseWithSets?.exercise_description}
           </p>
+
+          <p className="mt-2 font-medium">Rest between sets {exerciseWithSets?.rest ?? 0}</p>
+          
           {exerciseWithSets?.exercise_sets?.map((item, index) => (
             <div key={item.id} className="my-4">
               <h3 className="text-lg font-medium">Set {index + 1}</h3>

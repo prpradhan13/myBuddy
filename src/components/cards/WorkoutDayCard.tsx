@@ -14,8 +14,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import UpdateDayDetails from "../forms/UpdateDayDetails";
 import { usePlan } from "@/context/WorkoutPlanProvider";
+import EditDayDetails from "../editDrawers/EditDayDetails";
 
 const WorkoutDayCard = ({
   dayDetails,
@@ -174,14 +174,14 @@ const WorkoutDayCard = ({
         />
       )}
 
-      {openUpdateForm && (
-        <UpdateDayDetails
-          dayId={dayDetails.id}
-          planId={planId}
-          openUpdateForm={openUpdateForm}
-          setOpenUpdateForm={setOpenUpdateForm}
-        />
-      )}
+      <EditDayDetails 
+        editDrawerOpen={openUpdateForm}
+        setEditDrawerOpen={setOpenUpdateForm}
+        dayId={dayDetails.id}
+        workoutName={dayDetails.workout_name!}
+        difficultyLevel={dayDetails.difficulty_level || ""}
+        description={dayDetails.description ?? ""}
+      />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   useAddNewWeek,
   useGetPlanWithDays,
@@ -11,16 +11,24 @@ import Alert from "@/components/extra/Alert";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import ReviewForm from "@/components/forms/ReviewForm";
 import { getInitialLetter } from "@/utils/helpingFunctions";
-import { CalendarDays, CalendarPlus, MessageCircle } from "lucide-react";
+import {
+  CalendarDays,
+  CalendarPlus,
+  MessageCircle,
+  FilePenLine,
+  Lock
+} from "lucide-react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
+import EditPlanDetails from "@/components/editDrawers/EditPlanDetails";
 
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const itemsPerPage = 7;
 
   const { planId } = useParams();
@@ -69,6 +77,10 @@ const WorkoutPlanDetails = () => {
     navigate(`/comments/${planId}`);
   };
 
+  const handleEditDetails = () => {
+    setEditDrawerOpen(true);
+  };
+
   const handleClickWeek = (index: number) => {
     setCurrentPage(index + 1);
   };
@@ -99,7 +111,7 @@ const WorkoutPlanDetails = () => {
           </h2>
         </div>
 
-        <div className="bg-[#444444] p-2 rounded-xl my-2">
+        <div className="bg-[#444444] p-4 rounded-xl my-4 shadow-lg">
           <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
             {data?.plan_name}
           </h1>
@@ -115,10 +127,10 @@ const WorkoutPlanDetails = () => {
             </div>
           )}
 
-          <div className="mt-2 flex gap-2">
+          <div className="mt-3 flex gap-3">
             <button
               onClick={handleOpenComment}
-              className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+              className="rounded-lg text-black p-2 bg-[#cbcbcb] hover:bg-[#b5b5b5] transition"
             >
               <MessageCircle size={20} color="#000" />
             </button>
@@ -127,19 +139,48 @@ const WorkoutPlanDetails = () => {
           </div>
         </div>
 
-        <p className="text-PrimaryTextColor font-semibold">
-          You are not authorized to view this plan!!
-        </p>
-        <p className="text-PrimaryTextColor font-semibold">
-          Please contact the creator of this plan.
-        </p>
+        <div className="relative">
+          <div className="my-4 flex justify-center items-center gap-2">
+            {Array.from({ length: 5 }, (_, index) => (
+              <button
+                key={index}
+                className={`flex flex-col items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold transition-all ${
+                  currentPage === index + 1
+                    ? "bg-[#898989] text-white"
+                    : "bg-[#cbcbcb] hover:bg-[#b5b5b5]"
+                }`}
+              >
+                <span className="font-bold">{index + 1}</span>
+                <CalendarDays size={20} />
+              </button>
+            ))}
+          </div>
+
+          {Array.from({ length: 5 }, (_, index) => (
+            <div
+              key={index}
+              className="grid mt-4 gap-4 bg-white rounded-xl w-full h-[10vh]"
+            ></div>
+          ))}
+
+          <div className="absolute inset-0 flex flex-col justify-center items-center bg-black/50 backdrop-blur-sm rounded-xl text-white text-center p-6">
+            <p className="font-bold text-lg tracking-wide flex items-center gap-2 text-[#ffad28]"><Lock strokeWidth={3} size={28} /> Premium Plan</p>
+            <p className="text-sm opacity-90 mt-2">
+              You are not authorized to view this plan. Please contact the
+              creator.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-poppins">
-      <div className="flex items-center gap-2">
+      <Link
+        to={`/profilePage/${data?.creator_id}`}
+        className="flex items-center gap-2"
+      >
         <div className="h-8 w-8 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989]  rounded-full flex justify-center items-center">
           {!data?.creator.avatar_url ? (
             <p className="text-PrimaryTextColor font-bold text-sm">
@@ -156,7 +197,7 @@ const WorkoutPlanDetails = () => {
         <h2 className="text-base text-SecondaryTextColor">
           {data?.creator.username}
         </h2>
-      </div>
+      </Link>
 
       <div className="bg-[#444444] p-2 rounded-xl my-2">
         <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
@@ -182,6 +223,15 @@ const WorkoutPlanDetails = () => {
             <MessageCircle size={20} color="#000" />
           </button>
 
+          {creatorOfPlan && (
+            <button
+              onClick={handleEditDetails}
+              className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+            >
+              <FilePenLine size={20} color="#000" />
+            </button>
+          )}
+
           {!creatorOfPlan && <ReviewForm />}
         </div>
       </div>
@@ -202,7 +252,6 @@ const WorkoutPlanDetails = () => {
                     ? "bg-[#898989] text-white"
                     : "bg-[#cbcbcb]"
                 }`}
-                key={index}
               >
                 <span className="font-bold">{index + 1}</span>
                 <CalendarDays size={20} />
@@ -245,6 +294,14 @@ const WorkoutPlanDetails = () => {
           </p>
         </div>
       )}
+
+      <EditPlanDetails
+        editDrawerOpen={editDrawerOpen}
+        setEditDrawerOpen={setEditDrawerOpen}
+        planName={data?.plan_name || ""}
+        planDescription={data?.plan_description || ""}
+        planDifficulty={data?.plan_difficulty || ""}
+      />
     </div>
   );
 };

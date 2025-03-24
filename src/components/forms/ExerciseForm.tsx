@@ -23,7 +23,6 @@ import {
 } from "../ui/collapsible";
 import { ChevronsUpDown } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
-import Alert from "../extra/Alert";
 
 interface ExerciseFormProps {
   setStep: Dispatch<SetStateAction<number>>;
@@ -221,42 +220,58 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
                       </h2>
 
                       <div className="flex flex-wrap gap-2">
-                        {exercises.map((exercise: ExerciseType) => (
-                          <Collapsible
-                            key={exercise.id}
-                            className="bg-[#d5d5d5] text-black capitalize rounded-lg"
-                          >
-                            <div className="flex justify-between items-center">
-                              <button
-                                onClick={() =>
-                                  handleSelectPreviousExercise(exercise)
-                                }
-                                className="text-sm p-2 capitalize font-semibold"
-                              >
-                                {exercise.exercise_name}
-                              </button>
-                              {(exercise.target_muscle ||
-                                exercise.description) && (
-                                <CollapsibleTrigger asChild className="z-50">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-black hover:bg-transparent hover:text-black"
-                                  >
-                                    <ChevronsUpDown className="h-4 w-4" />
-                                    <span className="sr-only">Toggle</span>
-                                  </Button>
-                                </CollapsibleTrigger>
-                              )}
-                            </div>
-                            <CollapsibleContent className="px-2 pb-2 text-sm">
-                              <p className="">Rest: {exercise.rest}</p>
-                              <p className="text-xs whitespace-pre-line">
-                                {exercise.description}
-                              </p>
-                            </CollapsibleContent>
-                          </Collapsible>
-                        ))}
+                        {exercises
+                          .slice()
+                          .sort((a: ExerciseType, b: ExerciseType) => {
+                            const muscleA =
+                              a.target_muscle?.trim().toLowerCase() || "zzz";
+                            const muscleB =
+                              b.target_muscle?.trim().toLowerCase() || "zzz";
+
+                            const result = muscleA.localeCompare(muscleB);
+
+                            console.log(
+                              `Comparing: "${muscleA}" vs "${muscleB}" -> ${result}`
+                            );
+
+                            return result;
+                          })
+                          .map((exercise: ExerciseType) => (
+                            <Collapsible
+                              key={exercise.id}
+                              className="bg-[#d5d5d5] text-black capitalize rounded-lg"
+                            >
+                              <div className="flex justify-between items-center">
+                                <button
+                                  onClick={() =>
+                                    handleSelectPreviousExercise(exercise)
+                                  }
+                                  className="text-sm p-2 capitalize font-semibold"
+                                >
+                                  {exercise.exercise_name}
+                                </button>
+                                {(exercise.target_muscle ||
+                                  exercise.description) && (
+                                  <CollapsibleTrigger asChild className="z-50">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="text-black hover:bg-transparent hover:text-black"
+                                    >
+                                      <ChevronsUpDown className="h-4 w-4" />
+                                      <span className="sr-only">Toggle</span>
+                                    </Button>
+                                  </CollapsibleTrigger>
+                                )}
+                              </div>
+                              <CollapsibleContent className="px-2 pb-2 text-sm">
+                                <p className="">Rest: {exercise.rest}</p>
+                                <p className="text-xs whitespace-pre-line">
+                                  {exercise.description}
+                                </p>
+                              </CollapsibleContent>
+                            </Collapsible>
+                          ))}
                       </div>
                     </div>
                   )
@@ -271,11 +286,13 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
             </div>
           </ScrollArea>
 
-          <Alert
-            trigerBtnVarient={"destructive"}
-            triggerBtnClassName="w-full mt-2"
-            handleContinueBtn={handleClosePreviousBox}
-          />
+          <Button
+            variant={"destructive"}
+            onClick={handleClosePreviousBox}
+            className="w-full mt-2"
+          >
+            Close
+          </Button>
         </div>
       )}
 

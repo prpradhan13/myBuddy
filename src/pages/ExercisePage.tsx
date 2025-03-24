@@ -134,6 +134,7 @@ const ExercisePage = () => {
           <h1 className="text-[#fff] font-bold text-2xl capitalize flex items-center gap-1">
             {data?.exercise_name}
           </h1>
+          <p className="font-medium text-PrimaryTextColor">Rest between sets {data.rest ?? 0}</p>
           {data?.exercise_description && (
             <div className={`${exerciseImage ? "bg-transparent" : "bg-[#2f2f2f] p-4 rounded-xl"} mt-2`}>
               <p className="text-white capitalize whitespace-pre-line">

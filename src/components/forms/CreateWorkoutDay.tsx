@@ -18,8 +18,16 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 import Alert from "../extra/Alert";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "../ui/textarea";
 
 const CreateWorkoutDay = ({
   workoutDayId,
@@ -96,17 +104,30 @@ const CreateWorkoutDay = ({
               control={form.control}
               name="difficulty_level"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-PrimaryTextColor text-lg">
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-lg text-PrimaryTextColor">
                     Difficulty Level
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Optional"
-                      {...field}
-                      className="text-PrimaryTextColor"
-                      value={field.value ?? ""}
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger
+                        className={`w-[180px] ${
+                          field.value ? "text-white" : "text-white"
+                        }`}
+                      >
+                        <SelectValue>{field.value ?? "Select"}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="easy">Easy</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="hard">Hard</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

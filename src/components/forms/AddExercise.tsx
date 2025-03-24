@@ -222,8 +222,13 @@ const AddExercise = ({
                   </div>
                 ) : previousExercisesData &&
                   Object.keys(previousExercisesData).length > 0 ? (
-                  Object.entries(previousExercisesData).map(
-                    ([category, exercises]) => (
+                  Object.entries(previousExercisesData)
+                    .sort(([categoryA], [categoryB]) =>
+                      categoryA.localeCompare(categoryB, "en", {
+                        sensitivity: "base",
+                      })
+                    )
+                    .map(([category, exercises]) => (
                       <div key={category} className="mb-3">
                         <h2 className="text-white font-bold capitalize">
                           {category}
@@ -259,9 +264,7 @@ const AddExercise = ({
                                 )}
                               </div>
                               <CollapsibleContent className="px-2 pb-2 text-sm">
-                                <p className="">
-                                  Rest: {exercise.rest}
-                                </p>
+                                <p className="">Rest: {exercise.rest}</p>
                                 <p className="text-xs whitespace-pre-line">
                                   {exercise.description}
                                 </p>
@@ -270,8 +273,7 @@ const AddExercise = ({
                           ))}
                         </div>
                       </div>
-                    )
-                  )
+                    ))
                 ) : (
                   <div className="flex justify-center">
                     <p className="text-PrimaryTextColor text-lg font-medium">
@@ -282,11 +284,13 @@ const AddExercise = ({
               </div>
             </ScrollArea>
 
-            <Alert
-              trigerBtnVarient={"destructive"}
-              triggerBtnClassName="w-full mt-2"
-              handleContinueBtn={handleClosePreviousBox}
-            />
+            <Button
+              variant={"destructive"}
+              onClick={handleClosePreviousBox}
+              className="w-full mt-2"
+            >
+              Close
+            </Button>
           </div>
         ))}
 
