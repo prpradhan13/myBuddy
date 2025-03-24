@@ -2,19 +2,23 @@ import ErrorPage from "@/components/loaders/ErrorPage";
 import Loader from "@/components/loaders/Loader";
 import {
   useGetSharedPlan,
-  useSendedPlan,
 } from "@/utils/queries/sharedPlanQuery";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SharedPlanCard from "@/components/cards/SharedPlanCard";
+import SendPlanCard from "@/components/cards/SendPlanCard";
 
 const SharedPlanDetails = () => {
-  const { data: sharedPlansData, isPending, isError, error } = useGetSharedPlan();
-  const { data: sendPlanData } = useSendedPlan();
-  
+  const {
+    data: sharedPlansData,
+    isPending,
+    isError,
+    error,
+  } = useGetSharedPlan();
+
   const navigate = useNavigate();
-  
+
   const handleBackBtn = () => {
     navigate(-1);
   };
@@ -28,7 +32,7 @@ const SharedPlanDetails = () => {
         onClick={handleBackBtn}
         className="cursor-pointer text-PrimaryTextColor mb-3"
       />
-      
+
       <Tabs defaultValue="recived" className="w-full">
         <div className="w-full flex justify-center">
           <TabsList className="grid w-full md:w-[50vw] lg:w-[35vw] grid-cols-2 bg-SecondaryBackgroundColor text-SecondaryTextColor">
@@ -66,27 +70,10 @@ const SharedPlanDetails = () => {
             )}
           </div>
         </TabsContent>
+
         <TabsContent value="sended">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 mt-3">
-            {sendPlanData && sendPlanData.length > 0 ? (
-              sendPlanData.map((sendPlan, index) => (
-                <SharedPlanCard 
-                  key={`${index}_${sendPlan.created_at}`}
-                  avatarUrl={sendPlan.profiles.avatar_url}
-                  createdAt={sendPlan.created_at}
-                  username={sendPlan.profiles.username}
-                  workoutplanId={sendPlan.workoutplan_id}
-                  workoutplanName={sendPlan.workoutplan.plan_name}
-                  userFullname={sendPlan.profiles.full_name}
-                  recipientId={sendPlan.user_id}
-                  plan_image={sendPlan.workoutplan.image_content}
-                />
-              ))
-            ) : (
-              <p className="text-SecondaryTextColor text-center mt-5">
-                No share plans
-              </p>
-            )}
+            <SendPlanCard />
           </div>
         </TabsContent>
       </Tabs>

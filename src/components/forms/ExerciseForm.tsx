@@ -212,7 +212,13 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
                 </div>
               ) : previousExercisesData &&
                 Object.keys(previousExercisesData).length > 0 ? (
-                Object.entries(previousExercisesData).map(
+                Object.entries(previousExercisesData)
+                .sort(([categoryA], [categoryB]) =>
+                  categoryA.localeCompare(categoryB, "en", {
+                    sensitivity: "base",
+                  })
+                )
+                .map(
                   ([category, exercises]) => (
                     <div key={category} className="mb-3">
                       <h2 className="text-white font-bold capitalize">
@@ -220,23 +226,7 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
                       </h2>
 
                       <div className="flex flex-wrap gap-2">
-                        {exercises
-                          .slice()
-                          .sort((a: ExerciseType, b: ExerciseType) => {
-                            const muscleA =
-                              a.target_muscle?.trim().toLowerCase() || "zzz";
-                            const muscleB =
-                              b.target_muscle?.trim().toLowerCase() || "zzz";
-
-                            const result = muscleA.localeCompare(muscleB);
-
-                            console.log(
-                              `Comparing: "${muscleA}" vs "${muscleB}" -> ${result}`
-                            );
-
-                            return result;
-                          })
-                          .map((exercise: ExerciseType) => (
+                        {exercises.map((exercise: ExerciseType) => (
                             <Collapsible
                               key={exercise.id}
                               className="bg-[#d5d5d5] text-black capitalize rounded-lg"

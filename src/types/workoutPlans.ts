@@ -178,3 +178,16 @@ export type CommentType = {
 export type BuildCommentTreeType = CommentType & {
   replies: BuildCommentTreeType[];
 };
+
+export type TUserDetailsOfSharedPlan = {
+  workoutplan_id: number;
+  sender_id: string; // creator_id
+  user_id: {
+    id: string; // recipient_id
+    full_name: string;
+    username: string;
+    email: string;
+    avatar_url: string | null;
+  };
+  created_at: string;
+}

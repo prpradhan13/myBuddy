@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import toast from "react-hot-toast";
-import { RecipientAchivementType, SendedPlanType } from "@/types/workoutPlans";
+import { RecipientAchivementType, SendedPlanType, TUserDetailsOfSharedPlan } from "@/types/workoutPlans";
 import { SearchUserType } from "@/types/userType";
 import { useAuth } from "@/context/AuthProvider";
 import { Dispatch, SetStateAction } from "react";
@@ -30,7 +30,9 @@ export const useGetSharedPlan = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("workoutplan_shared")
-        .select("*, workoutplan:workoutplan_id (plan_name, creator_id, image_content), profiles:user_id (full_name, username, email, avatar_url)")
+        .select(
+          "*, workoutplan:workoutplan_id (plan_name, creator_id, image_content), profiles:user_id (full_name, username, email, avatar_url)"
+        )
         .eq("user_id", currentUserId)
         .order("created_at", { ascending: false });
 
@@ -38,7 +40,7 @@ export const useGetSharedPlan = () => {
 
       return data || [];
     },
-    enabled: !!currentUserId
+    enabled: !!currentUserId,
   });
 };
 
@@ -56,11 +58,11 @@ export const useCreateSharedPlan = (planId: number) => {
       }
     },
     onSuccess: () => {
-        toast.success("Plan Shared")
+      toast.success("Plan Shared");
     },
     onError: (error) => {
-        throw new Error(error.message);
-    }
+      throw new Error(error.message);
+    },
   });
 };
 
@@ -77,36 +79,56 @@ export const useSearchUser = (searchText: string) => {
         .ilike("username", `%${searchText}%`)
         .neq("id", loggedInUserId);
 
-        if (error) {
-          toast.error(error.message);
-          throw new Error(error.message);
-        }
+      if (error) {
+        toast.error(error.message);
+        throw new Error(error.message);
+      }
 
-        return data ?? [];
+      return data ?? [];
     },
     enabled: searchText.length > 0,
-  })
+  });
 };
 
 export const useSendedPlan = () => {
   const { user } = useAuth();
   const currentUserId = user?.id;
-  
+
   return useQuery<SendedPlanType[]>({
     queryKey: ["sendedPlans", currentUserId],
     queryFn: async () => {
-       const { data, error } = await supabase
+      const { data, error } = await supabase
         .from("workoutplan_shared")
-        .select("*, workoutplan:workoutplan_id (plan_name, image_content), profiles:user_id (full_name, username, email, avatar_url)")
+        .select(
+          "*, workoutplan:workoutplan_id (plan_name, image_content), profiles:user_id (full_name, username, email, avatar_url)"
+        )
         .eq("sender_id", currentUserId)
         .order("created_at", { ascending: false });
 
       if (error) throw new Error(error.message);
-      return data || []
+      return data || [];
     },
-    enabled: !!currentUserId
+    enabled: !!currentUserId,
   });
-}
+};
+
+export const useUserDetailsOfSharedPlan = (planId: number) => {
+  return useQuery<TUserDetailsOfSharedPlan[]>({
+    queryKey: ["userDetailsOfSharedPlan", planId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("workoutplan_shared")
+        .select("*, user_id(id, full_name, username, email, avatar_url)") // These are the user id of the shared plan
+        .eq("workoutplan_id", planId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw new Error(error.message);
+
+      return data || [];
+    },
+    enabled: !!planId,
+  });
+};
 
 interface TUseUpdateSetByRecipient {
   planId?: number;
@@ -122,56 +144,65 @@ interface TRecipientAchiveFormData {
   setId: number;
 }
 
-export const useUpdateSetByRecipient = ({ planId, dayId, exerciseId, recipientId, setExerciseSetIdForUpdate }: TUseUpdateSetByRecipient) => {
+export const useUpdateSetByRecipient = ({
+  planId,
+  dayId,
+  exerciseId,
+  recipientId,
+  setExerciseSetIdForUpdate,
+}: TUseUpdateSetByRecipient) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ formData }: {formData: TRecipientAchiveFormData}) => {
-      const { error } = await supabase
-        .from("recipient_achive")
-        .insert({
-          recipient_id: recipientId,
-          plan_id: planId,
-          day_id: dayId,
-          exercise_id: exerciseId,
-          set_id: formData.setId,
-          achive_repetition: formData.achive_repetition,
-          achive_weight: formData.achive_weight
-        })
+    mutationFn: async ({
+      formData,
+    }: {
+      formData: TRecipientAchiveFormData;
+    }) => {
+      const { error } = await supabase.from("recipient_achive").insert({
+        recipient_id: recipientId,
+        plan_id: planId,
+        day_id: dayId,
+        exercise_id: exerciseId,
+        set_id: formData.setId,
+        achive_repetition: formData.achive_repetition,
+        achive_weight: formData.achive_weight,
+      });
 
       if (error) throw new Error(error.message);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["recipientAchive", recipientId] });
+      queryClient.invalidateQueries({
+        queryKey: ["recipientAchive", recipientId],
+      });
       setExerciseSetIdForUpdate(null);
-      toast.success("Successfully submitted")
+      toast.success("Successfully submitted");
     },
     onError: () => {
       toast.error("Submission failed");
-    }
-  })
-  
-}
+    },
+  });
+};
 
 export const useGetRecipientAchivement = (setId: number) => {
   return useQuery<RecipientAchivementType[]>({
     queryKey: ["recipientAchiveSet", setId],
     queryFn: async () => {
-      const {data, error} = await supabase
+      const { data, error } = await supabase
         .from("recipient_achive")
         .select("*, profiles(username, avatar_url, full_name)")
-        .eq("set_id", setId)
+        .eq("set_id", setId);
 
-      if(error) throw new Error(error.message);
-      
+      if (error) throw new Error(error.message);
+
       return data || [];
     },
-    enabled: !!setId
-  })
-}
+    enabled: !!setId,
+  });
+};
 
 export const useTotalSharedCount = (senderId: string) => {
-  return useQuery<{count: number} | undefined>({
+  return useQuery<{ count: number } | undefined>({
     queryKey: ["totalSharedCount", senderId],
     queryFn: async () => {
       const { count, error } = await supabase
@@ -183,8 +214,8 @@ export const useTotalSharedCount = (senderId: string) => {
 
       return { count: count ?? 0 };
     },
-    enabled: !!senderId
-  })
+    enabled: !!senderId,
+  });
 };
 
 export const useHasReceivedPlan = (planId: number) => {
@@ -209,4 +240,18 @@ export const useHasReceivedPlan = (planId: number) => {
     },
     enabled: !!userId && !!planId,
   });
+};
+
+export const useRemoveUserFromSharePlan = () => {
+  return useMutation({
+    mutationFn: async ({ recipentId, planId }: {recipentId: string, planId: number}) => {
+      const { error } = await supabase
+        .from("workoutplan_shared")
+        .delete()
+        .eq("user_id", recipentId)
+        .eq("workoutplan_id", planId)
+
+        if (error) throw new Error(error.message);
+    }
+  })
 };

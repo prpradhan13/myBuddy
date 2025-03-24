@@ -164,8 +164,8 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <div className="flex mt-3 justify-between">
-        <div className="h-60 bg-black w-[70%] rounded-xl overflow-hidden aspect-square">
+      <div className="h-60 flex mt-3 justify-between">
+        <div className="h-full bg-black w-[70%] rounded-xl overflow-hidden aspect-square">
           {!data.profile_banner ? (
             <img src="/logoImg.jpg" className="h-full w-full object-cover" />
           ) : data.profile_banner.content_type === "video" ? (
@@ -184,7 +184,7 @@ const ProfilePage = () => {
           )}
         </div>
 
-        <div className="h-60 bg-[#444444] w-[27%] rounded-xl p-2 grid gap-3">
+        <div className="h-full bg-[#444444] w-[27%] rounded-xl p-2 grid gap-3">
           <div className="bg-MainBackgroundColor w-full p-2 rounded-xl flex flex-col justify-center items-center">
             {countingTotalShares ? (
               <ClipLoader size={20} color="#fff" />
@@ -193,7 +193,7 @@ const ProfilePage = () => {
                 {totalShares?.count}
               </span>
             )}
-            <span className="text-white font-medium leading-5">Plan Share</span>
+            <span className="text-white font-medium leading-5">Shares</span>
           </div>
 
           <div className="bg-MainBackgroundColor w-full p-2 rounded-xl flex flex-col justify-center items-center">

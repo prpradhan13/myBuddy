@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   calculateAverageRating,
   getInitialLetter,
@@ -31,7 +30,7 @@ const SharedPlanCard = ({
   createdAt,
   userFullname,
   recipientId,
-  plan_image
+  plan_image,
 }: SharedPlanCardProps) => {
   const { isRecipient, sharedPlanInfo, setSharedPlanInfo } = useRecipientPlan();
 
@@ -39,7 +38,7 @@ const SharedPlanCard = ({
     if (recipientId && sharedPlanInfo.recipientId !== recipientId) {
       setSharedPlanInfo({ recipientId });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const planBGImage = plan_image && cld.image(plan_image);
@@ -58,7 +57,11 @@ const SharedPlanCard = ({
         </div>
       )}
 
-      <div className={`absolute ${planBGImage ? "bg-black/30" : "bg-[#2d2d2d]"} p-4 text-SecondaryTextColor flex flex-col w-full h-full`}>
+      <div
+        className={`absolute ${
+          planBGImage ? "bg-black/30" : "bg-[#2d2d2d]"
+        } p-4 text-SecondaryTextColor flex flex-col w-full h-full`}
+      >
         <Link to={`/workoutPlanDetails/${workoutplanId}`}>
           <h1 className="text-PrimaryTextColor text-lg font-semibold capitalize">
             {workoutplanName}
@@ -80,20 +83,20 @@ const SharedPlanCard = ({
         <div className="mt-2">
           {!isRecipient && (
             <div className="flex items-center gap-2">
-              <Avatar>
-                {!avatarUrl ? (
-                  <AvatarFallback className="w-10 h-10 bg-gradient-to-t from-[#000000] via-[#1b1b1b] to-[#3a3a3a] text-PrimaryTextColor text-xs font-semibold">
-                    {getInitialLetter(userFullname)}
-                  </AvatarFallback>
-                ) : (
-                  <AvatarImage
-                    src={avatarUrl}
-                    alt="profileImg"
-                    className="w-9 h-9"
-                  />
-                )}
-              </Avatar>
-              <h1 className="text-SecondaryTextColor font-semibold">{username}</h1>
+              {!avatarUrl ? (
+                <div className="w-10 h-10 flex justify-center rounded-full items-center bg-gradient-to-t from-[#000000] via-[#1b1b1b] to-[#3a3a3a] text-PrimaryTextColor text-xs font-semibold">
+                  {getInitialLetter(userFullname)}
+                </div>
+              ) : (
+                <img
+                  src={avatarUrl}
+                  alt="profileImg"
+                  className="w-10 h-10 object-cover rounded-full"
+                />
+              )}
+              <h1 className="text-SecondaryTextColor font-semibold">
+                {username}
+              </h1>
             </div>
           )}
           <p className="text-SecondaryTextColor text-sm flex items-center gap-1 mt-1">
