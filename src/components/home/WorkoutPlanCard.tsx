@@ -90,21 +90,21 @@ const WorkoutPlanCard = ({
 
   return (
     <div className="rounded-xl font-poppins w-full overflow-hidden bg-[#f3f3f3] p-2">
-      <div className="h-36">
+      <div className="aspect-video">
         {planBGImage ? (
           <button onClick={handlePlanClick} className="w-full">
             <AdvancedImage
               cldImg={planBGImage}
-              className="h-36 w-full object-cover rounded-xl"
+              className="aspect-video w-full object-cover rounded-xl"
             />
           </button>
         ) : (
           <button
             onClick={handlePlanClick}
-            className="h-36 w-full bg-gradient-to-t from-[#000] to-[#4a4a4a] rounded-xl"
+            className="aspect-video w-full bg-gradient-to-t from-[#000] to-[#4a4a4a] rounded-xl"
           >
             <p className="text-white font-medium text-center">
-              {truncateText(planDetails.plan_name ?? "", 20)}
+              {truncateText(planDetails.plan_name ?? "", 30)}
             </p>
           </button>
         )}
@@ -116,14 +116,14 @@ const WorkoutPlanCard = ({
             onClick={handlePlanClick}
             className="font-semibold capitalize text-[#000]"
           >
-            {truncateText(planDetails.plan_name ?? "", 15)}
+            {truncateText(planDetails.plan_name ?? "", 30)}
           </button>
 
           {isLogedInUserCreator && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="p-2 rounded-md hover:bg-gray-700">
-                  <Ellipsis size={18} color="#000" />
+                <button className="p-2 rounded-md hover:bg-transparent">
+                  <Ellipsis size={20} color="#000" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent

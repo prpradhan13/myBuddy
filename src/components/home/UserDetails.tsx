@@ -83,7 +83,7 @@ const UserDetails = () => {
 
   return (
     <div className="w-full md:flex justify-center">
-      <div className="w-full lg:w-[40vw] md:w-[60vw]">
+      <div className="w-full lg:w-[30vw] md:w-[60vw]">
         <div className="w-full font-ubuntu flex gap-3">
           {/* Profile Image */}
           <div className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">

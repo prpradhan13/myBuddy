@@ -21,10 +21,10 @@ import {
 } from "@/components/ui/collapsible";
 import dayjs from "dayjs";
 import { usePlan } from "@/context/WorkoutPlanProvider";
-import { useRecipientPlan } from "@/context/SharedPlanProvider";
 import RecipientAchiveForm from "@/components/forms/RecipientAchiveForm";
 import { cld } from "@/utils/lib/cloudinary";
 import { AdvancedImage } from "@cloudinary/react";
+import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
@@ -38,11 +38,14 @@ const ExercisePage = () => {
   const navigate = useNavigate();
 
   const { exerciseId } = useParams();
-  const { creatorOfPlan } = usePlan();
-  const { isRecipient } = useRecipientPlan();
+  const { creatorOfPlan, planInfo } = usePlan();
+  const planId = planInfo.planId
 
   const { data, isLoading, isError, error } = useGetExercises(
     Number(exerciseId)
+  );
+  const { data: hasReceivedPlan, isLoading: isChecking } = useHasReceivedPlan(
+    Number(planId)
   );
 
   const validExerciseSets = data?.exercise_sets || [];
@@ -66,7 +69,7 @@ const ExercisePage = () => {
     navigate(`/recipientAchivementsDetails/${setId}`);
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isChecking) return <Loader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   const exerciseImage = data?.image_content && cld.image(data.image_content);
@@ -238,7 +241,7 @@ const ExercisePage = () => {
                     </div>
                   )}
 
-                {isRecipient && !creatorOfPlan && (
+                {hasReceivedPlan && !creatorOfPlan && (
                   <Button
                     onClick={() => handleUpdateSetByRecipient(set.id)}
                     variant={"secondary"}
@@ -248,7 +251,7 @@ const ExercisePage = () => {
                   </Button>
                 )}
 
-                {isRecipient && !creatorOfPlan && (
+                {hasReceivedPlan && !creatorOfPlan && (
                   <Button
                     onClick={() => handleNavigateToRecipientAchive(set.id)}
                     variant={"secondary"}

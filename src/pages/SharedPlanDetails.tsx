@@ -1,7 +1,7 @@
 import ErrorPage from "@/components/loaders/ErrorPage";
 import Loader from "@/components/loaders/Loader";
 import {
-  useGetSharedPlan,
+  useGetRecivedPlan,
 } from "@/utils/queries/sharedPlanQuery";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ const SharedPlanDetails = () => {
     isPending,
     isError,
     error,
-  } = useGetSharedPlan();
+  } = useGetRecivedPlan();
 
   const navigate = useNavigate();
 
@@ -61,6 +61,9 @@ const SharedPlanDetails = () => {
                   workoutplanName={item.workoutplan.plan_name}
                   recipientId={item.user_id}
                   plan_image={item.workoutplan.image_content}
+                  avatarUrl={item.profiles.avatar_url}
+                  userFullname={item.profiles.full_name}
+                  username={item.profiles.username}
                 />
               ))
             ) : (

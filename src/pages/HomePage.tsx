@@ -34,7 +34,7 @@ const HomePage = () => {
             </Link>
           </div>
 
-          <div className="w-full mt-2 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          <div className="w-full mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
             {isLoading ? (
               <div className="text-white">Loading...</div>
             ) : (

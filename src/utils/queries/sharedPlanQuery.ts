@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import toast from "react-hot-toast";
-import { RecipientAchivementType, SendedPlanType, TUserDetailsOfSharedPlan } from "@/types/workoutPlans";
+import { RecipientAchivementType, RecivedPlanType, SendedPlanType, TUserDetailsOfSharedPlan } from "@/types/workoutPlans";
 import { SearchUserType } from "@/types/userType";
 import { useAuth } from "@/context/AuthProvider";
 import { Dispatch, SetStateAction } from "react";
@@ -21,17 +21,17 @@ export const useGetSharedUsers = (planId: number) => {
   });
 };
 
-export const useGetSharedPlan = () => {
+export const useGetRecivedPlan = () => {
   const { user } = useAuth();
   const currentUserId = user?.id;
 
-  return useQuery<SendedPlanType[]>({
+  return useQuery<RecivedPlanType[]>({
     queryKey: [`sharedPlans`],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("workoutplan_shared")
         .select(
-          "*, workoutplan:workoutplan_id (plan_name, creator_id, image_content), profiles:user_id (full_name, username, email, avatar_url)"
+          "*, workoutplan:workoutplan_id (plan_name, creator_id, image_content), profiles:sender_id (full_name, username, email, avatar_url)"
         )
         .eq("user_id", currentUserId)
         .order("created_at", { ascending: false });
@@ -100,7 +100,7 @@ export const useSendedPlan = () => {
       const { data, error } = await supabase
         .from("workoutplan_shared")
         .select(
-          "*, workoutplan:workoutplan_id (plan_name, image_content), profiles:user_id (full_name, username, email, avatar_url)"
+          "*, workoutplan:workoutplan_id (plan_name, image_content)"
         )
         .eq("sender_id", currentUserId)
         .order("created_at", { ascending: false });
