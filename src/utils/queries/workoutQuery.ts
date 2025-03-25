@@ -22,7 +22,7 @@ export const useGetUserWorkoutPlans = (
   { limit, offset }: WorkoutQueryParams = {}
 ) => {
   return useQuery<WorkoutPlansType[]>({
-    queryKey: [`workoutPlans_${userId}_${limit}_${offset}`],
+    queryKey: [`workoutPlans_${userId}_${limit}`],
     queryFn: async () => {
       let query = supabase
         .from("workoutplan")
@@ -67,7 +67,7 @@ export const useGetPlanWithDays = (workoutPlanId: number) => {
 
 export const useCreateWorkoutPlan = (
   setOpenCreateForm: Dispatch<SetStateAction<boolean>>,
-  { limit, offset }: WorkoutQueryParams = {}
+  { limit }: WorkoutQueryParams = {}
 ) => {
   const { user } = useAuth();
   const userId = user?.id;
@@ -140,7 +140,7 @@ export const useCreateWorkoutPlan = (
     },
     onSuccess: ({ workoutPlan }: { workoutPlan: WorkoutPlansType }) => {
       queryClient.setQueryData(
-        [`workoutPlans_${userId}_${limit}_${offset}`],
+        [`workoutPlans_${userId}_${limit}`],
         (oldData: WorkoutPlansType[] | undefined) => {
           if (!oldData) return [workoutPlan];
           return [{ ...workoutPlan }, ...oldData];
@@ -156,7 +156,6 @@ export const useCreateWorkoutPlan = (
 export const useDeletePlan = (
   planId: number,
   limit?: number,
-  offset?: number
 ) => {
   const { user } = useAuth();
   const userId = user?.id;
@@ -192,7 +191,7 @@ export const useDeletePlan = (
     },
     onSuccess: () => {
       queryClient.setQueryData(
-        [`workoutPlans_${userId}_${limit}_${offset}`],
+        [`workoutPlans_${userId}_${limit}`],
         (oldData: WorkoutPlansType[] | undefined) => {
           if (!oldData) return undefined;
           const updatedData = oldData.filter((old) => old.id !== planId);
@@ -278,7 +277,7 @@ export const useAddNewWeek = (planId: number) => {
 
 export const useTogglePlanVisibility = (
   planId: number,
-  { limit = 5, offset }: WorkoutQueryParams
+  { limit = 5 }: WorkoutQueryParams
 ) => {
   const { user } = useAuth();
   const userId = user?.id;
@@ -299,7 +298,7 @@ export const useTogglePlanVisibility = (
     },
     onSuccess: ({ updatedPlan }: { updatedPlan: WorkoutPlansType }) => {
       queryClient.setQueryData(
-        [`workoutPlans_${userId}_${limit}_${offset}`],
+        [`workoutPlans_${userId}_${limit}`],
         (oldData: WorkoutPlansType[] | undefined) => {
           if (!oldData) return undefined;
 
@@ -453,7 +452,7 @@ export const useUpadatePlanDetails = () => {
         .update({
           plan_name,
           difficulty_level,
-          description,
+          description
         })
         .eq("id", planInfo.planId)
 

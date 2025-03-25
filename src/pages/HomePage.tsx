@@ -6,7 +6,8 @@ import WorkoutPlanCard from "../components/home/WorkoutPlanCard";
 
 const HomePage = () => {
   const { user } = useAuth();
-  const { data, isLoading } = useGetUserWorkoutPlans(user?.id, { limit: 5 });
+  const limit= 5;
+  const { data, isLoading } = useGetUserWorkoutPlans(user?.id, { limit });
 
   return (
     <div className="min-h-screen w-full bg-[#1d1d1d] p-4">
@@ -33,12 +34,12 @@ const HomePage = () => {
             </Link>
           </div>
 
-          <div className="w-full mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="w-full mt-2 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
             {isLoading ? (
               <div className="text-white">Loading...</div>
             ) : (
               data?.map((plan) => (
-                <WorkoutPlanCard key={plan.id} planDetails={plan} />
+                <WorkoutPlanCard key={plan.id} planDetails={plan} limit={limit} />
               ))
             )}
           </div>

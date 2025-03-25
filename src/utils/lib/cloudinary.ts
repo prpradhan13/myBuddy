@@ -25,9 +25,9 @@ export const openCloudinaryUploadWidget = (
     {
       cloudName: CLOUDINARY_CLOUD_NAME,
       uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-      resourceType: "video",
-      clientAllowedFormats: ["mp4", "mov"],
-      showAdvancedOptions: true, // ✅ Enable advanced options (like trimming)
+      resourceType: "auto",
+      clientAllowedFormats: ["jpg", "jpeg", "mp4", "mov"],
+      showAdvancedOptions: true,
       cropping: false,
       maxFileSize: 100000000,
       maxDuration: 30,

@@ -42,6 +42,7 @@ const WorkoutPlanDetails = () => {
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
   );
+  
   const initialLetterOfName = getInitialLetter(data?.creator.full_name);
 
   useEffect(() => {
@@ -250,7 +251,7 @@ const WorkoutPlanDetails = () => {
                 className={`flex flex-col flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
                   currentPage === index + 1
                     ? "bg-[#898989] text-white"
-                    : "bg-[#cbcbcb]"
+                    : "bg-[#d4d4d4]"
                 }`}
               >
                 <span className="font-bold">{index + 1}</span>

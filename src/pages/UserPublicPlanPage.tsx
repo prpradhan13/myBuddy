@@ -38,7 +38,7 @@ const UserPublicPlanPage = () => {
         ) : planData && planData.length > 0 ? (
           planData.map((plan, index) => (
             <div key={index} className="mt-2">
-              <WorkoutPlanCard planDetails={plan} />
+              <WorkoutPlanCard planDetails={plan} limit={limit} />
             </div>
           ))
         ) : (

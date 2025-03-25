@@ -32,13 +32,13 @@ const UserPrivatePlan = () => {
         </h1>
       )}
 
-      <div>
+      <div className="mt-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {planLoad && page === 1 ? (
           <Loader />
         ) : planData && planData.length > 0 ? (
           planData.map((plan, index) => (
             <div key={index} className="mt-2">
-              <WorkoutPlanCard planDetails={plan} />
+              <WorkoutPlanCard planDetails={plan} limit={limit} />
             </div>
           ))
         ) : (

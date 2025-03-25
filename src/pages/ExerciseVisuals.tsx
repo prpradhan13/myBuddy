@@ -53,7 +53,7 @@ const ExerciseVisuals = () => {
 
       {/* Scrollable Text Content */}
       <div className="w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y">
-        <div className="bg-transparent h-[60vh]"></div>
+        <div className="bg-transparent h-[80vh]"></div>
         <div className="w-full bg-gradient-to-t from-black to-transparent p-6">
           <h1 className="text-4xl font-bold capitalize">
             {exerciseWithSets?.exercise_name}

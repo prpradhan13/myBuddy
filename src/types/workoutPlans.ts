@@ -31,6 +31,7 @@ export type WorkoutPlanWithDaysType = {
   };
   workoutdays: WorkoutDayType[] | null;
   created_at: string | null;
+  image_content: string | null;
 };
 
 export type ExerciseType = {

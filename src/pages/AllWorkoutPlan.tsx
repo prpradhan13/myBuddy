@@ -13,46 +13,54 @@ import {
 
 const AllWorkoutPlan = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const limit= 5;
+  const offset= currentPage * 5
   const { user } = useAuth();
   const { data, isLoading } = useGetUserWorkoutPlans(user?.id, {
-    limit: 5,
-    offset: currentPage * 5,
+    limit,
+    offset
   });
-
-  if (isLoading) return <WorkoutDayLoader />;
-  if (!data)
-    return (
-      <div className="bg-MainBackgroundColor w-full min-h-screen p-4">
-        <h1 className="text-SecondaryTextColor text-center mt-10">No Plans</h1>
-      </div>
-    );
-
-  const isLastPage = data.length === 1;
+  
+  const isLastPage = data && data.length === 1;
   const isFirstPage = currentPage === 0;
-
+  
   const handleNextBtn = () => {
     if (!isLastPage) {
       setCurrentPage((prev) => prev + 1);
     }
   };
-
+  
   const handlePreviousBtn = () => {
     if (!isFirstPage) {
       setCurrentPage((prev) => prev - 1);
     }
   };
+  
+  if (isLoading) return <WorkoutDayLoader />;
+  if (!data) {
+    return (
+      <div className="bg-MainBackgroundColor w-full min-h-screen p-4">
+        <h1 className="text-SecondaryTextColor text-center mt-10">No Plans</h1>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-MainBackgroundColor w-full min-h-screen p-4 font-poppins relative">
-      <h1 className="text-PrimaryTextColor text-xl font-semibold">All Plans</h1>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="bg-MainBackgroundColor w-full min-h-screen p-3 font-poppins relative">
+      <h1 className="text-PrimaryTextColor text-xl font-semibold ">All Plans</h1>
+      <div className="mt-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {data.map((item) => (
-          <WorkoutPlanCard planDetails={item} key={item.id} />
+          <WorkoutPlanCard 
+            planDetails={item} key={item.id}
+            limit={limit}
+          />
         ))}
       </div>
 
       {data.length === 0 && (
-        <h1 className="text-SecondaryTextColor text-center mt-10">No Plans Go Back</h1>
+        <h1 className="text-SecondaryTextColor text-center mt-10">
+          No Plans Go Back
+        </h1>
       )}
 
       <Pagination className="mt-4">

@@ -53,14 +53,14 @@ const WorkoutDayCard = ({
   return (
     <>
       {dayDetails.is_restday ? (
-        <div className="bg-SecondaryBackgroundColor p-4 rounded-xl flex gap-3">
+        <div className="bg-[#d4d4d4] p-2 rounded-xl flex gap-3">
           <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
           <div className="w-[calc(100% - 25%)]">
-            <h1 className="text-PrimaryTextColor text-lg font-medium">
+            <h1 className="text-lg font-semibold">
               Rest Day
             </h1>
             <div className="flex gap-3">
@@ -69,7 +69,7 @@ const WorkoutDayCard = ({
                   type="button"
                   onClick={handleToggleRestDay}
                   disabled={isPending}
-                  className="bg-green-500 mt-1 text-white text-sm font-medium px-2 rounded-xl"
+                  className="bg-green-500 mt-1 text-white text-sm font-medium px-2 rounded-lg"
                 >
                   {isPending ? (
                     <ClipLoader size={15} />
@@ -84,14 +84,14 @@ const WorkoutDayCard = ({
           </div>
         </div>
       ) : !dayDetails.workout_name && !dayDetails.is_restday ? (
-        <div className="bg-SecondaryBackgroundColor p-4 rounded-xl flex gap-3">
+        <div className="bg-[#d4d4d4] p-2 rounded-xl flex gap-3">
           <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
           <div className="w-[75%]">
-            <h1 className="text-PrimaryTextColor text-lg font-medium">
+            <h1 className="text-lg font-medium">
               No Exercises Added
             </h1>
             <div className="flex gap-3">
@@ -99,7 +99,7 @@ const WorkoutDayCard = ({
                 <>
                   <button
                     onClick={clickOnAddExercise}
-                    className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-xl"
+                    className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-lg"
                   >
                     Add Exercises
                   </button>
@@ -107,7 +107,7 @@ const WorkoutDayCard = ({
                     type="button"
                     onClick={handleToggleRestDay}
                     disabled={isPending}
-                    className="bg-green-500 mt-1 text-white text-sm font-medium px-2 rounded-xl"
+                    className="bg-green-500 mt-1 text-white text-sm font-medium px-2 rounded-lg"
                   >
                     {isPending ? <ClipLoader size={15} /> : "Rest Day"}
                   </Button>
@@ -117,7 +117,7 @@ const WorkoutDayCard = ({
           </div>
         </div>
       ) : (
-        <div className="bg-SecondaryBackgroundColor p-4 rounded-xl flex gap-3">
+        <div className="bg-[#d4d4d4] p-2 rounded-xl flex gap-3">
           <Link
             to={`/workoutDayDetails/${dayDetails.id}`}
             className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center"
@@ -129,14 +129,14 @@ const WorkoutDayCard = ({
           <div className="flex flex-col justify-center w-[calc(100%-25%)]">
             <div className="flex items-center justify-between">
               <Link to={`/workoutDayDetails/${dayDetails.id}`}>
-                <h1 className="text-PrimaryTextColor font-semibold text-lg capitalize">
+                <h1 className="font-semibold text-lg capitalize">
                   {truncateText(dayDetails.workout_name!, 25)}
                 </h1>
               </Link>
                 {creatorOfPlan && (
                   <DropdownMenu>
                     <DropdownMenuTrigger>
-                      <EllipsisVertical color="#fff" size={20} />
+                      <EllipsisVertical color="#000" size={20} />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
@@ -158,7 +158,7 @@ const WorkoutDayCard = ({
                 )}
             </div>
 
-            <h1 className="text-SecondaryTextColor font-medium mt-1 capitalize">
+            <h1 className="font-medium mt-1 capitalize">
               {dayDetails.difficulty_level}
             </h1>
           </div>
