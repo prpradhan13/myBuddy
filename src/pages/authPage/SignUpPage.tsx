@@ -18,13 +18,28 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import PasswordCheck from "@/components/extra/PasswordCheck";
 
 const SignUpPage = () => {
   const form = useForm<SignUpSchemaTypes>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      fullname: "",
+      username: "",
+    }
   });
 
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordForCheck, setPasswordForCheck] = useState("");
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -54,8 +69,8 @@ const SignUpPage = () => {
         position: "bottom-right",
         style: {
           backgroundColor: "greenyellow",
-          color: "#000"
-        }
+          color: "#000",
+        },
       });
       form.reset();
       navigate("/register");
@@ -72,121 +87,140 @@ const SignUpPage = () => {
       >
         <ArrowLeft color="#fff" size={24} />
       </button>
-      <h1 className="text-2xl text-PrimaryTextColor font-semibold">
-        Create your Account
-      </h1>
-      <h3 className="text-sm text-[#dadada] text-center mt-5">
-        Get started with our app, just create an account and enjoy the
-        experience.
-      </h3>
 
-      <Form {...form}>
-        <form
-          className="w-full md:w-[50vw] lg:w-[30vw] mt-10 flex flex-col gap-3"
-          onSubmit={form.handleSubmit(formSubmit)}
-        >
-          <FormField
-            control={form.control}
-            name="fullname"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Full name</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    className="text-white placeholder:text-[#c2c2c2]"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      <Card className="w-full max-w-md p-6 shadow-lg bg-white rounded-2xl">
+        <CardHeader>
+          <CardTitle className="text-2xl text-center font-semibold">
+            Create your account
+          </CardTitle>
+          <CardDescription className="text-center">
+            Get started with our app, just create an account and enjoy the
+            experience.
+          </CardDescription>
+        </CardHeader>
 
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Username</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    className="text-white placeholder:text-[#c2c2c2]"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <CardContent>
+          <Form {...form}>
+            <form
+              className="w-full md:w-[50vw] lg:w-[30vw] space-y-2"
+              onSubmit={form.handleSubmit(formSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="fullname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="">Full name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="placeholder:text-[#c2c2c2]"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Email</FormLabel>
-                <FormControl>
-                  <div className="flex gap-2 items-center border rounded-md px-3 py-1 h-9">
-                    <IoMailOutline color="#c2c2c2" size={24} />
-                    <Input
-                      placeholder="name@mail.com"
-                      autoCapitalize="none"
-                      {...field}
-                      className="text-white placeholder:text-[#c2c2c2] border-none p-0 focus-visible:ring-0"
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="">Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="placeholder:text-[#c2c2c2]"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="">Email</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-2 items-center border rounded-md px-3 py-1 h-9">
+                        <IoMailOutline color="#c2c2c2" size={24} />
+                        <Input
+                          placeholder="name@mail.com"
+                          autoCapitalize="none"
+                          {...field}
+                          className="placeholder:text-[#c2c2c2] border-none p-0 focus-visible:ring-0"
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="">Password</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-2 items-center border rounded-md px-3 py-1 h-9">
+                        <TbLockPassword size={24} color="#dfdfdf" />
+                        <Input
+                          placeholder="Password"
+                          type={passwordVisible ? "text" : "password"}
+                          autoCapitalize="none"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setPasswordForCheck(e.target.value);
+                          }}
+                          className="placeholder:text-[#c2c2c2] bg-transparent border-none px-0 focus-visible:ring-0"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setPasswordVisible((prev) => !prev)}
+                        >
+                          {passwordVisible ? (
+                            <IoEyeOutline size={20} color="#000" />
+                          ) : (
+                            <IoEyeOffOutline size={20} color="#000" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+
+                    <PasswordCheck 
+                      isSubmitted={form.formState.isSubmitted}
+                      password={passwordForCheck}
                     />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">Password</FormLabel>
-                <FormControl>
-                  <div className="flex gap-2 items-center border rounded-md px-3 py-1 h-9">
-                    <TbLockPassword size={24} color="#dfdfdf" />
-                    <Input
-                      placeholder="Password"
-                      type={passwordVisible ? "text" : "password"}
-                      autoCapitalize="none"
-                      {...field}
-                      className="text-white placeholder:text-[#c2c2c2] bg-transparent border-none px-0 focus-visible:ring-0"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setPasswordVisible((prev) => !prev)}
-                      className="p-1 bg-SecondaryBackgroundColor rounded-md"
-                    >
-                      {passwordVisible ? (
-                        <IoEyeOutline color="#fff" />
-                      ) : (
-                        <IoEyeOffOutline color="#fff" />
-                      )}
-                    </button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit" variant={"secondary"} className="w-full mt-4">
-            {form.formState.isSubmitting ? (
-              <>
-                <Loader2 className="animate-spin" />
-                Please wait
-              </>
-            ) : (
-              "Sign up"
-            )}
-          </Button>
-        </form>
-      </Form>
+              <Button
+                type="submit"
+                variant={"secondary"}
+                className="w-full mt-4"
+              >
+                {form.formState.isSubmitting ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </>
+                ) : (
+                  "Sign up"
+                )}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

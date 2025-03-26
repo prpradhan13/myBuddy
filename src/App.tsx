@@ -24,6 +24,10 @@ const CommentsPage = lazy(() => import("./pages/CommentPage"));
 const ExerciseVisuals = lazy(() => import("./pages/ExerciseVisuals"));
 const UserPrivatePlan = lazy(() => import("./pages/UserPrivatePlan"));
 const UserPublicPlanPage = lazy(() => import("./pages/UserPublicPlanPage"));
+// const SmallWorkoutPage = lazy(() => import("./pages/SmallWorkoutPage"));
+// const SmallWorkoutDetailsPage = lazy(() => import("./pages/SmallWorkoutDetailsPage"));
+const ForgotPasswordPage = lazy(() => import("./pages/authPage/ForgotPassword"));
+const UpdatePasswordPage = lazy(() => import("./pages/authPage/UpdatePasswordPage"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -39,6 +43,7 @@ function App() {
               <Route path="/notAuthLandingPage" element={<NotAuthLandingPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/signUp" element={<SignUpPage />} />
+              <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
             </Route>
 
             <Route element={<PrivateRoute />}>
@@ -64,6 +69,9 @@ function App() {
               <Route path="/exerciseVisuals/:exerciseId" element={<ExerciseVisuals />}/>
               <Route path="/userPublicPlan/:userId" element={<UserPublicPlanPage />}/>
               <Route path="/userPrivatePlan/:userId" element={<UserPrivatePlan />}/>
+              {/* <Route path="/smallWorkouts" element={<SmallWorkoutPage />}/>
+              <Route path="/smallWorkoutDetailsPage/:planId" element={<SmallWorkoutDetailsPage />}/> */}
+              <Route path="/updatePassword" element={<UpdatePasswordPage />} />
             </Route>
           </Routes>
         </Suspense>
