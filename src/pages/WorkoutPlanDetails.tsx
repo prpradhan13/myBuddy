@@ -16,7 +16,8 @@ import {
   CalendarPlus,
   MessageCircle,
   FilePenLine,
-  Lock
+  Lock,
+  Star,
 } from "lucide-react";
 import {
   Carousel,
@@ -29,6 +30,7 @@ import EditPlanDetails from "@/components/editDrawers/EditPlanDetails";
 const WorkoutPlanDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
   const itemsPerPage = 7;
 
   const { planId } = useParams();
@@ -42,7 +44,7 @@ const WorkoutPlanDetails = () => {
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
   );
-  
+
   const initialLetterOfName = getInitialLetter(data?.creator.full_name);
 
   useEffect(() => {
@@ -136,7 +138,12 @@ const WorkoutPlanDetails = () => {
               <MessageCircle size={20} color="#000" />
             </button>
 
-            {!creatorOfPlan && <ReviewForm />}
+            <button
+              onClick={() => setIsReviewOpen(true)}
+              className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+            >
+              <Star size={20} color="#000" />
+            </button>
           </div>
         </div>
 
@@ -165,13 +172,20 @@ const WorkoutPlanDetails = () => {
           ))}
 
           <div className="absolute inset-0 flex flex-col justify-center items-center bg-black/50 backdrop-blur-sm rounded-xl text-white text-center p-6">
-            <p className="font-bold text-lg tracking-wide flex items-center gap-2 text-[#ffad28]"><Lock strokeWidth={3} size={28} /> Premium Plan</p>
+            <p className="font-bold text-lg tracking-wide flex items-center gap-2 text-[#ffad28]">
+              <Lock strokeWidth={3} size={28} /> Premium Plan
+            </p>
             <p className="text-sm opacity-90 mt-2">
               You are not authorized to view this plan. Please contact the
               creator.
             </p>
           </div>
         </div>
+        
+        <ReviewForm
+          isReviewOpen={isReviewOpen}
+          setIsReviewOpen={setIsReviewOpen}
+        />
       </div>
     );
   }
@@ -233,7 +247,12 @@ const WorkoutPlanDetails = () => {
             </button>
           )}
 
-          {!creatorOfPlan && <ReviewForm />}
+          <button
+            onClick={() => setIsReviewOpen(true)}
+            className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+          >
+            <Star size={20} color="#000" />
+          </button>
         </div>
       </div>
 
@@ -303,6 +322,13 @@ const WorkoutPlanDetails = () => {
         planDescription={data?.plan_description || ""}
         planDifficulty={data?.plan_difficulty || ""}
       />
+
+      {isReviewOpen && (
+        <ReviewForm
+          isReviewOpen={isReviewOpen}
+          setIsReviewOpen={setIsReviewOpen}
+        />
+      )}
     </div>
   );
 };

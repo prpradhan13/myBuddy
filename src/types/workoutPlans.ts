@@ -159,8 +159,13 @@ export type RecipientAchivementType = {
 export type GetReviewStarType = {
   id: number;
   rating: number;
-  reviewed_user: string;
-  review: string;
+  reviewed_user: {
+    id: string;
+    full_name: string;
+    username: string;
+    avatar_url: string | null;
+  };
+  review: string | null;
 }
 
 export type searchResultsType = {
@@ -203,3 +208,29 @@ export type TUserDetailsOfSharedPlan = {
   };
   created_at: string;
 }
+
+export type SmallWorkoutType = {
+  id: number;
+  creator_id: string;
+  image_content: string | null;
+  creator: {
+    full_name: string;
+    username: string;
+    avatar_url: string | null;
+  };
+  workout_name: string;
+  difficulty_level: string;
+  is_public: boolean;
+  created_at: string;
+}
+
+export type SmallExercisesType = {
+  id: string;
+  plan_id: number;
+  exercise_name: string;
+  target_muscle: string | null;
+  how_to_do: string;
+  rest: number;
+  video_content: string | null;
+  created_at: string;
+};

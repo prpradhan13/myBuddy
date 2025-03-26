@@ -52,7 +52,7 @@ const SharedPlanDetails = () => {
         </div>
         <TabsContent value="recived">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 mt-3">
-            {sharedPlansData && sharedPlansData?.length > 0 ? (
+            {sharedPlansData && sharedPlansData.length > 0 ? (
               sharedPlansData?.map((item, index) => (
                 <SharedPlanCard
                   key={`${index}_ ${item.created_at}`}

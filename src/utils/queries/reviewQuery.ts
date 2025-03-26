@@ -36,8 +36,8 @@ export const useGetReviewDetails = (planId: number) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("plan_review")
-        .select("id, rating, reviewed_user, review")
-        .eq("plan_id", planId)
+        .select("*, reviewed_user:profiles(id, full_name, username, avatar_url)")
+        .eq("plan_id", planId);
 
       if (error) throw new Error(error.message);
       

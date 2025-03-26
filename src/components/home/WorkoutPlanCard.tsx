@@ -89,7 +89,7 @@ const WorkoutPlanCard = ({
     planDetails.image_content && cld.image(planDetails.image_content);
 
   return (
-    <div className="rounded-xl font-poppins w-full overflow-hidden bg-[#f3f3f3] p-2">
+    <div className="rounded-xl font-poppins w-full overflow-hidden bg-[#f3f3f3] p-1">
       <div className="aspect-video">
         {planBGImage ? (
           <button onClick={handlePlanClick} className="w-full">
@@ -252,7 +252,7 @@ const WorkoutPlanCard = ({
             </Sheet>
           )}
         </div>
-        <div className="flex mt-2">
+        <div className="flex my-2">
           {Array.from({ length: 5 }).map((_, index) => (
             <Star
               key={index}

@@ -6,8 +6,7 @@ import {
 } from "@/utils/helpingFunctions";
 import dayjs from "dayjs";
 import { CalendarClock, Send, Star } from "lucide-react";
-import { useRecipientPlan } from "@/context/SharedPlanProvider";
-import { useEffect } from "react";
+import React from "react";
 import { useGetReviewDetails } from "@/utils/queries/reviewQuery";
 import { cld } from "@/utils/lib/cloudinary";
 import { AdvancedImage } from "@cloudinary/react";
@@ -23,25 +22,16 @@ interface SharedPlanCardProps {
   plan_image: string | null;
 }
 
-const SharedPlanCard = ({
+const SharedPlanCard: React.FC<SharedPlanCardProps> = ({
   workoutplanId,
   workoutplanName,
   avatarUrl,
   username,
   createdAt,
   userFullname,
-  recipientId,
   plan_image,
-}: SharedPlanCardProps) => {
-  const { sharedPlanInfo, setSharedPlanInfo } = useRecipientPlan();
+}) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (recipientId && sharedPlanInfo.recipientId !== recipientId) {
-      setSharedPlanInfo({ recipientId });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handlePlanClick = () => {
     navigate(`/workoutPlanDetails/${workoutplanId}`);
