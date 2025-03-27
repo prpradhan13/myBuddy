@@ -11,6 +11,7 @@ import { useAuth } from "../../context/AuthProvider";
 import { Dispatch, SetStateAction } from "react";
 import { TEditPlanDetails } from "@/validations/forms";
 import { usePlan } from "@/context/WorkoutPlanProvider";
+import { daysOrder } from "../constants";
 
 interface WorkoutQueryParams {
   limit?: number;
@@ -95,18 +96,10 @@ export const useCreateWorkoutPlan = (
       }
 
       // Step 2: Create Days Entry
-      const daysOfWeek: string[] = [
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday",
-      ];
       const totalDays = weeks * 7;
       const workoutDays = Array.from({ length: totalDays }, (_, index) => ({
-        day_name: daysOfWeek[index % 7],
+        day_name: daysOrder[index % 7],
+        week_number: Math.floor(index / 7) + 1,
       }));
 
       const { data: workoutDayIds, error: daysError } = await supabase
@@ -153,10 +146,7 @@ export const useCreateWorkoutPlan = (
   });
 };
 
-export const useDeletePlan = (
-  planId: number,
-  limit?: number,
-) => {
+export const useDeletePlan = (planId: number, limit?: number) => {
   const { user } = useAuth();
   const userId = user?.id;
   const queryClient = useQueryClient();
@@ -211,19 +201,27 @@ export const useAddNewWeek = (planId: number) => {
 
   return useMutation({
     mutationFn: async (): Promise<WorkoutDayType[]> => {
-      const daysOfWeek: string[] = [
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday",
-      ];
       const totalDays = 7;
 
+      // Fetch the current max week_number for the given workout plan
+      const { data: existingWeeks, error: fetchError } = await supabase
+        .from("workoutday")
+        .select("week_number")
+        .order("week_number", { ascending: false })
+        .limit(1);
+
+      if (fetchError) {
+        toast.error(fetchError.message || "Error fetching week data");
+        throw new Error(fetchError.message || "Error fetching week data");
+      }
+
+      const nextWeekNumber = existingWeeks?.[0]?.week_number
+      ? existingWeeks[0].week_number + 1
+      : 1; // If no weeks exist, start from 1
+
       const workoutDays = Array.from({ length: totalDays }, (_, index) => ({
-        day_name: daysOfWeek[index % 7],
+        day_name: daysOrder[index % 7],
+        week_number: nextWeekNumber,
       }));
 
       const { data: workoutDayIds, error: daysError } = await supabase
@@ -390,7 +388,7 @@ export const useOtherUsersAllPrivatePlans = (
 };
 
 export const useUsersTotalPlanCount = (userId: string) => {
-  return useQuery<{count: number} | undefined>({
+  return useQuery<{ count: number } | undefined>({
     queryKey: ["userTotalPlanCount", userId],
     queryFn: async () => {
       const { count, error } = await supabase
@@ -404,10 +402,10 @@ export const useUsersTotalPlanCount = (userId: string) => {
     },
     enabled: !!userId,
   });
-}
+};
 
 export const useUserTotalPublicPlanCount = (userId: string) => {
-  return useQuery<{count: number} | undefined>({
+  return useQuery<{ count: number } | undefined>({
     queryKey: ["userTotalPublicPlanCount", userId],
     queryFn: async () => {
       const { count, error } = await supabase
@@ -425,7 +423,7 @@ export const useUserTotalPublicPlanCount = (userId: string) => {
 };
 
 export const useUserTotalPrivatePlanCount = (userId: string) => {
-  return useQuery<{count: number} | undefined>({
+  return useQuery<{ count: number } | undefined>({
     queryKey: ["userTotalPrivatePlanCount", userId],
     queryFn: async () => {
       const { count, error } = await supabase
@@ -446,20 +444,24 @@ export const useUpadatePlanDetails = () => {
   const { planInfo } = usePlan();
 
   return useMutation({
-    mutationFn: async ({ plan_name, difficulty_level, description }: TEditPlanDetails) => {
+    mutationFn: async ({
+      plan_name,
+      difficulty_level,
+      description,
+    }: TEditPlanDetails) => {
       const { error } = await supabase
         .from("workoutplan")
         .update({
           plan_name,
           difficulty_level,
-          description
+          description,
         })
-        .eq("id", planInfo.planId)
+        .eq("id", planInfo.planId);
 
       if (error) {
         toast.error(error.message || "Error while updating plan details");
         throw new Error(error.message || "Error while updating plan details");
       }
-    }
-  })
+    },
+  });
 };

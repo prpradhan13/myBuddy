@@ -17,7 +17,7 @@ const WorkOutDayDetails = lazy(() => import("./pages/WorkoutDayDetails"));
 const ExercisePage = lazy(() => import("./pages/ExercisePage"));
 const AllWorkoutPlan = lazy(() => import("./pages/AllWorkoutPlan"));
 const SharedPlanDetails = lazy(() => import("./pages/SharedPlanDetails"));
-const RecipientAchivementsDetails = lazy(() => import("./pages/RecipientAchivements"));
+// const RecipientAchivementsDetails = lazy(() => import("./pages/RecipientAchivements"));
 const PublicPlanPage = lazy(() => import("./pages/PublicPlanPage"));
 const ProfilePage = lazy(() => import("./pages/authPage/ProfilePage"));
 const CommentsPage = lazy(() => import("./pages/CommentPage"));
@@ -28,6 +28,7 @@ const UserPublicPlanPage = lazy(() => import("./pages/UserPublicPlanPage"));
 // const SmallWorkoutDetailsPage = lazy(() => import("./pages/SmallWorkoutDetailsPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/authPage/ForgotPassword"));
 const UpdatePasswordPage = lazy(() => import("./pages/authPage/UpdatePasswordPage"));
+const RecipentAchivementDetailsPage = lazy(() => import("./pages/RecipentAchivementDetailsPage"));
 
 function App() {
   const queryClient = new QueryClient();
@@ -62,7 +63,7 @@ function App() {
               />
               <Route path="/allWorkoutPlans" element={<AllWorkoutPlan />} />
               <Route path="/sharedplandetails" element={<SharedPlanDetails />}/>
-              <Route path="/recipientAchivementsDetails/:setId" element={<RecipientAchivementsDetails />}/>
+              {/* <Route path="/recipientAchivementsDetails/:setId" element={<RecipientAchivementsDetails />}/> */}
               <Route path="/publicplan" element={<PublicPlanPage />}/>
               <Route path="/profilePage/:profileId" element={<ProfilePage />}/>
               <Route path="/comments/:planId" element={<CommentsPage />}/>
@@ -72,6 +73,7 @@ function App() {
               {/* <Route path="/smallWorkouts" element={<SmallWorkoutPage />}/>
               <Route path="/smallWorkoutDetailsPage/:planId" element={<SmallWorkoutDetailsPage />}/> */}
               <Route path="/updatePassword" element={<UpdatePasswordPage />} />
+              <Route path="/recipientAchivementsDetails/:recipientId" element={<RecipentAchivementDetailsPage />} />
             </Route>
           </Routes>
         </Suspense>

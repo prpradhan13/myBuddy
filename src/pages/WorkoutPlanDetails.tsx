@@ -26,18 +26,20 @@ import {
 } from "@/components/ui/carousel";
 import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
 import EditPlanDetails from "@/components/editDrawers/EditPlanDetails";
+import { WorkoutDayType } from "@/types/workoutPlans";
+import { daysOrder } from "@/utils/constants";
 
 const WorkoutPlanDetails = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedWeek, setSelectedWeek] = useState<number>(1);
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const itemsPerPage = 7;
 
   const { planId } = useParams();
   const { planInfo, setPlanInfo, creatorOfPlan } = usePlan();
   const { data: hasReceivedPlan, isLoading: isChecking } = useHasReceivedPlan(
     Number(planId)
   );
+  const { mutate, isPending } = useAddNewWeek(Number(planId));
 
   const navigate = useNavigate();
 
@@ -62,15 +64,24 @@ const WorkoutPlanDetails = () => {
   }, [data, setPlanInfo, planInfo]);
 
   const validWorkoutDays = data?.workoutdays || [];
-  const sortedWorkoutDays = [...validWorkoutDays].sort((a, b) => a.id - b.id);
-  const totalPages = Math.ceil(validWorkoutDays.length / itemsPerPage);
 
-  const currentDays = sortedWorkoutDays.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  // **Step 1: Group Days by Week**
+  const weeksData = validWorkoutDays.reduce((acc, day) => {
+    if (!acc[day.week_number]) acc[day.week_number] = [];
+    acc[day.week_number].push(day);
+    return acc;
+  }, {} as Record<number, WorkoutDayType[]>);
 
-  const { mutate, isPending } = useAddNewWeek(Number(planId));
+  Object.keys(weeksData).forEach((week) => {
+    weeksData[Number(week)] = weeksData[Number(week)].sort(
+      (a, b) =>
+        daysOrder.indexOf(a.day_name!.toLowerCase()) -
+        daysOrder.indexOf(b.day_name!.toLowerCase())
+    );
+  });
+
+  const totalWeeks = Object.keys(weeksData).length;
+  const currentWeekDays = weeksData[selectedWeek] || [];
 
   const handleAddWeek = () => {
     mutate();
@@ -85,7 +96,7 @@ const WorkoutPlanDetails = () => {
   };
 
   const handleClickWeek = (index: number) => {
-    setCurrentPage(index + 1);
+    setSelectedWeek(index + 1);
   };
 
   if (isLoading) return <WorkoutDayLoader />;
@@ -119,7 +130,7 @@ const WorkoutPlanDetails = () => {
             {data?.plan_name}
           </h1>
           <h2 className="text-sm text-PrimaryTextColor capitalize">
-            {data?.plan_difficulty}, {totalPages} week plan
+            {data?.plan_difficulty}, {totalWeeks} week plan
           </h2>
 
           {data?.plan_description && (
@@ -152,11 +163,9 @@ const WorkoutPlanDetails = () => {
             {Array.from({ length: 5 }, (_, index) => (
               <button
                 key={index}
-                className={`flex flex-col items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold transition-all ${
-                  currentPage === index + 1
-                    ? "bg-[#898989] text-white"
-                    : "bg-[#cbcbcb] hover:bg-[#b5b5b5]"
-                }`}
+                className={
+                  "flex flex-col items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold bg-white"
+                }
               >
                 <span className="font-bold">{index + 1}</span>
                 <CalendarDays size={20} />
@@ -219,7 +228,7 @@ const WorkoutPlanDetails = () => {
           {data?.plan_name}
         </h1>
         <h2 className="text-sm text-PrimaryTextColor capitalize">
-          {data?.plan_difficulty}, {totalPages} week plan
+          {data?.plan_difficulty}, {totalWeeks} week plan
         </h2>
 
         {data?.plan_description && (
@@ -263,12 +272,12 @@ const WorkoutPlanDetails = () => {
         className="w-full my-5"
       >
         <CarouselContent>
-          {Array.from({ length: totalPages }, (_, index) => (
+          {Array.from({ length: totalWeeks }, (_, index) => (
             <CarouselItem key={index} className="basis-1/6">
               <button
                 onClick={() => handleClickWeek(index)}
                 className={`flex flex-col flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
-                  currentPage === index + 1
+                  selectedWeek === index + 1
                     ? "bg-[#d4d4d4]"
                     : "bg-[#898989] text-white"
                 }`}
@@ -279,7 +288,7 @@ const WorkoutPlanDetails = () => {
             </CarouselItem>
           ))}
           <CarouselItem className="">
-            {creatorOfPlan && totalPages < 6 && (
+            {creatorOfPlan && totalWeeks < 6 && (
               <button className="bg-[#cbcbcb] h-14 w-14 flex flex-col items-center justify-center rounded-xl overflow-hidden">
                 <Alert
                   trigerBtnVarient={"default"}
@@ -297,9 +306,9 @@ const WorkoutPlanDetails = () => {
         </CarouselContent>
       </Carousel>
 
-      {validWorkoutDays.length > 0 ? (
+      {currentWeekDays.length > 0 ? (
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {currentDays.map((day) => (
+          {currentWeekDays.map((day) => (
             <WorkoutDayCard
               planId={Number(planId)}
               dayDetails={day}

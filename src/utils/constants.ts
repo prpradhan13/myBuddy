@@ -5,3 +5,13 @@ export const bannerPublicId = [
     {content_type: "image", content_path: "ғᴀsᴄɪɴᴀᴛɪɴɢ_lbnhzp"},
     {content_type: "image", content_path: "r_e_v_ê_u_s_e_q3f884"}
 ]
+
+export const daysOrder = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -20,6 +20,9 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { SendedPlanType, TUserDetailsOfSharedPlan } from "@/types/workoutPlans";
+import { useNavigate } from "react-router-dom";
+import Alert from "./Alert";
+import { CircleMinus, NotebookTabs } from "lucide-react";
 
 interface SharedPlanUserListProps {
   drawerOpen: boolean;
@@ -30,10 +33,17 @@ interface SharedPlanUserListProps {
 const SharedPlanUserList: React.FC<SharedPlanUserListProps> = React.memo(
   ({ drawerOpen, setDrawerOpen, planId }) => {
     const { data } = useUserDetailsOfSharedPlan(planId);
-    const { mutate, isPending } = useRemoveUserFromSharePlan();
+    const { mutate } = useRemoveUserFromSharePlan();
     const queryClient = useQueryClient();
     const { user } = useAuth();
     const currentUserId = user?.id;
+    const navigate = useNavigate();
+
+    const [loadingUserId, setLoadingUserId] = useState<string | null>(null);
+
+    const handleNavigateToRecipientAchive = (recipientId: string) => {
+      navigate(`/recipientAchivementsDetails/${recipientId}`);
+    }
 
     const handleRemove = (recipentId: string, senderId: string) => {
       if (senderId !== currentUserId) {
@@ -77,6 +87,9 @@ const SharedPlanUserList: React.FC<SharedPlanUserListProps> = React.memo(
           onError: (error) => {
             toast.error(error.message || "Failed to remove recipent");
           },
+          onSettled: () => {
+            setLoadingUserId(null);
+          },
         }
       );
     };
@@ -119,16 +132,22 @@ const SharedPlanUserList: React.FC<SharedPlanUserListProps> = React.memo(
                         </p>
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      onClick={() =>
-                        handleRemove(item.user_id.id, item.sender_id)
-                      }
-                      disabled={isPending}
-                      className={isPending ? "bg-white/50" : ""}
-                    >
-                      {isPending ? "Removing..." : "Remove"}
-                    </Button>
+                    <div className="flex gap-3 items-center">
+                      <Button
+                        onClick={() => handleNavigateToRecipientAchive(item.user_id.id)}
+                      >
+                        <NotebookTabs />
+                      </Button>
+
+                      <Alert
+                        trigerBtnVarient={"destructive"}
+                        icon={CircleMinus}
+                        pendingState={loadingUserId === item.user_id.id}
+                        handleContinueBtn={() =>
+                          handleRemove(item.user_id.id, item.sender_id)
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
               ))}

@@ -11,6 +11,7 @@ export type WorkoutPlansType = {
 
 export type WorkoutDayType = {
   id: number;
+  week_number: number;
   day_name: string | null;
   description: string | null;
   difficulty_level: string | null;

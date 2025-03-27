@@ -13,9 +13,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { recipientAchiveForm, TRecipientAchiveForm } from "@/validations/forms";
 import { useUpdateSetByRecipient } from "@/utils/queries/sharedPlanQuery";
 import { usePlan } from "@/context/WorkoutPlanProvider";
-import { useRecipientPlan } from "@/context/SharedPlanProvider";
 import { Button } from "../ui/button";
 import Alert from "../extra/Alert";
+import { useAuth } from "@/context/AuthProvider";
 
 interface RecipientAchiveFormProps {
   exerciseId: number;
@@ -33,13 +33,14 @@ const RecipientAchiveForm = ({
   });
 
   const { planInfo } = usePlan();
-  const { sharedPlanInfo } = useRecipientPlan();
+  const { user } = useAuth();
+  const userId = user && user.id;
 
   const { mutate: recipientMutate } = useUpdateSetByRecipient({
     dayId: planInfo.dayId,
     exerciseId: Number(exerciseId),
     planId: planInfo.planId,
-    recipientId: sharedPlanInfo.recipientId,
+    recipientId: userId!,
     setExerciseSetIdForUpdate
   });
 
