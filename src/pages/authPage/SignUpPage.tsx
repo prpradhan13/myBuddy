@@ -80,7 +80,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col bg-MainBackgroundColor justify-center items-center px-8">
+    <div className="w-full min-h-screen flex flex-col bg-MainBackgroundColor justify-center items-center">
       <button
         onClick={handleGoBack}
         className="absolute top-8 left-8 bg-[#656565] rounded-lg p-1"
@@ -88,7 +88,7 @@ const SignUpPage = () => {
         <ArrowLeft color="#fff" size={24} />
       </button>
 
-      <Card className="w-full max-w-md p-6 shadow-lg bg-white rounded-2xl">
+      <Card className="w-full max-w-md p-4 shadow-lg bg-white rounded-2xl">
         <CardHeader>
           <CardTitle className="text-2xl text-center font-semibold">
             Create your account

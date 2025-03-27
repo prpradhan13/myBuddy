@@ -58,7 +58,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col bg-MainBackgroundColor justify-center items-center px-8 relative">
+    <div className="w-full h-screen flex flex-col bg-MainBackgroundColor justify-center items-center relative">
       <button
         onClick={handleGoBack}
         className="absolute top-8 left-8 bg-[#656565] rounded-lg p-1"
@@ -66,7 +66,7 @@ const RegisterPage = () => {
         <ArrowLeft color="#fff" size={24} />
       </button>
 
-      <Card className="w-full max-w-md p-6 shadow-lg bg-white rounded-2xl">
+      <Card className="w-full max-w-md p-4 shadow-lg bg-white rounded-2xl">
         <CardHeader>
           <CardTitle className="text-2xl text-center font-semibold">
             Welcome Back!
@@ -123,12 +123,11 @@ const RegisterPage = () => {
                           <button
                             type="button"
                             onClick={() => setPasswordVisible((prev) => !prev)}
-                            className="p-1 bg-SecondaryBackgroundColor rounded-md"
                           >
                             {passwordVisible ? (
-                              <IoEyeOutline color="#fff" />
+                              <IoEyeOutline size={20} color="#000" />
                             ) : (
-                              <IoEyeOffOutline color="#fff" />
+                              <IoEyeOffOutline size={20} color="#000" />
                             )}
                           </button>
                         </div>

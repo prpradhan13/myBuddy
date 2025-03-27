@@ -181,7 +181,7 @@ const WorkoutPlanDetails = () => {
             </p>
           </div>
         </div>
-        
+
         <ReviewForm
           isReviewOpen={isReviewOpen}
           setIsReviewOpen={setIsReviewOpen}
@@ -269,8 +269,8 @@ const WorkoutPlanDetails = () => {
                 onClick={() => handleClickWeek(index)}
                 className={`flex flex-col flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
                   currentPage === index + 1
-                    ? "bg-[#898989] text-white"
-                    : "bg-[#d4d4d4]"
+                    ? "bg-[#d4d4d4]"
+                    : "bg-[#898989] text-white"
                 }`}
               >
                 <span className="font-bold">{index + 1}</span>

@@ -16,7 +16,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Timer } from 'lucide-react';
+import { Timer } from "lucide-react";
+import { useRef } from "react";
 
 const ExerciseVisuals = () => {
   const { exerciseId } = useParams();
@@ -28,6 +29,8 @@ const ExerciseVisuals = () => {
     useGetExercises(Number(exerciseId));
 
   const myVideo = cld.video(data?.content_url);
+
+  const detailsRef = useRef(null);
 
   if (isLoading || exerciseWithSetsLoading) return <Loader />;
 
@@ -53,9 +56,9 @@ const ExerciseVisuals = () => {
 
       {/* Scrollable Text Content */}
       <div className="w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y">
-        <div className="bg-transparent h-[80vh]"></div>
-        <div className="w-full bg-gradient-to-t from-black to-transparent p-6">
-          <h1 className="text-4xl font-bold capitalize">
+        <div className="bg-transparent h-[85vh]"></div>
+        <div ref={detailsRef} className="w-full p-6 bg-gradient-to-t from-black/60 via-black/40 to-transparent backdrop-blur-md">
+          <h1 className="text-3xl font-bold capitalize">
             {exerciseWithSets?.exercise_name}
           </h1>
           <h2 className="text-lg font-semibold mt-1 capitalize">
@@ -65,8 +68,10 @@ const ExerciseVisuals = () => {
             {exerciseWithSets?.exercise_description}
           </p>
 
-          <p className="mt-2 font-medium">Rest between sets {exerciseWithSets?.rest ?? 0}</p>
-          
+          <p className="mt-2 font-medium">
+            Rest between sets {exerciseWithSets?.rest ?? 0}
+          </p>
+
           {exerciseWithSets?.exercise_sets?.map((item, index) => (
             <div key={item.id} className="my-4">
               <h3 className="text-lg font-medium">Set {index + 1}</h3>
@@ -84,9 +89,7 @@ const ExerciseVisuals = () => {
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>Stopwatch</DrawerTitle>
-                <DrawerDescription>
-                  No need to go any where
-                </DrawerDescription>
+                <DrawerDescription>No need to go any where</DrawerDescription>
               </DrawerHeader>
               <StopWatch />
               <DrawerFooter>
