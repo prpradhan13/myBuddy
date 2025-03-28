@@ -5,6 +5,7 @@ export type UserProfileType = {
     email: string;
     bio: string | null;
     avatar_url: string | null;
+    access_create_plan: boolean;
     profile_banner: {
         id: number;
         user_id: string;

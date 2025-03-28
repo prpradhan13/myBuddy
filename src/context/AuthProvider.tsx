@@ -15,8 +15,6 @@ export default function AuthProvider({ children }: {children: ReactNode}){
     const [session, setSession] = useState<Session | null>(null);
     const [isReady, setIsReady] = useState(false)
 
-
-
     useEffect(() => {
         supabase.auth.getSession().then(({ data: {session} }) => {
             setSession(session);

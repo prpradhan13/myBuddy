@@ -8,6 +8,7 @@ import { useAuth } from "../../context/AuthProvider";
 export const getUserDetails = (userId?: string) => {
   if (!userId) {
     toast.error("Unauthorized: User ID is required");
+    throw new Error("Unauthorized : User ID is required");
   }
 
   return useQuery<UserProfileType>({
@@ -21,6 +22,7 @@ export const getUserDetails = (userId?: string) => {
 
       if (error) {
         toast.error(error.message || "User profile not found");
+        throw new Error(error.message);
       }
       
       return data;

@@ -192,6 +192,7 @@ const UserDetails = () => {
         <CreateWorkoutPlan
           openCreateForm={openCreateForm}
           setOpenCreateForm={setOpenCreateForm}
+          accessForCreatePlan={data.access_create_plan}
         />
       )}
 
