@@ -46,7 +46,7 @@ const SharedPlanDetails = () => {
               value="sended"
               className="data-[state=active]:bg-MainBackgroundColor data-[state=active]:text-PrimaryTextColor"
             >
-              Sended
+              Shared
             </TabsTrigger>
           </TabsList>
         </div>

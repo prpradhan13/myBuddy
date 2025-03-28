@@ -1,7 +1,7 @@
 import { useGetExercises, useRemoveSet } from "../utils/queries/exerciseQuery";
 import Loader from "../components/loaders/Loader";
 import ErrorPage from "../components/loaders/ErrorPage";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 import SetsForm from "../components/forms/SetsForm";
 import { Button } from "@/components/ui/button";
@@ -35,11 +35,10 @@ const ExercisePage = () => {
   const [exerciseSetIdForUpdate, setExerciseSetIdForUpdate] = useState<
     number | null
   >(null);
-  const navigate = useNavigate();
 
   const { exerciseId } = useParams();
   const { creatorOfPlan, planInfo } = usePlan();
-  const planId = planInfo.planId
+  const planId = planInfo.planId;
 
   const { data, isLoading, isError, error } = useGetExercises(
     Number(exerciseId)
@@ -63,10 +62,6 @@ const ExercisePage = () => {
 
   const handleUpdateSetByRecipient = (setId: number) => {
     setExerciseSetIdForUpdate(setId);
-  };
-
-  const handleNavigateToRecipientAchive = (setId: number) => {
-    navigate(`/recipientAchivementsDetails/${setId}`);
   };
 
   if (isLoading || isChecking) return <Loader />;
@@ -129,17 +124,29 @@ const ExercisePage = () => {
         }`}
       >
         {exerciseImage && <div className="bg-transparent h-[50vh]"></div>}
-        
-        <div className={`${exerciseImage ? "w-full bg-gradient-to-t from-black via-[#000] to-transparent p-6" : ""}`}>
+
+        <div
+          className={`${
+            exerciseImage
+              ? "w-full bg-gradient-to-t from-black via-[#000] to-transparent p-6"
+              : ""
+          }`}
+        >
           <p className="text-[#d6d6d6] font-medium capitalize">
             {data?.target_muscle}
           </p>
           <h1 className="text-[#fff] font-bold text-2xl capitalize flex items-center gap-1">
             {data?.exercise_name}
           </h1>
-          <p className="font-medium text-PrimaryTextColor">Rest between sets {data.rest ?? 0}</p>
+          <p className="font-medium text-PrimaryTextColor">
+            Rest between sets {data.rest ?? 0}
+          </p>
           {data?.exercise_description && (
-            <div className={`${exerciseImage ? "bg-transparent" : "bg-[#2f2f2f] p-4 rounded-xl"} mt-2`}>
+            <div
+              className={`${
+                exerciseImage ? "bg-transparent" : "bg-[#2f2f2f] p-4 rounded-xl"
+              } mt-2`}
+            >
               <p className="text-white capitalize whitespace-pre-line">
                 {data?.exercise_description}
               </p>
@@ -165,13 +172,6 @@ const ExercisePage = () => {
                           className="cursor-pointer"
                         >
                           Edit Your Achives
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          onClick={() => handleNavigateToRecipientAchive(set.id)}
-                          className="cursor-pointer"
-                        >
-                          Recipient Achives
                         </DropdownMenuItem>
 
                         <Alert
@@ -241,23 +241,13 @@ const ExercisePage = () => {
                     </div>
                   )}
 
-                {hasReceivedPlan && !creatorOfPlan && (
+                {hasReceivedPlan && (
                   <Button
                     onClick={() => handleUpdateSetByRecipient(set.id)}
                     variant={"secondary"}
                     className="text-xs h-7 px-2 mt-2"
                   >
                     Edit
-                  </Button>
-                )}
-
-                {hasReceivedPlan && !creatorOfPlan && (
-                  <Button
-                    onClick={() => handleNavigateToRecipientAchive(set.id)}
-                    variant={"secondary"}
-                    className="text-xs h-7 px-2 mt-2 ml-3"
-                  >
-                    Achievement
                   </Button>
                 )}
               </div>

@@ -18,6 +18,7 @@ import {
   FilePenLine,
   Lock,
   Star,
+  Award,
 } from "lucide-react";
 import {
   Carousel,
@@ -28,6 +29,7 @@ import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
 import EditPlanDetails from "@/components/editDrawers/EditPlanDetails";
 import { WorkoutDayType } from "@/types/workoutPlans";
 import { daysOrder } from "@/utils/constants";
+import { useAuth } from "@/context/AuthProvider";
 
 const WorkoutPlanDetails = () => {
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
@@ -40,7 +42,8 @@ const WorkoutPlanDetails = () => {
     Number(planId)
   );
   const { mutate, isPending } = useAddNewWeek(Number(planId));
-
+  const { user } = useAuth();
+  const currentUser = user?.id;
   const navigate = useNavigate();
 
   const { data, isLoading, isError, error } = useGetPlanWithDays(
@@ -262,6 +265,15 @@ const WorkoutPlanDetails = () => {
           >
             <Star size={20} color="#000" />
           </button>
+
+          {hasReceivedPlan && (
+            <Link
+              to={`/recipientAchivementsDetails/${currentUser}`}
+              className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+            >
+              <Award size={20} color="#000" />
+            </Link>
+          )}
         </div>
       </div>
 

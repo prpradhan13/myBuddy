@@ -40,7 +40,7 @@ const RecipentAchivementDetailsPage = () => {
 
   const recipient = data[0]?.recipient;
 
-  // Grouping by Day and Workout
+  // Grouping by Week and Day name
   const groupedData = data.reduce((acc, item) => {
     const key = `week_${item.dayDetails.week_number}_${item.dayDetails.day_name}`;
     if (!acc[key]) {

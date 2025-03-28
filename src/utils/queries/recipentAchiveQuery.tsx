@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import { RecipentAchiveDataType } from "@/types/recipientAchiveType";
+import { useAuth } from "@/context/AuthProvider";
+import toast from "react-hot-toast";
 
 export const useGetRecipentAchivementDetails = (recipientId?: string) => {
   if (!recipientId) {
@@ -22,6 +24,31 @@ export const useGetRecipentAchivementDetails = (recipientId?: string) => {
         throw new Error(error.message || "Recipient not found in database!");
 
       return data ?? [];
+    },
+  });
+};
+
+export const useRecipientAchiveSetDetails = (setId: number) => {
+  const { user } = useAuth();
+  const currentUserId = user?.id;
+
+  if (!currentUserId) {
+    toast.error("User not found");
+    throw new Error("User not found");
+  }
+
+  return useQuery<RecipentAchiveDataType>({
+    queryKey: ["recipientAchiveSetDetails", setId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("recipient_achive")
+        .select("*, setDetails: set_id(target_repetitions, target_weight)")
+        .eq("set_id", setId)
+        .maybeSingle();
+
+      if (error) throw new Error(error.message || "Set not found in database!");
+
+      return data ?? {};
     },
   });
 };
