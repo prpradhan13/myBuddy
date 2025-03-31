@@ -73,7 +73,10 @@ const CustomListPreview: React.FC<
   ChannelPreviewUIComponentProps<DefaultStreamChatGenerics>
 > = ({ channel, setActiveChannel }) => {
   const { user } = useAuth();
+  const userId = user && user.id;
   const members = Object.values(channel.state.members || {});
+
+  const unReadMeassages = channel.state.read[userId!].unread_messages;
 
   const channelImage =
     channel.data?.image ||
@@ -89,21 +92,28 @@ const CustomListPreview: React.FC<
 
   return (
       <div
-        className="p-3 cursor-pointer flex items-center gap-2"
+        className="p-3 cursor-pointer flex items-center gap-2 justify-between"
         onClick={() => setActiveChannel && setActiveChannel(channel)}
       >
-        {channelImage ? (
-          <img
-            className="rounded-full w-12 h-12 object-cover"
-            src={channelImage}
-            alt={channelName}
-          />
-        ) : (
-          <div className="rounded-full w-12 h-12 bg-gradient-to-t from-[#242424] to-[#464646] flex justify-center items-center">
-            {getInitialLetter(channelName)}
+        <div className="flex items-center gap-2">
+          {channelImage ? (
+            <img
+              className="rounded-full w-12 h-12 object-cover"
+              src={channelImage}
+              alt={channelName}
+            />
+          ) : (
+            <div className="rounded-full w-12 h-12 bg-gradient-to-t from-[#242424] to-[#464646] flex justify-center items-center">
+              {getInitialLetter(channelName)}
+            </div>
+          )}
+          <p className="font-semibold capitalize">{channelName}</p>
+        </div>
+        {unReadMeassages > 0 && (
+          <div className="bg-red-500 text-xs font-medium px-2 py-1 rounded-full flex justify-center items-center">
+            {unReadMeassages}
           </div>
         )}
-        <p className="font-semibold capitalize">{channelName}</p>
       </div>
   );
 };

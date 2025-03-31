@@ -164,7 +164,7 @@ const WorkoutPlanCard = ({
                 : "bg-[#ffa600] hover:bg-[#ffa600]"
             }`}
           >
-            {planDetails.is_public ? "Public" : "Private"}
+            {planDetails.is_public ? "Free" : "Premium"}
           </Badge>
 
           {isLogedInUserCreator && (

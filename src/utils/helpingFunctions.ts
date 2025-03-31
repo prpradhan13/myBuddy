@@ -1,5 +1,7 @@
 import { BuildCommentTreeType, CommentType } from "@/types/workoutPlans";
 import { useEffect, useState } from "react";
+import { useChatContext } from "stream-chat-react";
+import type { Event } from "stream-chat";
 
 export const getInitialLetter = (fullName?: string) => {
   if (!fullName) return "";
@@ -67,3 +69,27 @@ export const buildCommentTree = (comments: CommentType[]) => {
 
   return rootComments;
 }
+
+export const useCountUnreadMessage = () => {
+  const { client } = useChatContext();
+  const [unReadCount, setUnReadCount] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    // Handler for both new messages and read messages
+    const updateUnreadCount = (event: Event) => {
+      setUnReadCount(event.total_unread_count ?? 0);
+    };
+
+    // Attach event listeners
+    client.on("notification.message_new", updateUnreadCount);
+    client.on("message.read", updateUnreadCount);
+
+    // Cleanup function to remove event listeners
+    return () => {
+      client.off("notification.message_new", updateUnreadCount);
+      client.off("message.read", updateUnreadCount);
+    };
+  }, [client]);
+
+  return unReadCount;
+};
