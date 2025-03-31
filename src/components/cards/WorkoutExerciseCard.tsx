@@ -12,6 +12,7 @@ import { openCloudinaryUploadWidget } from "@/utils/lib/cloudinary";
 import { useNavigate } from "react-router-dom";
 import { Play, FileVideo, LoaderCircle } from "lucide-react";
 import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const WorkoutExerciseCard = ({
   exerciseDetails,
@@ -32,18 +33,20 @@ const WorkoutExerciseCard = ({
   };
 
   const { mutate: addVisual, isPending: isUploading } = useAddExerciseVisual();
-  const { mutate: addImageVisual, isPending: isImageUploading } = useAddExerciseImage();
+  const { mutate: addImageVisual, isPending: isImageUploading } =
+    useAddExerciseImage();
 
   const handleUploadVisual = () => {
-
+    if (!creatorOfPlan) {
+      toast.error("Hey, You are not the creator. Get out of here.");
+      return;
+    }
     openCloudinaryUploadWidget((publicId, type) => {
-
       if (type === "image") {
         addImageVisual(
           { exerciseId: exerciseDetails.id, imageUrl: publicId },
           { onSuccess: () => navigate(-1) }
-        )
-        
+        );
       } else if (type === "video") {
         addVisual(
           { exerciseId: exerciseDetails.id, videoUrl: publicId },
@@ -84,7 +87,7 @@ const WorkoutExerciseCard = ({
           >
             <Play color="#000" size={22} />
           </Link>
-        ) : (
+        ) : creatorOfPlan ? (
           <button
             onClick={handleUploadVisual}
             className="bg-BtnBgClr rounded-full p-3"
@@ -95,8 +98,9 @@ const WorkoutExerciseCard = ({
               <FileVideo color="#000" size={22} />
             )}
           </button>
-        )}
+        ) : null}
       </div>
+      
     </div>
   );
 };
