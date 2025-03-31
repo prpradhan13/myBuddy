@@ -3,11 +3,14 @@ import { ExerciseType } from "../../types/workoutPlans";
 import Alert from "../extra/Alert";
 import { useDeleteExercise } from "@/utils/queries/exerciseQuery";
 import { usePlan } from "@/context/WorkoutPlanProvider";
-import { Button } from "../ui/button";
-import { useAddExerciseVisual, useHasExerciseVisual } from "@/utils/queries/exerciseVisuals";
+import {
+  useAddExerciseImage,
+  useAddExerciseVisual,
+  useHasExerciseVisual,
+} from "@/utils/queries/exerciseVisuals";
 import { openCloudinaryUploadWidget } from "@/utils/lib/cloudinary";
-import { useNavigate } from 'react-router-dom'
-import { Play } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { Play, FileVideo, LoaderCircle } from "lucide-react";
 import { ClipLoader } from "react-spinners";
 
 const WorkoutExerciseCard = ({
@@ -29,13 +32,24 @@ const WorkoutExerciseCard = ({
   };
 
   const { mutate: addVisual, isPending: isUploading } = useAddExerciseVisual();
+  const { mutate: addImageVisual, isPending: isImageUploading } = useAddExerciseImage();
 
   const handleUploadVisual = () => {
-    openCloudinaryUploadWidget((publicId) => {
-      addVisual(
-        { exerciseId: exerciseDetails.id, videoUrl: publicId },
-        { onSuccess: () => navigate(-1) }
-      );
+
+    openCloudinaryUploadWidget((publicId, type) => {
+
+      if (type === "image") {
+        addImageVisual(
+          { exerciseId: exerciseDetails.id, imageUrl: publicId },
+          { onSuccess: () => navigate(-1) }
+        )
+        
+      } else if (type === "video") {
+        addVisual(
+          { exerciseId: exerciseDetails.id, videoUrl: publicId },
+          { onSuccess: () => navigate(-1) }
+        );
+      }
     });
   };
 
@@ -43,25 +57,17 @@ const WorkoutExerciseCard = ({
     <div className="bg-SecondaryBackgroundColor p-4 rounded-xl flex justify-between items-center">
       <div className="">
         <Link to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}>
-          <h1 className="text-[#fca311] text-lg capitalize font-semibold">
+          <h1 className="text-PrimaryTextColor text-lg capitalize font-semibold">
             {" "}
             {exerciseDetails.exercise_name}{" "}
           </h1>
         </Link>
 
-        {isCheckingVisuals ? (
-          <p>Loading...</p>
-        ) : !hasVisuals && creatorOfPlan ? (
-          <Button onClick={handleUploadVisual} variant={"outline"} className="h-6 mr-3">
-            {isUploading ? "Uploading..." : "Add Visual"}
-          </Button>
-        ) : ("")}
-
         {creatorOfPlan && (
           <Alert
             btnName="Remove"
-            trigerBtnVarient={"secondary"}
-            triggerBtnClassName="mt-4 h-6 p-0 bg-transparent hover:bg-transparent text-[#ef4444]"
+            trigerBtnVarient={"destructive"}
+            triggerBtnClassName="mt-4 text-xs h-6 p-1"
             handleContinueBtn={handleRemoveExercise}
             pendingState={isPending}
           />
@@ -72,12 +78,24 @@ const WorkoutExerciseCard = ({
         {isCheckingVisuals ? (
           <ClipLoader color="#fff" />
         ) : hasVisuals ? (
-          <Link to={`/exerciseVisuals/${exerciseDetails.id}`}>
-            <button className="mr-3 p-3 bg-white rounded-full">
-              <Play color="#000" size={20} />
-            </button>
+          <Link
+            to={`/exerciseVisuals/${exerciseDetails.id}`}
+            className="p-3 bg-white rounded-full"
+          >
+            <Play color="#000" size={22} />
           </Link>
-        ): ""}
+        ) : (
+          <button
+            onClick={handleUploadVisual}
+            className="bg-BtnBgClr rounded-full p-3"
+          >
+            {isUploading || isImageUploading ? (
+              <LoaderCircle size={22} className="animate-spin" />
+            ) : (
+              <FileVideo color="#000" size={22} />
+            )}
+          </button>
+        )}
       </div>
     </div>
   );

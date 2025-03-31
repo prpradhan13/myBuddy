@@ -10,9 +10,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddExerciseFinal from "./AddExerciseFinal";
 import { ExercisesFormType, ExerciseType } from "@/types/workoutPlans";
 import { Dispatch, SetStateAction } from "react";
@@ -26,6 +34,7 @@ import {
   CollapsibleTrigger,
 } from "../ui/collapsible";
 import { ChevronsUpDown } from "lucide-react";
+import { targetMuscles } from "@/utils/constants";
 
 interface AddExerciseProps {
   workoutId: number;
@@ -54,6 +63,18 @@ const AddExercise = ({
     planId!
   );
   const [selectPreviousBoxOpen, setSelectPreviousBoxOpen] = useState(false);
+
+  useEffect(() => {
+    if (workoutId) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [workoutId]);
 
   const handleCloseBtn = () => {
     setOpenAddExerciseForm(false);
@@ -90,7 +111,7 @@ const AddExercise = ({
   };
 
   return (
-    <div className="bg-[#000000d6] absolute top-0 right-0 left-0 w-full h-screen flex justify-center items-center px-8 overflow-hidden">
+    <div className="bg-[#000000d6] fixed top-0 right-0 left-0 w-full h-screen flex justify-center items-center px-8 overflow-hidden">
       {step === 1 &&
         (!selectPreviousBoxOpen ? (
           <Form {...form}>
@@ -122,17 +143,38 @@ const AddExercise = ({
                 control={form.control}
                 name="target_muscle"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col">
                     <FormLabel className="text-PrimaryTextColor text-lg">
-                      Target Muscles
+                      Target Muscle
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="e.g. Chest"
-                        {...field}
-                        value={field.value ?? ""}
-                        className="text-PrimaryTextColor"
-                      />
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger
+                          className={`w-[180px] capitalize ${
+                            field.value ? "text-white" : "text-white"
+                          }`}
+                        >
+                          <SelectValue className="text-white">
+                            {field.value}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {targetMuscles.map((target, index) => (
+                              <SelectItem
+                                key={index}
+                                value={target}
+                                className="capitalize"
+                              >
+                                {target}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

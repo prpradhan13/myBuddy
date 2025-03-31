@@ -56,8 +56,8 @@ const WorkoutDayDetails = () => {
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-montserrat">
-      <div className="">
-        <h2 className=" text-sm font-medium text-SecondaryTextColor capitalize">
+      <div className="bg-SecondaryBackgroundColor p-2 rounded-xl">
+        <h2 className="text-sm font-medium text-SecondaryTextColor capitalize">
           {data?.day_name}, {data?.day_difficulty}
         </h2>
         <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
@@ -70,40 +70,40 @@ const WorkoutDayDetails = () => {
             </p>
           </div>
         )}
-
-        {creatorOfPlan && (
-          <Button
-            onClick={handleClickAddBtn}
-            variant={"secondary"}
-            className="mb-2 rounded-xl bg-white px-4 flex"
-          >
-            Add Exercise
-          </Button>
-        )}
-
-        {sortedWorkoutDays && sortedWorkoutDays.length > 0 ? (
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {sortedWorkoutDays.map((exercise, index) => (
-              <WorkoutExerciseCard
-                key={`${index}_${exercise.id}`}
-                exerciseDetails={exercise}
-                dayId={data?.workoutday_id}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="h-96 text-center text-SecondaryTextColor">
-            <p>No exercises for this day</p>
-          </div>
-        )}
-
-        {openAddExerciseForm && (
-          <AddExercise
-            workoutId={Number(dayId)}
-            setOpenAddExerciseForm={setOpenAddExerciseForm}
-          />
-        )}
       </div>
+
+      {sortedWorkoutDays && sortedWorkoutDays.length > 0 ? (
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {sortedWorkoutDays.map((exercise, index) => (
+            <WorkoutExerciseCard
+              key={`${index}_${exercise.id}`}
+              exerciseDetails={exercise}
+              dayId={data?.workoutday_id}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="h-96 text-center text-SecondaryTextColor">
+          <p>No exercises for this day</p>
+        </div>
+      )}
+
+      {creatorOfPlan && (
+        <Button
+          onClick={handleClickAddBtn}
+          variant={"secondary"}
+          className="mt-4 w-full bg-white px-4 flex"
+        >
+          Add New Exercise
+        </Button>
+      )}
+
+      {openAddExerciseForm && (
+        <AddExercise
+          workoutId={Number(dayId)}
+          setOpenAddExerciseForm={setOpenAddExerciseForm}
+        />
+      )}
     </div>
   );
 };

@@ -14,4 +14,22 @@ export const daysOrder = [
     "friday",
     "saturday",
     "sunday",
-  ];
+];
+
+export const targetMuscles = [
+    "chest",
+    "back",
+    "shoulders",
+    "arms",
+    "legs",
+    "abs",
+    "triceps",
+    "biceps",
+    "forearms",
+    "neck",
+    "waist",
+    "quads",
+    "hamstrings",
+    "glutes",
+    "calves",
+]

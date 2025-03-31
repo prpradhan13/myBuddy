@@ -14,7 +14,7 @@ export const cld = new Cloudinary({
 });
 
 export const openCloudinaryUploadWidget = (
-  onSuccess: (publicId: string) => void
+  onSuccess: (publicId: string, type: "image" | "video") => void
 ) => {
   if (!window.cloudinary) {
     alert("Cloudinary not loaded!");
@@ -26,7 +26,7 @@ export const openCloudinaryUploadWidget = (
       cloudName: CLOUDINARY_CLOUD_NAME,
       uploadPreset: CLOUDINARY_UPLOAD_PRESET,
       resourceType: "auto",
-      clientAllowedFormats: ["jpg", "jpeg", "mp4", "mov"],
+      clientAllowedFormats: ["jpg", "jpeg", "png", "mp4", "mov"],
       showAdvancedOptions: true,
       cropping: false,
       maxFileSize: 100000000,
@@ -47,7 +47,15 @@ export const openCloudinaryUploadWidget = (
         (result as any).event === "success"
       ) {
         const publicId = (result as any).info.public_id;
-        onSuccess(publicId);
+        const resourceType = (result as any).info.resource_type;
+
+        if (resourceType === "image") {
+          onSuccess(publicId, "image");
+        } else if (resourceType === "video") {
+          onSuccess(publicId, "video");
+        } else {
+          console.warn("Unsupported file type uploaded");
+        }
       }
     }
   );

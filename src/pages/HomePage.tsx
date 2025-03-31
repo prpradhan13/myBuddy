@@ -10,7 +10,7 @@ const HomePage = () => {
   const { data, isLoading } = useGetUserWorkoutPlans(user?.id, { limit });
 
   return (
-    <div className="min-h-screen w-full bg-[#0e0e0e] p-4">
+    <div className="min-h-screen w-full bg-[#000] p-4">
       <UserDetails />
 
       {data?.length === 0 ? (
@@ -23,7 +23,7 @@ const HomePage = () => {
         </div>
       ) : (
         <div
-          className="bg-[#444] p-2 rounded-xl mt-4"
+          className="bg-SecondaryBackgroundColor p-2 rounded-xl mt-4"
         >
           <div className="w-full mt-4 flex justify-between items-center">
             <h1 className="text-SecondaryTextColor font-semibold text-xl">

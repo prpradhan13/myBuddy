@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronDown, ChevronsUpDown, FilePenLine, Plus } from "lucide-react";
 import Alert from "@/components/extra/Alert";
 import AchiveForm from "@/components/forms/AchiveForm";
 import {
@@ -25,6 +25,7 @@ import RecipientAchiveForm from "@/components/forms/RecipientAchiveForm";
 import { cld } from "@/utils/lib/cloudinary";
 import { AdvancedImage } from "@cloudinary/react";
 import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
+import EditExerciseDetails from "@/components/editDrawers/EditExerciseDetails";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
@@ -35,6 +36,7 @@ const ExercisePage = () => {
   const [exerciseSetIdForUpdate, setExerciseSetIdForUpdate] = useState<
     number | null
   >(null);
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
   const { exerciseId } = useParams();
   const { creatorOfPlan, planInfo } = usePlan();
@@ -62,6 +64,10 @@ const ExercisePage = () => {
 
   const handleUpdateSetByRecipient = (setId: number) => {
     setExerciseSetIdForUpdate(setId);
+  };
+
+  const handleEditDetails = () => {
+    setEditDrawerOpen(true);
   };
 
   if (isLoading || isChecking) return <Loader />;
@@ -141,17 +147,22 @@ const ExercisePage = () => {
           <p className="font-medium text-PrimaryTextColor">
             Rest between sets {data.rest ?? 0}
           </p>
-          {data?.exercise_description && (
-            <div
-              className={`${
-                exerciseImage ? "bg-transparent" : "bg-[#2f2f2f] p-4 rounded-xl"
-              } mt-2`}
-            >
+          <div className="bg-[#2f2f2f]  p-4 rounded-xl mt-2">
+            {data?.exercise_description && (
               <p className="text-white capitalize whitespace-pre-line">
                 {data?.exercise_description}
               </p>
-            </div>
-          )}
+            )}
+
+            {creatorOfPlan && (
+              <button
+                onClick={handleEditDetails}
+                className="rounded-lg text-black p-2 mt-2 bg-BtnBgClr"
+              >
+                <FilePenLine size={20} color="#000" />
+              </button>
+            )}
+          </div>
 
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sortedExerciseSets.map((set, index) => (
@@ -286,6 +297,16 @@ const ExercisePage = () => {
               setExerciseSetIdForUpdate={setExerciseSetIdForUpdate}
             />
           )}
+
+          <EditExerciseDetails
+            editDrawerOpen={editDrawerOpen}
+            setEditDrawerOpen={setEditDrawerOpen}
+            exerciseId={Number(exerciseId)}
+            exerciseName={data?.exercise_name}
+            exerciseDescription={data?.exercise_description || ""}
+            targetMuscle={data?.target_muscle ?? ""}
+            rest={data.rest ?? "0 second"}
+          />
         </div>
       </div>
     </div>

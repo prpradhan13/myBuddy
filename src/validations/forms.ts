@@ -43,18 +43,15 @@ export const exerciseSchema = z.object({
     .string()
     .min(3, "Exercise Name must be at least 3 characters")
     .trim(),
-  target_muscle: z
-    .string()
-    .optional()
-    .transform((val) => (typeof val === "string" ? val.trim() : val)),
+  target_muscle: z.string().min(1, "Please select a target muscle"),
   exercise_description: z
     .string()
     .optional()
     .transform((val) => (typeof val === "string" ? val.trim() : val)),
   rest: z
     .string()
-    .optional()
-    .transform((val) => (typeof val === "string" ? val.trim() : val)),
+    .min(2, "Add some rest time")
+    .trim()
 });
 export type TExerciseForm = z.infer<typeof exerciseSchema>;
 
@@ -115,6 +112,21 @@ export const editPlanDetails = z.object({
     .string()
     .optional()
     .transform((val) => (typeof val === "string" ? val.trim() : val)),
-})
+});
 
 export type TEditPlanDetails = z.infer<typeof editPlanDetails>;
+
+export const editExerciseDetails = z.object({
+  exercise_name: z
+    .string()
+    .min(3, "Workout Name must be at least 3 characters")
+    .trim(),
+  description: z
+    .string()
+    .optional()
+    .transform((val) => (typeof val === "string" ? val.trim() : val)),
+  rest: z.string(),
+  target_muscle: z.string().min(1, "Please select a target muscle"),
+});
+
+export type TEditExerciseDetails = z.infer<typeof editExerciseDetails>;

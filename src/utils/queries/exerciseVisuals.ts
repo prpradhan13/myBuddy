@@ -39,12 +39,37 @@ export const useHasExerciseVisual = (exerciseId: number) => {
 
 export const useAddExerciseVisual = () => {
   return useMutation({
-    mutationFn: async ({ exerciseId, videoUrl }: { exerciseId: number; videoUrl: string }) => {
-        const { error } = await supabase
+    mutationFn: async ({
+      exerciseId,
+      videoUrl,
+    }: {
+      exerciseId: number;
+      videoUrl: string;
+    }) => {
+      const { error } = await supabase
         .from("exercise_visuals")
         .insert({ exercise_id: exerciseId, content_url: videoUrl });
-  
+
       if (error) throw new Error(error.message);
-    }
+    },
+  });
+};
+
+export const useAddExerciseImage = () => {
+  return useMutation({
+    mutationFn: async ({
+      exerciseId,
+      imageUrl,
+    }: {
+      exerciseId: number;
+      imageUrl: string;
+    }) => {
+      const { error } = await supabase
+        .from("exercise")
+        .update({ image_content: imageUrl })
+        .eq("id", exerciseId);
+
+        if (error) throw new Error(error.message);
+    },
   });
 };

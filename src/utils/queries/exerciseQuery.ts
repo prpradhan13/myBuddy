@@ -10,7 +10,7 @@ import {
   WorkoutDayWithExerciseType,
 } from "../../types/workoutPlans";
 import { useNavigate } from "react-router-dom";
-import { TAchiveSchema } from "@/validations/forms";
+import { TAchiveSchema, TEditExerciseDetails } from "@/validations/forms";
 import { Dispatch, SetStateAction } from "react";
 
 export const useGetExercises = (exerciseId: number) => {
@@ -293,3 +293,19 @@ export const useGetPreviousExercises = (planId: number) => {
     enabled: !!planId,
   });
 };
+
+export const useUpdateExercise = () => {
+
+  return useMutation({
+    mutationFn: async ({ exerciseId, editFormData }: {exerciseId: number, editFormData: TEditExerciseDetails}) => {
+      const { data, error } = await supabase
+        .from("exercise")
+        .update(editFormData)
+        .eq("id", exerciseId)
+
+      if (error) throw new Error(error.message);
+
+      return data || {};
+    }
+  })
+}

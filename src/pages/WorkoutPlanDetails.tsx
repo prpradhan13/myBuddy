@@ -204,29 +204,31 @@ const WorkoutPlanDetails = () => {
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-poppins">
-      <Link
-        to={`/profilePage/${data?.creator_id}`}
-        className="flex items-center gap-2"
-      >
-        <div className="h-8 w-8 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989]  rounded-full flex justify-center items-center">
-          {!data?.creator.avatar_url ? (
-            <p className="text-PrimaryTextColor font-bold text-sm">
-              {initialLetterOfName}
-            </p>
-          ) : (
-            <img
-              src={data?.creator.avatar_url}
-              alt="Image Preview"
-              className="h-full w-full object-cover rounded-full"
-            />
-          )}
-        </div>
-        <h2 className="text-base text-SecondaryTextColor">
-          {data?.creator.username}
-        </h2>
-      </Link>
+      {!creatorOfPlan && (
+        <Link
+          to={`/profilePage/${data?.creator_id}`}
+          className="inline-flex items-center gap-2 bg-SecondaryBackgroundColor px-2 py-1 rounded-md"
+        >
+          <div className="h-8 w-8 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989]  rounded-full flex justify-center items-center">
+            {!data?.creator.avatar_url ? (
+              <p className="text-PrimaryTextColor font-bold text-sm">
+                {initialLetterOfName}
+              </p>
+            ) : (
+              <img
+                src={data?.creator.avatar_url}
+                alt="Image Preview"
+                className="h-full w-full object-cover rounded-full"
+              />
+            )}
+          </div>
+          <h2 className="text-base text-SecondaryTextColor">
+            {data?.creator.username}
+          </h2>
+        </Link>
+      )}
 
-      <div className="bg-[#444444] p-2 rounded-xl my-2">
+      <div className="bg-SecondaryBackgroundColor p-2 rounded-xl my-2">
         <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
           {data?.plan_name}
         </h1>
@@ -245,7 +247,7 @@ const WorkoutPlanDetails = () => {
         <div className="mt-2 flex gap-2">
           <button
             onClick={handleOpenComment}
-            className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+            className="rounded-lg text-black p-2 bg-BtnBgClr"
           >
             <MessageCircle size={20} color="#000" />
           </button>
@@ -253,7 +255,7 @@ const WorkoutPlanDetails = () => {
           {creatorOfPlan && (
             <button
               onClick={handleEditDetails}
-              className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+              className="rounded-lg text-black p-2 bg-BtnBgClr"
             >
               <FilePenLine size={20} color="#000" />
             </button>
@@ -261,7 +263,7 @@ const WorkoutPlanDetails = () => {
 
           <button
             onClick={() => setIsReviewOpen(true)}
-            className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+            className="rounded-lg text-black p-2 bg-BtnBgClr"
           >
             <Star size={20} color="#000" />
           </button>
@@ -269,7 +271,7 @@ const WorkoutPlanDetails = () => {
           {hasReceivedPlan && (
             <Link
               to={`/recipientAchivementsDetails/${currentUser}`}
-              className="rounded-lg text-black p-2 bg-[#cbcbcb]"
+              className="rounded-lg text-black p-2 bg-BtnBgClr"
             >
               <Award size={20} color="#000" />
             </Link>
@@ -290,8 +292,8 @@ const WorkoutPlanDetails = () => {
                 onClick={() => handleClickWeek(index)}
                 className={`flex flex-col flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
                   selectedWeek === index + 1
-                    ? "bg-[#d4d4d4]"
-                    : "bg-[#898989] text-white"
+                    ? "bg-BtnBgClr"
+                    : "bg-[#666666] text-white"
                 }`}
               >
                 <span className="font-bold">{index + 1}</span>

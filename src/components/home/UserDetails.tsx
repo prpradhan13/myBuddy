@@ -82,7 +82,7 @@ const UserDetails = () => {
   const bannerImage = cld.image(data.profile_banner?.content_path);
 
   return (
-    <div className="w-full md:flex justify-center text-white">
+    <div className="w-full md:flex justify-center">
       <div className="w-full lg:w-[30vw] md:w-[60vw]">
         <div className="w-full font-ubuntu flex gap-3">
           {/* Profile Image */}
@@ -98,7 +98,7 @@ const UserDetails = () => {
             )}
           </div>
 
-          <div className="bg-[#444444] p-2 rounded-xl w-[70%]">
+          <div className="bg-SecondaryBackgroundColor p-2 rounded-xl w-[70%]">
             <h1 className="text-PrimaryTextColor font-semibold text-xl">
               {data.full_name}
             </h1>
@@ -159,23 +159,23 @@ const UserDetails = () => {
             )}
           </button>
 
-          <div className="h-60 bg-[#444444] rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center">
+          <div className="h-60 bg-SecondaryBackgroundColor rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center">
             {iconButtons.map(({ Icon, action }, index) => (
               <div
                 key={index}
-                className="bg-[#242424] rounded-xl w-14 h-14 flex justify-center items-center hover:scale-105 transition"
+                className="bg-BtnBgClr rounded-xl w-12 h-12 flex justify-center items-center hover:scale-105 transition"
                 onClick={action}
               >
-                <Icon color={"#fff"} size={24} />
+                <Icon color={"#000"} size={24} />
               </div>
             ))}
           </div>
         </div>
 
         {data.bio ? (
-          <div className="mt-3 bg-[#444444] p-2 rounded-xl">
-            <h2 className="text-white text-lg font-semibold">About me</h2>
-            <div className="bg-[#fff] h-1 w-10 rounded-full"></div>
+          <div className="mt-3 bg-SecondaryBackgroundColor p-2 rounded-xl">
+            <h2 className="text-PrimaryTextColor text-lg font-semibold">About me</h2>
+            <div className="bg-PrimaryTextColor h-1 w-10 rounded-full"></div>
             <p className="text-SecondaryTextColor leading-5 mt-2 whitespace-pre-line">
               {data.bio}
             </p>

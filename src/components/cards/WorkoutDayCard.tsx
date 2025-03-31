@@ -53,7 +53,7 @@ const WorkoutDayCard = ({
   return (
     <>
       {dayDetails.is_restday ? (
-        <div className="bg-[#d4d4d4] p-2 rounded-xl flex gap-3">
+        <div className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
           <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
@@ -84,7 +84,7 @@ const WorkoutDayCard = ({
           </div>
         </div>
       ) : !dayDetails.workout_name && !dayDetails.is_restday ? (
-        <div className="bg-[#d4d4d4] p-2 rounded-xl flex gap-3">
+        <div className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
           <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
@@ -99,7 +99,7 @@ const WorkoutDayCard = ({
                 <>
                   <button
                     onClick={clickOnAddExercise}
-                    className="bg-blue-500 mt-1 text-white text-sm font-medium px-2 py-1 rounded-lg"
+                    className="bg-SecondaryBackgroundColor mt-1 text-white text-sm font-medium px-2 py-1 rounded-lg"
                   >
                     Add Exercises
                   </button>
@@ -107,7 +107,7 @@ const WorkoutDayCard = ({
                     type="button"
                     onClick={handleToggleRestDay}
                     disabled={isPending}
-                    className="bg-green-500 mt-1 text-white text-sm font-medium px-2 rounded-lg"
+                    className="bg-green-500 hover:bg-green-400 mt-1 text-white text-sm font-medium px-2 rounded-lg"
                   >
                     {isPending ? <ClipLoader size={15} /> : "Rest Day"}
                   </Button>
@@ -117,7 +117,7 @@ const WorkoutDayCard = ({
           </div>
         </div>
       ) : (
-        <div className="bg-[#d4d4d4] p-2 rounded-xl flex gap-3">
+        <div className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
           <Link
             to={`/workoutDayDetails/${dayDetails.id}`}
             className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center"
