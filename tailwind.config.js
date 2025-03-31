@@ -13,7 +13,7 @@ export default {
         "notAuthPageBg": "url('/notAuthPageBg.jpg')",
       },
       colors: {
-        MainBackgroundColor: "#1d1d1d",
+        MainBackgroundColor: "#0e0e0e",
         SecondaryBackgroundColor: "#242527",
         PrimaryTextColor: "#FFFFFF",
         SecondaryTextColor: "#D3D3D3",

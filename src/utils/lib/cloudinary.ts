@@ -54,3 +54,13 @@ export const openCloudinaryUploadWidget = (
 
   uploadWidget.open();
 };
+
+interface CloudinaryOptions {
+  transformations?: string;
+}
+
+export const getCloudinaryUrl = (publicId: string, options: CloudinaryOptions = {}) => {
+  const transformations = options?.transformations || "c_fill,w_200,h_200";
+
+  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${transformations}/${publicId}`;
+};

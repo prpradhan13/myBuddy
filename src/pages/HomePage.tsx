@@ -10,7 +10,7 @@ const HomePage = () => {
   const { data, isLoading } = useGetUserWorkoutPlans(user?.id, { limit });
 
   return (
-    <div className="min-h-screen w-full bg-[#1d1d1d] p-4">
+    <div className="min-h-screen w-full bg-[#0e0e0e] p-4">
       <UserDetails />
 
       {data?.length === 0 ? (

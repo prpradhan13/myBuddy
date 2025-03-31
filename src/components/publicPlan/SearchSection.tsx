@@ -15,7 +15,6 @@ import {
 } from "@/utils/helpingFunctions";
 import { useSearches } from "@/utils/queries/searchQuery";
 import { Badge } from "../ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link } from "react-router-dom";
 
 interface SearchSectionProps {
@@ -126,12 +125,7 @@ const SearchSection = ({ isSearchOpen = false, setIsSearchOpen }: SearchSectionP
                   )}
                   {selectedButton === "profiles" &&
                     (result.avatar_url ? (
-                      <Avatar>
-                        <AvatarImage>{result.avatar_url}</AvatarImage>
-                        <AvatarFallback>
-                          {getInitialLetter(result.full_name)}
-                        </AvatarFallback>
-                      </Avatar>
+                      <img src={result.avatar_url} alt="profileImg" className="w-14 h-14 rounded-full object-cover" />
                     ) : (
                       <div className="bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] text-PrimaryTextColor w-14 h-14 rounded-full flex justify-center items-center">
                         {getInitialLetter(result.full_name)}

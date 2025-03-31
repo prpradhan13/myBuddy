@@ -1,16 +1,18 @@
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import AuthProvider from './context/AuthProvider.tsx'
-import { WorkoutPlanProvider } from './context/WorkoutPlanProvider.tsx'
-import { SharedPlanProvider } from './context/SharedPlanProvider.tsx'
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
+import AuthProvider from "./context/AuthProvider.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WorkoutPlanProvider } from "./context/WorkoutPlanProvider.tsx";
 
-createRoot(document.getElementById('root')!).render(
-    <AuthProvider>
+const queryClient = new QueryClient();
+
+createRoot(document.getElementById("root")!).render(
+  <AuthProvider>
+    <QueryClientProvider client={queryClient}>
         <WorkoutPlanProvider>
-            <SharedPlanProvider>
-                <App />
-            </SharedPlanProvider>
+          <App />
         </WorkoutPlanProvider>
-    </AuthProvider>
-)
+    </QueryClientProvider>
+  </AuthProvider>
+);

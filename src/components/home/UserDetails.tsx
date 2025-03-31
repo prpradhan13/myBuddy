@@ -61,7 +61,7 @@ const UserDetails = () => {
     { Icon: LandPlot, action: () => setOpenCreateForm(true) },
     { Icon: Send, action: () => navigate("/sharedplandetails") },
     { Icon: Search, action: () => setIsSearchOpen(true) },
-    { Icon: Users, action: () => navigate("/publicplan") },
+    { Icon: Users, action: () => navigate("/chatPage") },
     { Icon: LogOut, action: () => handleLogout() },
   ];
 
@@ -148,7 +148,6 @@ const UserDetails = () => {
               <AdvancedVideo
                 cldVid={bannerVideo}
                 autoPlay
-                muted
                 loop
                 className="h-full w-full object-cover"
               />
