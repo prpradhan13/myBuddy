@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
-import { getInitialLetter, useCountUnreadMessage } from "../../utils/helpingFunctions";
+import { getInitialLetter } from "../../utils/helpingFunctions";
 import { getUserDetails } from "../../utils/queries/userProfileQuery";
 import Loader from "../loaders/Loader";
 import { useState } from "react";
@@ -61,6 +61,7 @@ const UserDetails = () => {
     { Icon: LandPlot, action: () => setOpenCreateForm(true) },
     { Icon: Send, action: () => navigate("/sharedplandetails") },
     { Icon: Search, action: () => setIsSearchOpen(true) },
+    { Icon: MessageCircle, action: () => navigate("/chatPage") },
     { Icon: LogOut, action: () => handleLogout() },
   ];
 
@@ -159,7 +160,6 @@ const UserDetails = () => {
           </button>
 
           <div className="h-60 bg-[#444444] rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center">
-            <ChatButton />
             {iconButtons.map(({ Icon, action }, index) => (
               <div
                 key={index}
@@ -216,29 +216,5 @@ const UserDetails = () => {
     </div>
   );
 };
-
-const ChatButton = () => {
-  const navigate = useNavigate();
-  const unReadCount = useCountUnreadMessage();
-
-  return (
-    <div className="relative">
-      <button
-        onClick={() => navigate("/chatPage")}
-        className="relative bg-[#242424] rounded-xl w-14 h-14 flex justify-center items-center hover:scale-105 transition"
-      >
-        <MessageCircle color="#fff" size={24} />
-      </button>
-
-      {/* 🔴 Notification Badge */}
-      {unReadCount && unReadCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-          {unReadCount}
-        </span>
-      )}
-    </div>
-  );
-};
-
 
 export default UserDetails;
