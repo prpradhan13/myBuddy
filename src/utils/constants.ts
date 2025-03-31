@@ -33,3 +33,18 @@ export const targetMuscles = [
     "glutes",
     "calves",
 ]
+
+export const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1, // Delay between child animations
+      },
+    },
+  };
+
+export const cardVariants = {
+    hidden: { y: 30, opacity: 0 },
+    show: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
+  };

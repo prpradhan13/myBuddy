@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { Play, FileVideo, LoaderCircle } from "lucide-react";
 import { ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import { motion } from "motion/react";
+import { cardVariants } from "@/utils/constants";
 
 const WorkoutExerciseCard = ({
   exerciseDetails,
@@ -57,7 +59,7 @@ const WorkoutExerciseCard = ({
   };
 
   return (
-    <div className="bg-SecondaryBackgroundColor p-4 rounded-xl flex justify-between items-center">
+    <motion.div variants={cardVariants}  className="bg-SecondaryBackgroundColor p-4 rounded-xl flex justify-between items-center">
       <div className="">
         <Link to={`/exerciseDetails/${exerciseDetails.id}/:${dayId}`}>
           <h1 className="text-PrimaryTextColor text-lg capitalize font-semibold">
@@ -101,7 +103,7 @@ const WorkoutExerciseCard = ({
         ) : null}
       </div>
       
-    </div>
+    </motion.div>
   );
 };
 

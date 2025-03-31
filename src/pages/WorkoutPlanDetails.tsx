@@ -28,8 +28,9 @@ import {
 import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
 import EditPlanDetails from "@/components/editDrawers/EditPlanDetails";
 import { WorkoutDayType } from "@/types/workoutPlans";
-import { daysOrder } from "@/utils/constants";
+import { containerVariants, daysOrder } from "@/utils/constants";
 import { useAuth } from "@/context/AuthProvider";
+import { motion } from "motion/react";
 
 const WorkoutPlanDetails = () => {
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
@@ -321,7 +322,12 @@ const WorkoutPlanDetails = () => {
       </Carousel>
 
       {currentWeekDays.length > 0 ? (
-        <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
           {currentWeekDays.map((day) => (
             <WorkoutDayCard
               planId={Number(planId)}
@@ -329,7 +335,7 @@ const WorkoutPlanDetails = () => {
               key={day.id}
             />
           ))}
-        </div>
+        </motion.div>
       ) : (
         <div className="h-96 flex justify-center items-center">
           <p className="text-PrimaryTextColor font-semibold">

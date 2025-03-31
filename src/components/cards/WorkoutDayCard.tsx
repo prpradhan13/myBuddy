@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import EditDayDetails from "../editDrawers/EditDayDetails";
+import { motion } from "motion/react";
+import { cardVariants } from "@/utils/constants";
 
 const WorkoutDayCard = ({
   dayDetails,
@@ -53,16 +55,14 @@ const WorkoutDayCard = ({
   return (
     <>
       {dayDetails.is_restday ? (
-        <div className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
+        <motion.div variants={cardVariants} className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
           <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
           <div className="w-[calc(100% - 25%)]">
-            <h1 className="text-lg font-semibold">
-              Rest Day
-            </h1>
+            <h1 className="text-lg font-semibold">Rest Day</h1>
             <div className="flex gap-3">
               {creatorOfPlan && (
                 <Button
@@ -82,18 +82,16 @@ const WorkoutDayCard = ({
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
       ) : !dayDetails.workout_name && !dayDetails.is_restday ? (
-        <div className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
+        <motion.div variants={cardVariants} className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
           <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
           <div className="w-[75%]">
-            <h1 className="text-lg font-medium">
-              No Exercises Added
-            </h1>
+            <h1 className="text-lg font-medium">No Exercises Added</h1>
             <div className="flex gap-3">
               {creatorOfPlan && (
                 <>
@@ -115,9 +113,12 @@ const WorkoutDayCard = ({
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <div className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
+        <motion.div
+          variants={cardVariants}
+          className="bg-BtnBgClr p-2 rounded-xl flex gap-3"
+        >
           <Link
             to={`/workoutDayDetails/${dayDetails.id}`}
             className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center"
@@ -133,36 +134,36 @@ const WorkoutDayCard = ({
                   {truncateText(dayDetails.workout_name!, 25)}
                 </h1>
               </Link>
-                {creatorOfPlan && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <EllipsisVertical color="#000" size={20} />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={handleEditClick}
-                        className="font-medium"
-                      >
-                        Edit
-                      </DropdownMenuItem>
-                      <Alert
-                        trigerBtnVarient={"ghost"}
-                        btnName="Rest Day"
-                        triggerBtnClassName="hover:bg-transparent px-2"
-                        handleContinueBtn={handleToggleRestDay}
-                        headLine="Are you absolutely sure make this Rest day?"
-                        descLine="Don't worry you can change this."
-                      />
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
+              {creatorOfPlan && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <EllipsisVertical color="#000" size={20} />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={handleEditClick}
+                      className="font-medium"
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                    <Alert
+                      trigerBtnVarient={"ghost"}
+                      btnName="Rest Day"
+                      triggerBtnClassName="hover:bg-transparent px-2"
+                      handleContinueBtn={handleToggleRestDay}
+                      headLine="Are you absolutely sure make this Rest day?"
+                      descLine="Don't worry you can change this."
+                    />
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
             <h1 className="font-medium mt-1 capitalize">
               {dayDetails.difficulty_level}
             </h1>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {openCreateForm && (
@@ -174,7 +175,7 @@ const WorkoutDayCard = ({
         />
       )}
 
-      <EditDayDetails 
+      <EditDayDetails
         editDrawerOpen={openUpdateForm}
         setEditDrawerOpen={setOpenUpdateForm}
         dayId={dayDetails.id}

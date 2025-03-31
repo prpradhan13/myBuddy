@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import AddExercise from "@/components/forms/AddExercise";
 import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
 import { usePlan } from "@/context/WorkoutPlanProvider";
+import { motion } from "motion/react";
+import { containerVariants } from "@/utils/constants";
 
 const WorkoutDayDetails = () => {
   const [openAddExerciseForm, setOpenAddExerciseForm] = useState(false);
@@ -73,7 +75,12 @@ const WorkoutDayDetails = () => {
       </div>
 
       {sortedWorkoutDays && sortedWorkoutDays.length > 0 ? (
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
           {sortedWorkoutDays.map((exercise, index) => (
             <WorkoutExerciseCard
               key={`${index}_${exercise.id}`}
@@ -81,7 +88,7 @@ const WorkoutDayDetails = () => {
               dayId={data?.workoutday_id}
             />
           ))}
-        </div>
+        </motion.div>
       ) : (
         <div className="h-96 text-center text-SecondaryTextColor">
           <p>No exercises for this day</p>
