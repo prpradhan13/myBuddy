@@ -67,8 +67,8 @@ const ExerciseVisuals = () => {
           cldVid={myVideo}
           className="h-full w-full md:w-1/2 object-cover"
           muted={isMuted}
-          // autoPlay
-          // loop
+          autoPlay
+          loop
         />
       </div>
 
