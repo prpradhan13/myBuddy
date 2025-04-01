@@ -89,7 +89,7 @@ const WorkoutPlanCard = ({
     planDetails.image_content && cld.image(planDetails.image_content);
 
   return (
-    <div className="rounded-xl font-poppins w-full overflow-hidden bg-[#f3f3f3] p-1">
+    <div className="rounded-xl font-ubuntu text-lg w-full overflow-hidden bg-[#f3f3f3] p-1">
       <div className="aspect-video">
         {planBGImage ? (
           <button onClick={handlePlanClick} className="w-full">
@@ -156,7 +156,7 @@ const WorkoutPlanCard = ({
           )}
         </div>
 
-        <div className="flex gap-2 items-center mt-2">
+        <div className="flex gap-2 items-center mt-1">
           <Badge
             className={`text-black self-start ${
               planDetails.is_public

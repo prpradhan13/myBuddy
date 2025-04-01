@@ -6,7 +6,7 @@ import WorkoutPlanCard from "../components/home/WorkoutPlanCard";
 
 const HomePage = () => {
   const { user } = useAuth();
-  const limit= 5;
+  const limit = 5;
   const { data, isLoading } = useGetUserWorkoutPlans(user?.id, { limit });
 
   return (
@@ -14,22 +14,18 @@ const HomePage = () => {
       <UserDetails />
 
       {data?.length === 0 ? (
-        <div
-          className="bg-[#444] p-2 rounded-xl mt-4 h-36 flex justify-center items-center"
-        >
+        <div className="bg-[#444] p-2 rounded-xl mt-4 h-36 flex justify-center items-center">
           <p className="text-SecondaryTextColor font-semibold">
             You have no plans
           </p>
         </div>
       ) : (
-        <div
-          className="bg-SecondaryBackgroundColor p-2 rounded-xl mt-4"
-        >
-          <div className="w-full mt-4 flex justify-between items-center">
+        <div className="bg-SecondaryBackgroundColor p-2 rounded-xl mt-4">
+          <div className="w-full flex justify-between items-center">
             <h1 className="text-SecondaryTextColor font-semibold text-xl">
               Your Plans
             </h1>
-            <Link to={"/allWorkoutPlans"} className="text-blue-500">
+            <Link to={"/allWorkoutPlans"} className="text-blue-500 ">
               View all
             </Link>
 
@@ -43,7 +39,11 @@ const HomePage = () => {
               <div className="text-white">Loading...</div>
             ) : (
               data?.map((plan) => (
-                <WorkoutPlanCard key={plan.id} planDetails={plan} limit={limit} />
+                <WorkoutPlanCard
+                  key={plan.id}
+                  planDetails={plan}
+                  limit={limit}
+                />
               ))
             )}
           </div>

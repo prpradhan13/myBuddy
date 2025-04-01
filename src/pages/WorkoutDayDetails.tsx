@@ -8,12 +8,16 @@ import WorkoutDayLoader from "@/components/loaders/WorkoutDayLoader";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import { motion } from "motion/react";
 import { containerVariants } from "@/utils/constants";
+import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
+import NotValidUser from "@/components/authentication/NotValidUser";
 
 const WorkoutDayDetails = () => {
   const [openAddExerciseForm, setOpenAddExerciseForm] = useState(false);
   const { dayId } = useParams();
   const { creatorOfPlan, planInfo, setPlanInfo } = usePlan();
-
+  const { data: hasReceivedPlan, isLoading: isChecking } = useHasReceivedPlan(
+    Number(planInfo.planId)
+  );
   const { data, isLoading } = useGetWorkoutDay(Number(dayId));
   const validDayId = Number(dayId);
 
@@ -30,7 +34,10 @@ const WorkoutDayDetails = () => {
     setOpenAddExerciseForm(true);
   };
 
-  if (isLoading) return <WorkoutDayLoader />;
+  if (isLoading || isChecking) return <WorkoutDayLoader />;
+
+  if (!creatorOfPlan && !hasReceivedPlan) return <NotValidUser />;
+
   if (!data) {
     return (
       <div className="bg-MainBackgroundColor min-h-screen w-full flex justify-center items-center">
@@ -99,7 +106,7 @@ const WorkoutDayDetails = () => {
         <Button
           onClick={handleClickAddBtn}
           variant={"secondary"}
-          className="mt-4 w-full bg-white px-4 flex"
+          className="mt-4 w-full md:w-auto bg-white px-4 flex"
         >
           Add New Exercise
         </Button>

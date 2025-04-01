@@ -19,13 +19,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import { useChatContext } from "stream-chat-react"
 
 const ProfilePage = () => {
   const { profileId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { client } = useChatContext();
 
   const { data, isLoading: userDetailsLoading } = getUserDetails(profileId);
   const { data: totalPublicPlan, isLoading: countingPublicPlan } =
@@ -119,27 +117,6 @@ const ProfilePage = () => {
     navigate(`/userPrivatePlan/${profileId}`);
   };
 
-  const onClickMessageBtn = async () => {
-    if (!client || !client.user) {
-      toast.error("Chat client not initialized");
-      return;
-    }
-  
-    try {
-
-      const channel = client.channel("messaging", {
-        members: [user.id, profileId!]
-      })
-  
-      await channel.watch();
-  
-      navigate(`/chatChannel/${channel.id}`);
-    } catch (error) {
-      console.error("Error creating chat channel:", error);
-      toast.error("Failed to start a chat");
-    }
-  }
-
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4">
       <div className="w-full font-ubuntu flex gap-3">
@@ -183,10 +160,6 @@ const ProfilePage = () => {
                 Follow
               </Button>
             )}
-
-            <Button onClick={onClickMessageBtn} variant={"secondary"} className="ml-3">
-              Message
-            </Button>
           </div>
         </div>
       </div>

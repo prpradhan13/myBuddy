@@ -5,8 +5,7 @@ import {
   truncateText,
 } from "@/utils/helpingFunctions";
 import dayjs from "dayjs";
-import { CalendarClock, Send, Star } from "lucide-react";
-import React from "react";
+import { CalendarDays, Clock, Star } from "lucide-react";
 import { useGetReviewDetails } from "@/utils/queries/reviewQuery";
 import { cld } from "@/utils/lib/cloudinary";
 import { AdvancedImage } from "@cloudinary/react";
@@ -22,7 +21,7 @@ interface SharedPlanCardProps {
   plan_image: string | null;
 }
 
-const SharedPlanCard: React.FC<SharedPlanCardProps> = ({
+const SharedPlanCard = ({
   workoutplanId,
   workoutplanName,
   avatarUrl,
@@ -30,7 +29,7 @@ const SharedPlanCard: React.FC<SharedPlanCardProps> = ({
   createdAt,
   userFullname,
   plan_image,
-}) => {
+}: SharedPlanCardProps) => {
   const navigate = useNavigate();
 
   const handlePlanClick = () => {
@@ -65,33 +64,33 @@ const SharedPlanCard: React.FC<SharedPlanCardProps> = ({
       </div>
 
       <div className="flex flex-col w-full h-full">
-        <div className="flex justify-between">
+        <div className="">
           <button
             onClick={handlePlanClick}
-            className="font-semibold capitalize text-[#000]"
+            className="font-bold capitalize text-[#000] text-xl"
           >
             {truncateText(workoutplanName ?? "", 30)}
           </button>
+
+          <div className="flex">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Star
+                key={index}
+                size={16}
+                className={
+                  index < averageRating
+                    ? "fill-yellow-500 text-yellow-500"
+                    : "text-gray-400"
+                }
+              />
+            ))}
+          </div>
         </div>
 
-        <div className="flex mt-2">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              size={16}
-              className={
-                index < averageRating
-                  ? "fill-yellow-500 text-yellow-500"
-                  : "text-gray-400"
-              }
-            />
-          ))}
-        </div>
-
-        <div className="mt-2">
-          <div className="flex items-center gap-2">
+        <div className="flex gap-2 mt-4">
+          <div className="flex items-center gap-2 bg-[#d5d5d5] py-1 px-2 rounded-lg">
             {!avatarUrl ? (
-              <div className="w-10 h-10 flex justify-center rounded-full items-center bg-gradient-to-t from-[#000000] via-[#1b1b1b] to-[#3a3a3a]">
+              <div className="w-8 h-8 flex justify-center rounded-full items-center bg-gradient-to-t from-[#000000] via-[#1b1b1b] to-[#3a3a3a]">
                 <p className="text-PrimaryTextColor text-xs">
                   {getInitialLetter(userFullname)}
                 </p>
@@ -99,17 +98,20 @@ const SharedPlanCard: React.FC<SharedPlanCardProps> = ({
             ) : (
               <img
                 src={avatarUrl}
-                alt="profileImg"
-                className="w-10 h-10 object-cover rounded-full"
+                alt="img"
+                className="w-8 h-8 object-cover rounded-full"
               />
             )}
-            <h1 className="font-semibold">{username}</h1>
+            <h1 className="text-sm">{truncateText(username!, 10)}</h1>
           </div>
 
-          <p className="text-sm flex items-center gap-1 mt-1">
-            <Send color="#1c86ff" size={16} />
-            {dayjs(createdAt).format("DD-MM-YYYY h:mm A")}{" "}
-            <CalendarClock size={16} color="#36ff23" />
+          <p className="text-sm flex items-center gap-2 bg-[#d5d5d5] py-1 px-2 rounded-lg">
+            <CalendarDays size={22} color="#000" />
+            {dayjs(createdAt).format("DD/MM/YYYY")}
+          </p>
+          <p className="text-sm flex items-center gap-2 bg-[#d5d5d5] py-1 px-2 rounded-lg">
+            <Clock size={22} color="#000" />
+            {dayjs(createdAt).format("hh:mm A")}
           </p>
         </div>
       </div>

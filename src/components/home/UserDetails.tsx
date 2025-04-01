@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
-import { getInitialLetter } from "../../utils/helpingFunctions";
+import { getInitialLetter, truncateText } from "../../utils/helpingFunctions";
 import { getUserDetails } from "../../utils/queries/userProfileQuery";
 import Loader from "../loaders/Loader";
 import { useState } from "react";
@@ -84,31 +84,33 @@ const UserDetails = () => {
   return (
     <div className="w-full md:flex justify-center">
       <div className="w-full lg:w-[30vw] md:w-[60vw]">
-        <div className="w-full font-ubuntu flex gap-3">
+        <div className="w-full font-ubuntu flex items-center gap-3">
           {/* Profile Image */}
-          <div className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
+          <div className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-full border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
             {!data.avatar_url ? (
               <p className="font-montserrat">{initialLetterOfName}</p>
             ) : (
               <img
                 src={data.avatar_url}
                 alt="Image Preview"
-                className="h-full w-full object-cover rounded-xl"
+                className="h-full w-full object-cover rounded-full"
               />
             )}
           </div>
 
-          <div className="bg-SecondaryBackgroundColor p-2 rounded-xl w-[70%]">
-            <h1 className="text-PrimaryTextColor font-semibold text-xl">
-              {data.full_name}
-            </h1>
-            <h3 className="text-PrimaryTextColor font-semibold">
-              {data.username}
-            </h3>
-            <p className="text-SecondaryTextColor text-sm">{data.email}</p>
+          <div className="bg-SecondaryBackgroundColor p-2 rounded-xl w-[70%] flex flex-col justify-between">
+            <div className="overflow-hidden">
+              <h1 className="text-PrimaryTextColor font-semibold text-lg leading-5">
+                {data.full_name}
+              </h1>
+              <h3 className="text-SecondaryTextColor leading-5">
+                {data.username}
+              </h3>
+              <p className="text-SecondaryTextColor text-sm">{truncateText(data.email, 35)}</p>
+            </div>
 
-            <div className="flex gap-3">
-              <div className="bg-transparent">
+            <div className="flex justify-evenly gap-1 mt-3">
+              <div className="bg-[#3b3b3b] w-1/2 flex flex-col items-center rounded-xl">
                 {followersLoad ? (
                   <ClipLoader size={14} color="#fff" />
                 ) : (
@@ -121,7 +123,7 @@ const UserDetails = () => {
                 </span>
               </div>
 
-              <div className="bg-transparent">
+              <div className="bg-[#3b3b3b] w-1/2 flex flex-col items-center rounded-xl">
                 {followingLoad ? (
                   <ClipLoader size={20} color="#fff" />
                 ) : (
@@ -159,7 +161,7 @@ const UserDetails = () => {
             )}
           </button>
 
-          <div className="h-60 bg-SecondaryBackgroundColor rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center">
+          <div className="h-60 bg-SecondaryBackgroundColor rounded-xl p-2 grid grid-cols-2 gap-3 place-items-center overflow-hidden">
             {iconButtons.map(({ Icon, action }, index) => (
               <div
                 key={index}
@@ -173,7 +175,7 @@ const UserDetails = () => {
         </div>
 
         {data.bio ? (
-          <div className="mt-3 bg-SecondaryBackgroundColor p-2 rounded-xl">
+          <div className="mt-3 bg-SecondaryBackgroundColor p-2 rounded-xl font-ubuntu">
             <h2 className="text-PrimaryTextColor text-lg font-semibold">About me</h2>
             <div className="bg-PrimaryTextColor h-1 w-10 rounded-full"></div>
             <p className="text-SecondaryTextColor leading-5 mt-2 whitespace-pre-line">
@@ -181,7 +183,7 @@ const UserDetails = () => {
             </p>
           </div>
         ) : (
-          <div className="mt-3 min-h-32 bg-[#444444] p-2 rounded-xl flex justify-center items-center">
+          <div className="mt-3 min-h-32 bg-SecondaryBackgroundColor p-2 rounded-xl flex justify-center items-center">
             <p className="text-SecondaryTextColor font-medium"> No Bio </p>
           </div>
         )}

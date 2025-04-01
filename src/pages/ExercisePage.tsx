@@ -26,6 +26,7 @@ import { cld } from "@/utils/lib/cloudinary";
 import { AdvancedImage } from "@cloudinary/react";
 import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
 import EditExerciseDetails from "@/components/editDrawers/EditExerciseDetails";
+import NotValidUser from "@/components/authentication/NotValidUser";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
@@ -71,6 +72,7 @@ const ExercisePage = () => {
   };
 
   if (isLoading || isChecking) return <Loader />;
+  if (!creatorOfPlan && !hasReceivedPlan) return <NotValidUser />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   const exerciseImage = data?.image_content && cld.image(data.image_content);
@@ -117,7 +119,7 @@ const ExercisePage = () => {
         <div className="fixed inset-0 -z-10">
           <AdvancedImage
             cldImg={exerciseImage}
-            className="h-full w-full object-cover"
+            className="h-full w-full md:w-1/2 object-cover"
           />
         </div>
       )}
@@ -134,7 +136,7 @@ const ExercisePage = () => {
         <div
           className={`${
             exerciseImage
-              ? "w-full bg-gradient-to-t from-black via-[#000] to-transparent p-6"
+              ? "w-full md:w-1/2 bg-gradient-to-t from-black via-[#000] to-transparent p-6"
               : ""
           }`}
         >

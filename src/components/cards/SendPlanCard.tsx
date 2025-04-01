@@ -1,13 +1,14 @@
 import { cld } from "@/utils/lib/cloudinary";
 import { useSendedPlan } from "@/utils/queries/sharedPlanQuery";
 import { AdvancedImage } from "@cloudinary/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import SharedPlanUserList from "../extra/SharedPlanUserList";
 import { truncateText } from "@/utils/helpingFunctions";
+import { CircleUser } from "lucide-react";
 
-const SendPlanCard: React.FC = () => {
+const SendPlanCard = () => {
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { data, isLoading } = useSendedPlan();
@@ -41,8 +42,16 @@ const SendPlanCard: React.FC = () => {
     new Map(data.map((item) => [item.workoutplan_id, item])).values()
   );
 
+  if (!data || data.length === 0) {
+    return (
+      <p className="text-white text-center mt-5">
+        No plans send
+      </p>
+    );
+  }
+
   return (
-    <div className="rounded-xl font-poppins w-full overflow-hidden bg-[#f3f3f3] p-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 mt-3">
       {uniquePlans?.map((item, index) => {
         const planBGImage =
           item.workoutplan.image_content &&
@@ -51,7 +60,7 @@ const SendPlanCard: React.FC = () => {
         return (
           <div
             key={`${index}_item.workoutplan_id_${item.workoutplan_id}`}
-            className=""
+            className="rounded-xl font-poppins w-full overflow-hidden bg-[#f3f3f3] p-2"
           >
             <div className="aspect-video">
               {planBGImage ? (
@@ -83,16 +92,13 @@ const SendPlanCard: React.FC = () => {
               >
                 {truncateText(item.workoutplan.plan_name ?? "", 30)}
               </button>
-              <div className="">
-                <button
-                  onClick={() => handleSharedUserList(item.workoutplan_id)}
-                  className="flex items-center gap-2"
-                >
-                  <p className="capitalize">
-                    shared with {data.length} people
-                  </p>
-                </button>
-              </div>
+              <button
+                onClick={() => handleSharedUserList(item.workoutplan_id)}
+                className="flex items-center gap-2 bg-[#d5d5d5] py-1 px-2 rounded-lg mt-2"
+              >
+                <CircleUser size={22} />
+                <span className="capitalize">{data.length} people</span>
+              </button>
             </div>
           </div>
         );

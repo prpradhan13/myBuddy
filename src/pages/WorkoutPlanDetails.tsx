@@ -31,6 +31,8 @@ import { WorkoutDayType } from "@/types/workoutPlans";
 import { containerVariants, daysOrder } from "@/utils/constants";
 import { useAuth } from "@/context/AuthProvider";
 import { motion } from "motion/react";
+import toast from "react-hot-toast";
+import { useChatContext } from "stream-chat-react";
 
 const WorkoutPlanDetails = () => {
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
@@ -46,6 +48,7 @@ const WorkoutPlanDetails = () => {
   const { user } = useAuth();
   const currentUser = user?.id;
   const navigate = useNavigate();
+  const { client } = useChatContext();
 
   const { data, isLoading, isError, error } = useGetPlanWithDays(
     Number(planId)
@@ -91,10 +94,6 @@ const WorkoutPlanDetails = () => {
     mutate();
   };
 
-  const handleOpenComment = () => {
-    navigate(`/comments/${planId}`);
-  };
-
   const handleEditDetails = () => {
     setEditDrawerOpen(true);
   };
@@ -102,6 +101,26 @@ const WorkoutPlanDetails = () => {
   const handleClickWeek = (index: number) => {
     setSelectedWeek(index + 1);
   };
+
+  const onClickMessageBtn = async () => {    
+    if (!client || !client.user) {
+      toast.error("Chat client not initialized");
+      return;
+    }
+  
+    try {
+      const channel = client.channel("messaging", {
+        members: [currentUser!, planInfo.creatorId!]
+      })
+  
+      await channel.watch();
+  
+      navigate(`/chatChannel/${channel.id}`);
+    } catch (error) {
+      console.error("Error creating chat channel:", error);
+      toast.error("Failed to start a chat");
+    }
+  }
 
   if (isLoading) return <WorkoutDayLoader />;
   if (isChecking) return <WorkoutDayLoader />;
@@ -146,13 +165,6 @@ const WorkoutPlanDetails = () => {
           )}
 
           <div className="mt-3 flex gap-3">
-            <button
-              onClick={handleOpenComment}
-              className="rounded-lg text-black p-2 bg-[#cbcbcb] hover:bg-[#b5b5b5] transition"
-            >
-              <MessageCircle size={20} color="#000" />
-            </button>
-
             <button
               onClick={() => setIsReviewOpen(true)}
               className="rounded-lg text-black p-2 bg-[#cbcbcb]"
@@ -246,13 +258,6 @@ const WorkoutPlanDetails = () => {
         )}
 
         <div className="mt-2 flex gap-2">
-          <button
-            onClick={handleOpenComment}
-            className="rounded-lg text-black p-2 bg-BtnBgClr"
-          >
-            <MessageCircle size={20} color="#000" />
-          </button>
-
           {creatorOfPlan && (
             <button
               onClick={handleEditDetails}
@@ -270,12 +275,20 @@ const WorkoutPlanDetails = () => {
           </button>
 
           {hasReceivedPlan && (
-            <Link
-              to={`/recipientAchivementsDetails/${currentUser}`}
-              className="rounded-lg text-black p-2 bg-BtnBgClr"
-            >
-              <Award size={20} color="#000" />
-            </Link>
+            <>
+              <Link
+                to={`/recipientAchivementsDetails/${currentUser}`}
+                className="rounded-lg text-black p-2 bg-BtnBgClr"
+              >
+                <Award size={20} color="#000" />
+              </Link>
+              <button
+                onClick={onClickMessageBtn}
+                className="bg-BtnBgClr p-2 rounded-lg"
+              >
+                <MessageCircle size={20} />
+              </button>
+            </>
           )}
         </div>
       </div>

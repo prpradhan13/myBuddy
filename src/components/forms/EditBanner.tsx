@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthProvider";
 import { UserProfileType } from "@/types/userType";
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface EditBannerProps {
   isBannerDrawerOpen: boolean;
@@ -108,7 +109,7 @@ const BannerForm: React.FC<BannerFormProps> = ({ setIsBannerDrawerOpen }) => {
   return (
     <div className="px-4 pb-4">
       <div className="flex mt-3 gap-3">
-        <div className="h-60 bg-black w-[70%] rounded-xl overflow-hidden aspect-square flex justify-center items-center">
+        <div className="h-60 bg-SecondaryBackgroundColor w-[70%] rounded-xl overflow-hidden aspect-square flex justify-center items-center">
           {!selectedBanner ? (
             <p className="text-PrimaryTextColor">Choose a Banner</p>
           ) : bannerChoosed ? (
@@ -121,24 +122,26 @@ const BannerForm: React.FC<BannerFormProps> = ({ setIsBannerDrawerOpen }) => {
           )}
         </div>
 
-        <div className="h-60 bg-[#444444] rounded-xl p-2 grid grid-cols-2 gap-2 place-items-center">
-          {bannerPublicId.map((item, index) => {
-            const givenBanner = cld.image(item.content_path);
+        <ScrollArea className="h-60 rounded-xl">
+          <div className="bg-SecondaryBackgroundColor rounded-xl p-2 grid grid-cols-2 gap-2 place-items-center">
+            {bannerPublicId.map((item, index) => {
+              const givenBanner = cld.image(item.content_path);
 
-            return (
-              <div
-                key={index}
-                onClick={() => clickOnGivenBanner(item)}
-                className="rounded-xl w-14 h-14 overflow-hidden"
-              >
-                <AdvancedImage
-                  cldImg={givenBanner}
-                  className="rounded-xl w-full h-full"
-                />
-              </div>
-            );
-          })}
-        </div>
+              return (
+                <div
+                  key={index}
+                  onClick={() => clickOnGivenBanner(item)}
+                  className="rounded-xl w-14 h-14 overflow-hidden"
+                >
+                  <AdvancedImage
+                    cldImg={givenBanner}
+                    className="rounded-xl w-full h-full"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </ScrollArea>  
       </div>
 
       <Button

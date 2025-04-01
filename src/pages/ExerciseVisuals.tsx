@@ -18,11 +18,19 @@ import {
 } from "@/components/ui/drawer";
 import { Timer, ChevronUp, Volume2, VolumeX } from "lucide-react";
 import { useRef, useState } from "react";
+import NotValidUser from "@/components/authentication/NotValidUser";
+import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
+import { usePlan } from "@/context/WorkoutPlanProvider";
 
 const ExerciseVisuals = () => {
   const { exerciseId } = useParams();
   const detailsRef = useRef<HTMLDivElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const { creatorOfPlan, planInfo } = usePlan();
+
+  const { data: hasReceivedPlan, isLoading: isChecking } = useHasReceivedPlan(
+    Number(planInfo.planId)
+  );
 
   const { data, isLoading, isError } = useGetExerciseVisuals(
     Number(exerciseId)
@@ -31,16 +39,6 @@ const ExerciseVisuals = () => {
     useGetExercises(Number(exerciseId));
 
   const myVideo = cld.video(data?.content_url);
-
-  if (isLoading || exerciseWithSetsLoading) return <Loader />;
-
-  if (!data || isError) {
-    return (
-      <div className="w-full h-screen flex justify-center items-center bg-MainBackgroundColor">
-        <h1 className="text-white text-xl">Opps!! No Preview</h1>
-      </div>
-    );
-  }
 
   const handlePauseAndScroll = () => {
     if (detailsRef.current) {
@@ -52,52 +50,63 @@ const ExerciseVisuals = () => {
     setIsMuted(!isMuted);
   };
 
+  if (isLoading || exerciseWithSetsLoading || isChecking) return <Loader />;
+  if (!creatorOfPlan && !hasReceivedPlan) return <NotValidUser />;
+  if (!data || isError) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center bg-MainBackgroundColor">
+        <h1 className="text-white text-xl">Opps!! No Preview</h1>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full h-screen relative">
+    <div className="w-full md:w-1/2 h-screen relative">
       <div className="fixed inset-0 -z-10">
         <AdvancedVideo
           cldVid={myVideo}
-          className="h-full w-full object-cover"
+          className="h-full w-full md:w-1/2 object-cover"
           muted={isMuted}
-          autoPlay
-          loop
+          // autoPlay
+          // loop
         />
       </div>
 
-      {/* Scrollable Text Content */}
       <div className="w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y">
         <div className="bg-transparent h-[80vh]"></div>
         <div
           ref={detailsRef}
-          className="w-full h-screen p-6 bg-gradient-to-t from-black/95 via-black/85 to-transparent"
+          className="w-full min-h-screen p-6 bg-gradient-to-t from-black/80 via-black/70 to-transparent"
         >
-          <div className="space-x-3">
-            <button
-              onClick={handleToggleMute}
-              className="bg-BtnBgClr p-3 rounded-full"
-            >
-              {isMuted ? (
-                <VolumeX size={22} color="#000" />
-              ) : (
-                <Volume2 size={22} color="#000" />
-              )}
-            </button>
-            <button
-              className="bg-BtnBgClr p-3 rounded-full"
-              onClick={handlePauseAndScroll}
-            >
-              <ChevronUp size={22} color="#000" />
-            </button>
-          </div>
-
-          <h1 className="text-3xl font-bold capitalize">
-            {exerciseWithSets?.exercise_name}
-          </h1>
-
           <div className="">
+            <div className="space-x-3">
+              <button
+                onClick={handleToggleMute}
+                className="bg-BtnBgClr p-2 rounded-xl"
+              >
+                {isMuted ? (
+                  <VolumeX size={20} color="#000" />
+                ) : (
+                  <Volume2 size={20} color="#000" />
+                )}
+              </button>
+              <button
+                className="bg-BtnBgClr p-2 rounded-xl"
+                onClick={handlePauseAndScroll}
+              >
+                <ChevronUp size={20} color="#000" />
+              </button>
+            </div>
+
+            <h1 className="text-3xl font-bold capitalize">
+              {exerciseWithSets?.exercise_name}
+            </h1>
             <h2 className="text-lg font-semibold mt-1 capitalize">
               {exerciseWithSets?.target_muscle}
             </h2>
+          </div>
+
+          <div className="">
             <p className="mt-4 whitespace-pre-line">
               {exerciseWithSets?.exercise_description}
             </p>
@@ -115,10 +124,8 @@ const ExerciseVisuals = () => {
             ))}
 
             <Drawer>
-              <DrawerTrigger asChild>
-                <button className="bg-[#fff] p-2 rounded-full">
+              <DrawerTrigger className="bg-[#fff] p-2 rounded-full">
                   <Timer color="#000" size={26} />
-                </button>
               </DrawerTrigger>
               <DrawerContent>
                 <DrawerHeader>

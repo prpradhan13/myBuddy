@@ -68,16 +68,14 @@ const SharedPlanDetails = () => {
               ))
             ) : (
               <p className="text-SecondaryTextColor text-center mt-5">
-                No rechived plans
+                No recived plans
               </p>
             )}
           </div>
         </TabsContent>
 
         <TabsContent value="sended">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 mt-3">
             <SendPlanCard />
-          </div>
         </TabsContent>
       </Tabs>
     </div>
