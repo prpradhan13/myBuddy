@@ -12,6 +12,7 @@ interface TPlanInfo {
   planId?: number;
   creatorId?: string;
   dayId?: number;
+  publicPlan?: boolean;
 }
 
 interface WorkoutPlanContextType {

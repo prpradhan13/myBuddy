@@ -84,16 +84,16 @@ const UserDetails = () => {
   return (
     <div className="w-full md:flex justify-center">
       <div className="w-full lg:w-[30vw] md:w-[60vw]">
-        <div className="w-full font-ubuntu flex items-center gap-3">
+        <div className="w-full font-ubuntu flex items-center justify-between gap-3">
           {/* Profile Image */}
-          <div className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-full border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
+          <div className="relative">
             {!data.avatar_url ? (
-              <p className="font-montserrat">{initialLetterOfName}</p>
+              <p className="h-28 w-28 border-2 border-[#a7a7a7] text-PrimaryTextColor font-bold text-xl bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] font-montserrat flex justify-center items-center rounded-full">{initialLetterOfName}</p>
             ) : (
               <img
                 src={data.avatar_url}
                 alt="Image Preview"
-                className="h-full w-full object-cover rounded-full"
+                className="h-28 w-28 object-cover rounded-full border-2 border-[#a7a7a7]"
               />
             )}
           </div>

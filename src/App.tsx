@@ -1,7 +1,9 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Loader from "./components/loaders/Loader";
+import PrivatePlanRoute from "./components/authentication/PrivatePlanRoute";
+import NotFoundPage from "./components/extra/NotFoundPage";
 
 const NotAuthLandingPage = lazy(
   () => import("./pages/authPage/NotAuthLandingPage")
@@ -18,8 +20,6 @@ const WorkOutDayDetails = lazy(() => import("./pages/WorkoutDayDetails"));
 const ExercisePage = lazy(() => import("./pages/ExercisePage"));
 const AllWorkoutPlan = lazy(() => import("./pages/AllWorkoutPlan"));
 const SharedPlanDetails = lazy(() => import("./pages/SharedPlanDetails"));
-// const RecipientAchivementsDetails = lazy(() => import("./pages/RecipientAchivements"));
-const PublicPlanPage = lazy(() => import("./pages/PublicPlanPage"));
 const ProfilePage = lazy(() => import("./pages/authPage/ProfilePage"));
 const CommentsPage = lazy(() => import("./pages/CommentPage"));
 const ExerciseVisuals = lazy(() => import("./pages/ExerciseVisuals"));
@@ -39,69 +39,55 @@ const RecipentAchivementDetailsPage = lazy(
 const ChatPage = lazy(() => import("./pages/ChatPage"));
 const ChatChannel = lazy(() => import("./pages/ChatChannel"));
 
+const router = createBrowserRouter([
+  {
+    element: <RegisterLayout />,
+    children: [
+      { path: "/notAuthLandingPage", element: <NotAuthLandingPage /> },
+      { path: "/register", element: <RegisterPage /> },
+      { path: "/signUp", element: <SignUpPage /> },
+      { path: "/forgotPassword", element: <ForgotPasswordPage /> },
+    ],
+  },
+  {
+    path: "/",
+    element: <PrivateRoute />,
+    children: [
+      { path: "", element: <HomePage /> },
+      { path: "workoutPlanDetails/:planId", element: <WorkOutPlanDetails /> },
+      {
+        element: <PrivatePlanRoute />,
+        children: [
+          { path: "workoutDayDetails/:dayId", element: <WorkOutDayDetails /> },
+          { path: "exerciseDetails/:exerciseId", element: <ExercisePage /> },
+          { path: "exerciseVisuals/:exerciseId", element: <ExerciseVisuals /> },
+        ],
+      },
+      { path: "allWorkoutPlans", element: <AllWorkoutPlan /> },
+      { path: "sharedplandetails", element: <SharedPlanDetails /> },
+      { path: "profilePage/:profileId", element: <ProfilePage /> },
+      { path: "comments/:planId", element: <CommentsPage /> },
+      { path: "userPublicPlan/:userId", element: <UserPublicPlanPage /> },
+      { path: "userPrivatePlan/:userId", element: <UserPrivatePlan /> },
+      { path: "updatePassword", element: <UpdatePasswordPage /> },
+      {
+        path: "recipientAchivementsDetails/:recipientId",
+        element: <RecipentAchivementDetailsPage />,
+      },
+      { path: "chatPage", element: <ChatPage /> },
+      { path: "chatChannel/:cid", element: <ChatChannel /> },
+
+      { path: "*", element: <NotFoundPage /> },
+    ],
+  },
+]);
+
 function App() {
   return (
-    <BrowserRouter>
+    <Suspense fallback={<Loader />}>
       <Toaster />
-
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          <Route element={<RegisterLayout />}>
-            <Route
-              path="/notAuthLandingPage"
-              element={<NotAuthLandingPage />}
-            />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/signUp" element={<SignUpPage />} />
-            <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
-          </Route>
-
-          <Route element={<PrivateRoute />}>
-            <Route path="/" element={<HomePage />} />
-            <Route
-              path="/workoutPlanDetails/:planId"
-              element={<WorkOutPlanDetails />}
-            />
-            <Route
-              path="/workoutDayDetails/:dayId"
-              element={<WorkOutDayDetails />}
-            />
-            <Route
-              path="/exerciseDetails/:exerciseId/:dayId"
-              element={<ExercisePage />}
-            />
-            <Route path="/allWorkoutPlans" element={<AllWorkoutPlan />} />
-            <Route path="/sharedplandetails" element={<SharedPlanDetails />} />
-            {/* <Route path="/recipientAchivementsDetails/:setId" element={<RecipientAchivementsDetails />}/> */}
-            <Route path="/publicplan" element={<PublicPlanPage />} />
-            <Route path="/profilePage/:profileId" element={<ProfilePage />} />
-            <Route path="/comments/:planId" element={<CommentsPage />} />
-            <Route
-              path="/exerciseVisuals/:exerciseId"
-              element={<ExerciseVisuals />}
-            />
-            <Route
-              path="/userPublicPlan/:userId"
-              element={<UserPublicPlanPage />}
-            />
-            <Route
-              path="/userPrivatePlan/:userId"
-              element={<UserPrivatePlan />}
-            />
-            {/* <Route path="/smallWorkouts" element={<SmallWorkoutPage />}/>
-                <Route path="/smallWorkoutDetailsPage/:planId" element={<SmallWorkoutDetailsPage />}/> */}
-            <Route path="/updatePassword" element={<UpdatePasswordPage />} />
-            <Route
-              path="/recipientAchivementsDetails/:recipientId"
-              element={<RecipentAchivementDetailsPage />}
-            />
-
-            <Route path="/chatPage" element={<ChatPage />} />
-            <Route path="/chatChannel/:cid" element={<ChatChannel />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+      <RouterProvider router={router} />
+    </Suspense>
   );
 }
 

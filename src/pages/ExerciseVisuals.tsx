@@ -18,19 +18,11 @@ import {
 } from "@/components/ui/drawer";
 import { Timer, ChevronUp, Volume2, VolumeX } from "lucide-react";
 import { useRef, useState } from "react";
-import NotValidUser from "@/components/authentication/NotValidUser";
-import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
-import { usePlan } from "@/context/WorkoutPlanProvider";
 
 const ExerciseVisuals = () => {
   const { exerciseId } = useParams();
   const detailsRef = useRef<HTMLDivElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
-  const { creatorOfPlan, planInfo } = usePlan();
-
-  const { data: hasReceivedPlan, isLoading: isChecking } = useHasReceivedPlan(
-    Number(planInfo.planId)
-  );
 
   const { data, isLoading, isError } = useGetExerciseVisuals(
     Number(exerciseId)
@@ -50,8 +42,7 @@ const ExerciseVisuals = () => {
     setIsMuted(!isMuted);
   };
 
-  if (isLoading || exerciseWithSetsLoading || isChecking) return <Loader />;
-  if (!creatorOfPlan && !hasReceivedPlan) return <NotValidUser />;
+  if (isLoading || exerciseWithSetsLoading) return <Loader />;
   if (!data || isError) {
     return (
       <div className="w-full h-screen flex justify-center items-center bg-MainBackgroundColor">

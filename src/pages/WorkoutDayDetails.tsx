@@ -9,7 +9,6 @@ import { usePlan } from "@/context/WorkoutPlanProvider";
 import { motion } from "motion/react";
 import { containerVariants } from "@/utils/constants";
 import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
-import NotValidUser from "@/components/authentication/NotValidUser";
 
 const WorkoutDayDetails = () => {
   const [openAddExerciseForm, setOpenAddExerciseForm] = useState(false);
@@ -19,13 +18,15 @@ const WorkoutDayDetails = () => {
     Number(planInfo.planId)
   );
   const { data, isLoading } = useGetWorkoutDay(Number(dayId));
+  
   const validDayId = Number(dayId);
 
   useEffect(() => {
+    if (!creatorOfPlan && !hasReceivedPlan && !planInfo.publicPlan) return;
     if (validDayId && planInfo.dayId !== validDayId) {
       setPlanInfo({ dayId: validDayId });
     }
-  }, [validDayId, planInfo.dayId, setPlanInfo]);
+  }, [validDayId, planInfo.dayId, setPlanInfo, creatorOfPlan, hasReceivedPlan, planInfo.publicPlan]);
 
   const validDAyExercises = data?.dayexercises || [];
   const sortedWorkoutDays = validDAyExercises.sort((a, b) => a.id - b.id);
@@ -35,8 +36,6 @@ const WorkoutDayDetails = () => {
   };
 
   if (isLoading || isChecking) return <WorkoutDayLoader />;
-
-  if (!creatorOfPlan && !hasReceivedPlan) return <NotValidUser />;
 
   if (!data) {
     return (

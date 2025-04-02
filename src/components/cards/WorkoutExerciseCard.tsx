@@ -61,7 +61,7 @@ const WorkoutExerciseCard = ({
   return (
     <motion.div variants={cardVariants}  className="bg-SecondaryBackgroundColor p-4 rounded-xl flex justify-between items-center">
       <div className="">
-        <Link to={`/exerciseDetails/${exerciseDetails.id}/${dayId}`}>
+        <Link to={`/exerciseDetails/${exerciseDetails.id}`}>
           <h1 className="text-PrimaryTextColor text-lg capitalize font-semibold">
             {" "}
             {exerciseDetails.exercise_name}{" "}

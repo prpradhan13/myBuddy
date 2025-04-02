@@ -44,31 +44,41 @@ const WorkoutPlanDetails = () => {
   const { data: hasReceivedPlan, isLoading: isChecking } = useHasReceivedPlan(
     Number(planId)
   );
+  const { data, isLoading, isError, error } = useGetPlanWithDays(
+    Number(planId)
+  );
   const { mutate, isPending } = useAddNewWeek(Number(planId));
   const { user } = useAuth();
   const currentUser = user?.id;
   const navigate = useNavigate();
   const { client } = useChatContext();
 
-  const { data, isLoading, isError, error } = useGetPlanWithDays(
-    Number(planId)
-  );
-
   const initialLetterOfName = getInitialLetter(data?.creator.full_name);
+  const publicPlan = data && data.is_public;
 
   useEffect(() => {
-    if (data?.workoutplan_id && data?.creator_id) {
-      if (
-        planInfo.planId !== data.workoutplan_id ||
-        planInfo.creatorId !== data.creator_id
-      ) {
-        setPlanInfo({
-          planId: data.workoutplan_id,
-          creatorId: data.creator_id,
-        });
-      }
+    if (!data) return;
+
+    const newPlanInfo = {
+      planId: data.workoutplan_id,
+      creatorId: data.creator_id,
+      publicPlan: data.is_public,
+    };
+
+    if (
+      planInfo.planId !== newPlanInfo.planId ||
+      planInfo.creatorId !== newPlanInfo.creatorId ||
+      planInfo.publicPlan !== newPlanInfo.publicPlan
+    ) {
+      setPlanInfo(newPlanInfo);
     }
-  }, [data, setPlanInfo, planInfo]);
+  }, [
+    data,
+    planInfo.creatorId,
+    planInfo.planId,
+    planInfo.publicPlan,
+    setPlanInfo,
+  ]);
 
   const validWorkoutDays = data?.workoutdays || [];
 
@@ -102,31 +112,31 @@ const WorkoutPlanDetails = () => {
     setSelectedWeek(index + 1);
   };
 
-  const onClickMessageBtn = async () => {    
+  const onClickMessageBtn = async () => {
     if (!client || !client.user) {
       toast.error("Chat client not initialized");
       return;
     }
-  
+
     try {
       const channel = client.channel("messaging", {
-        members: [currentUser!, planInfo.creatorId!]
-      })
-  
+        members: [currentUser!, planInfo.creatorId!],
+      });
+
       await channel.watch();
-  
+
       navigate(`/chatChannel/${channel.id}`);
     } catch (error) {
       console.error("Error creating chat channel:", error);
       toast.error("Failed to start a chat");
     }
-  }
+  };
 
   if (isLoading) return <WorkoutDayLoader />;
   if (isChecking) return <WorkoutDayLoader />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
-  if (!creatorOfPlan && !hasReceivedPlan) {
+  if (!creatorOfPlan && !hasReceivedPlan && !publicPlan) {
     return (
       <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-poppins">
         <div className="flex items-center gap-2">

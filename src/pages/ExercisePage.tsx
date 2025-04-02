@@ -26,7 +26,6 @@ import { cld } from "@/utils/lib/cloudinary";
 import { AdvancedImage } from "@cloudinary/react";
 import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
 import EditExerciseDetails from "@/components/editDrawers/EditExerciseDetails";
-import NotValidUser from "@/components/authentication/NotValidUser";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
@@ -46,6 +45,7 @@ const ExercisePage = () => {
   const { data, isLoading, isError, error } = useGetExercises(
     Number(exerciseId)
   );
+  
   const { data: hasReceivedPlan, isLoading: isChecking } = useHasReceivedPlan(
     Number(planId)
   );
@@ -72,7 +72,6 @@ const ExercisePage = () => {
   };
 
   if (isLoading || isChecking) return <Loader />;
-  if (!creatorOfPlan && !hasReceivedPlan) return <NotValidUser />;
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   const exerciseImage = data?.image_content && cld.image(data.image_content);
