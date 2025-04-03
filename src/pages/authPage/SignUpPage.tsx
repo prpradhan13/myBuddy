@@ -18,13 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import PasswordCheck from "@/components/extra/PasswordCheck";
 
 const SignUpPage = () => {
@@ -35,7 +28,7 @@ const SignUpPage = () => {
       password: "",
       fullname: "",
       username: "",
-    }
+    },
   });
 
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -80,147 +73,137 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col bg-MainBackgroundColor justify-center items-center">
-      <button
-        onClick={handleGoBack}
-        className="absolute top-8 left-8 bg-[#656565] rounded-lg p-1"
-      >
-        <ArrowLeft color="#fff" size={24} />
-      </button>
+    <div className="w-full min-h-screen flex flex-col bg-MainBackgroundColor justify-center">
+      <div className="px-6">
+        <button
+          onClick={handleGoBack}
+          className=" bg-BtnBgClr rounded-lg w-auto p-1"
+        >
+          <ArrowLeft color="#000" size={24} />
+        </button>
+      </div>
 
-      <Card className="w-full max-w-md p-4 shadow-lg bg-white rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-2xl text-center font-semibold">
-            Create your account
-          </CardTitle>
-          <CardDescription className="text-center">
-            Get started with our app, just create an account and enjoy the
-            experience.
-          </CardDescription>
-        </CardHeader>
+      <div className="px-6 mt-4">
+        <h1 className="text-2xl text-PrimaryTextColor font-semibold">
+          Create your account
+        </h1>
+        <p className="text-SecondaryTextColor mt-1">
+          Get started with my app, just create an account and enjoy the
+          experience.
+        </p>
+      </div>
 
-        <CardContent>
-          <Form {...form}>
-            <form
-              className="w-full md:w-[50vw] lg:w-[30vw] space-y-2"
-              onSubmit={form.handleSubmit(formSubmit)}
-            >
-              <FormField
-                control={form.control}
-                name="fullname"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="">Full name</FormLabel>
-                    <FormControl>
+      <div className="px-6 mt-6">
+        <Form {...form}>
+          <form
+            className="w-full md:w-[50vw] lg:w-[30vw] space-y-4 text-white"
+            onSubmit={form.handleSubmit(formSubmit)}
+          >
+            <FormField
+              control={form.control}
+              name="fullname"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="">Full name</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="placeholder:text-[#c2c2c2]" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="">Username</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="placeholder:text-[#c2c2c2]" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="">Email</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2 items-center border rounded-md px-3 py-1 h-9">
+                      <IoMailOutline color="#c2c2c2" size={24} />
                       <Input
+                        placeholder="name@mail.com"
+                        autoCapitalize="none"
                         {...field}
-                        className="placeholder:text-[#c2c2c2]"
+                        className="placeholder:text-[#c2c2c2] border-none p-0 focus-visible:ring-0"
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="">Username</FormLabel>
-                    <FormControl>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="">Password</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2 items-center border rounded-md px-3 py-1 h-9">
+                      <TbLockPassword size={24} color="#dfdfdf" />
                       <Input
+                        placeholder="Password"
+                        type={passwordVisible ? "text" : "password"}
+                        autoCapitalize="none"
                         {...field}
-                        className="placeholder:text-[#c2c2c2]"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setPasswordForCheck(e.target.value);
+                        }}
+                        className="placeholder:text-[#c2c2c2] bg-transparent border-none px-0 focus-visible:ring-0"
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <button
+                        type="button"
+                        onClick={() => setPasswordVisible((prev) => !prev)}
+                      >
+                        {passwordVisible ? (
+                          <IoEyeOutline size={20} color="#c2c2c2" />
+                        ) : (
+                          <IoEyeOffOutline size={20} color="#c2c2c2" />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
 
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="">Email</FormLabel>
-                    <FormControl>
-                      <div className="flex gap-2 items-center border rounded-md px-3 py-1 h-9">
-                        <IoMailOutline color="#c2c2c2" size={24} />
-                        <Input
-                          placeholder="name@mail.com"
-                          autoCapitalize="none"
-                          {...field}
-                          className="placeholder:text-[#c2c2c2] border-none p-0 focus-visible:ring-0"
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <PasswordCheck
+                    isSubmitted={form.formState.isSubmitted}
+                    password={passwordForCheck}
+                  />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="">Password</FormLabel>
-                    <FormControl>
-                      <div className="flex gap-2 items-center border rounded-md px-3 py-1 h-9">
-                        <TbLockPassword size={24} color="#dfdfdf" />
-                        <Input
-                          placeholder="Password"
-                          type={passwordVisible ? "text" : "password"}
-                          autoCapitalize="none"
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            setPasswordForCheck(e.target.value);
-                          }}
-                          className="placeholder:text-[#c2c2c2] bg-transparent border-none px-0 focus-visible:ring-0"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setPasswordVisible((prev) => !prev)}
-                        >
-                          {passwordVisible ? (
-                            <IoEyeOutline size={20} color="#000" />
-                          ) : (
-                            <IoEyeOffOutline size={20} color="#000" />
-                          )}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-
-                    <PasswordCheck 
-                      isSubmitted={form.formState.isSubmitted}
-                      password={passwordForCheck}
-                    />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="submit"
-                variant={"secondary"}
-                className="w-full mt-4"
-              >
-                {form.formState.isSubmitting ? (
-                  <>
-                    <Loader2 className="animate-spin" />
-                    Please wait
-                  </>
-                ) : (
-                  "Sign up"
-                )}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+            <Button type="submit" variant={"secondary"} className="w-full mt-4">
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                "Sign up"
+              )}
+            </Button>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 };

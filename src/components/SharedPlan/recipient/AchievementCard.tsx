@@ -21,14 +21,14 @@ const AchievementCard = ({ group }: { group: TGroupedDataValue }) => {
 
   return (
     <Card className="bg-[#d6d6d6] border-none">
-      <CardHeader>
+      <CardHeader className="p-2">
         <CardTitle className="text-lg font-semibold capitalize">
           {group.day_name}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2 p-2">
         {Object.entries(groupedExercises).map(([exerciseName, sets]) => (
-          <div key={exerciseName} className="bg-[#1c1c1c] p-4 rounded-lg">
+          <div key={exerciseName} className="bg-SecondaryBackgroundColor p-4 rounded-lg">
             <h3 className="text-md font-bold text-white">{exerciseName}</h3>
             {sets.map((set, index) => (
               <div key={index} className="mt-2">

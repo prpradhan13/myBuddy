@@ -5,37 +5,23 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import SetsForm from "../components/forms/SetsForm";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown, ChevronsUpDown, FilePenLine, Plus } from "lucide-react";
+import { FilePenLine, Plus } from "lucide-react";
 import Alert from "@/components/extra/Alert";
-import AchiveForm from "@/components/forms/AchiveForm";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import dayjs from "dayjs";
 import { usePlan } from "@/context/WorkoutPlanProvider";
-import RecipientAchiveForm from "@/components/forms/RecipientAchiveForm";
 import { cld } from "@/utils/lib/cloudinary";
 import { AdvancedImage } from "@cloudinary/react";
 import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
 import EditExerciseDetails from "@/components/editDrawers/EditExerciseDetails";
+import EditSetAchives from "@/components/editDrawers/EditSetAchives";
 
 const ExercisePage = () => {
   const [openSetsCreateForm, setOpenSetsCreateForm] = useState(false);
   const [openSetForm, setOpenSetForm] = useState(false);
-  const [openSetAchivesForm, setOpenSetAchivesForm] = useState<number | null>(
-    null
-  );
-  const [exerciseSetIdForUpdate, setExerciseSetIdForUpdate] = useState<
-    number | null
-  >(null);
+  const [editSetForAchiveOpen, setEditSetForAchiveOpen] = useState(false);
+  const [infoAboutSetExer, setInfoAboutSetExer] = useState<{
+    setIndex: number;
+    setId: number;
+  }>();
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
   const { exerciseId } = useParams();
@@ -45,7 +31,7 @@ const ExercisePage = () => {
   const { data, isLoading, isError, error } = useGetExercises(
     Number(exerciseId)
   );
-  
+
   const { data: hasReceivedPlan, isLoading: isChecking } = useHasReceivedPlan(
     Number(planId)
   );
@@ -61,10 +47,6 @@ const ExercisePage = () => {
 
   const handleRemoveSetBtnClick = (setId: number) => {
     mutate({ setId });
-  };
-
-  const handleUpdateSetByRecipient = (setId: number) => {
-    setExerciseSetIdForUpdate(setId);
   };
 
   const handleEditDetails = () => {
@@ -126,11 +108,11 @@ const ExercisePage = () => {
       <div
         className={`${
           exerciseImage
-            ? "w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y"
+            ? "w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y font-poppins"
             : "w-full min-h-screen bg-MainBackgroundColor p-4 font-poppins"
         }`}
       >
-        {exerciseImage && <div className="bg-transparent h-[50vh]"></div>}
+        {exerciseImage && <div className="bg-transparent h-[80vh]"></div>}
 
         <div
           className={`${
@@ -139,18 +121,18 @@ const ExercisePage = () => {
               : ""
           }`}
         >
-          <p className="text-[#d6d6d6] font-medium capitalize">
-            {data?.target_muscle}
-          </p>
-          <h1 className="text-[#fff] font-bold text-2xl capitalize flex items-center gap-1">
-            {data?.exercise_name}
-          </h1>
-          <p className="font-medium text-PrimaryTextColor">
-            Rest between sets {data.rest ?? 0}
-          </p>
-          <div className="bg-[#2f2f2f]  p-4 rounded-xl mt-2">
+          <div className="bg-[#2f2f2f] p-4 rounded-xl">
+            <p className="text-[#d6d6d6] font-medium capitalize">
+              {data?.target_muscle}
+            </p>
+            <h1 className="text-[#fff] font-bold text-2xl capitalize flex items-center gap-1">
+              {data?.exercise_name}
+            </h1>
+            <p className="font-medium text-PrimaryTextColor">
+              Rest between sets {data.rest ?? 0}
+            </p>
             {data?.exercise_description && (
-              <p className="text-white capitalize whitespace-pre-line">
+              <p className="text-white capitalize whitespace-pre-line mt-2">
                 {data?.exercise_description}
               </p>
             )}
@@ -165,103 +147,50 @@ const ExercisePage = () => {
             )}
           </div>
 
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sortedExerciseSets.map((set, index) => (
-              <div className="border p-4 rounded-xl" key={set.id}>
-                <div className="flex gap-2 items-center">
-                  <h1 className="text-SecondaryTextColor text-[1rem] capitalize font-semibold">
-                    Set {index + 1}
+              <div
+                className="min-h-28 bg-gradient-to-l from-[#121212] to-[#e0e0e0] p-4 rounded-xl relative"
+                key={set.id}
+              >
+                <h1 className="text-7xl font-extrabold absolute right-4 bottom-0 text-[#a2a2a2]">
+                  {index + 1}
+                </h1>
+
+                <div className="text-black">
+                  <h1 className="capitalize font-semibold">
+                    <span className="text-2xl">{set.target_repetitions}</span>
+                  </h1>
+                  <h1 className="capitalize font-medium">
+                    <span className="text-lg">{set.target_weight}</span>
                   </h1>
 
-                  {creatorOfPlan && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <ChevronDown color="#fff" size={20} />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          onClick={() => setOpenSetAchivesForm(set.id)}
-                          className="cursor-pointer"
-                        >
-                          Edit Your Achives
-                        </DropdownMenuItem>
+                  {(creatorOfPlan || hasReceivedPlan) && (
+                    <button
+                      onClick={() => {
+                        setEditSetForAchiveOpen(true);
+                        setInfoAboutSetExer((prev) => ({
+                          ...prev,
+                          setId: set.id,
+                          setIndex: index,
+                        }));
+                      }}
+                      className="cursor-pointer bg-BtnBgClr px-2 py-1 text-sm rounded-md"
+                    >
+                      Set achive
+                    </button>
+                  )}
 
-                        <Alert
-                          btnName="Remove"
-                          trigerBtnVarient={"ghost"}
-                          triggerBtnClassName="px-2 text-red-500 font-normal hover:text-red-500 hover:bg-transparent"
-                          handleContinueBtn={() =>
-                            handleRemoveSetBtnClick(set.id)
-                          }
-                          pendingState={isPending}
-                        />
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  {creatorOfPlan && (
+                    <Alert
+                      btnName="Remove"
+                      trigerBtnVarient={"ghost"}
+                      triggerBtnClassName="px-2 text-red-500 font-normal hover:text-red-500 hover:bg-transparent ml-2"
+                      handleContinueBtn={() => handleRemoveSetBtnClick(set.id)}
+                      pendingState={isPending}
+                    />
                   )}
                 </div>
-
-                <h1 className="text-PrimaryTextColor capitalize font-medium mt-2">
-                  Target Repetitions:{" "}
-                  <span className="text-[#0aefff] text-[1rem]">
-                    {set.target_repetitions}
-                  </span>
-                </h1>
-                <h1 className="text-PrimaryTextColor capitalize font-medium">
-                  Target Weight:{" "}
-                  <span className="text-[#ef233c] text-[1rem]">
-                    {set.target_weight}
-                  </span>
-                </h1>
-
-                {creatorOfPlan &&
-                  !!set.achive_repetitions &&
-                  !!set.achive_weight && (
-                    <div className="">
-                      <Collapsible>
-                        <div className="flex gap-1 items-center">
-                          <CollapsibleTrigger>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-[#0aefff] p-0 hover:bg-transparent hover:text-white"
-                            >
-                              <h4 className="text-[#0aefff] text-sm">
-                                My Achivements
-                              </h4>
-                              <ChevronsUpDown className="h-4 w-4" />
-                            </Button>
-                          </CollapsibleTrigger>
-                        </div>
-
-                        <CollapsibleContent>
-                          <p className="text-SecondaryTextColor">
-                            {dayjs(set.achive_date_time).format(
-                              "dddd, DD MMM YYYY"
-                            )}{" "}
-                            You perform{" "}
-                            <span className="font-semibold text-[1rem]">
-                              {set.achive_repetitions}
-                            </span>{" "}
-                            with weight{" "}
-                            <span className="font-semibold text-[1rem]">
-                              {set.achive_weight}
-                            </span>
-                            .
-                          </p>
-                        </CollapsibleContent>
-                      </Collapsible>
-                    </div>
-                  )}
-
-                {hasReceivedPlan && (
-                  <Button
-                    onClick={() => handleUpdateSetByRecipient(set.id)}
-                    variant={"secondary"}
-                    className="text-xs h-7 px-2 mt-2"
-                  >
-                    Edit
-                  </Button>
-                )}
               </div>
             ))}
           </div>
@@ -270,9 +199,9 @@ const ExercisePage = () => {
             <Button
               onClick={handleAddSetBtnClick}
               variant="secondary"
-              className="mt-3"
+              className="mt-4 w-full"
             >
-              Add Set <Plus />
+              <Plus /> Add New Set
             </Button>
           )}
 
@@ -283,19 +212,13 @@ const ExercisePage = () => {
             />
           )}
 
-          {openSetAchivesForm && (
-            <AchiveForm
-              exerciseId={data.exercise_id}
-              openSetAchivesForm={openSetAchivesForm}
-              setOpenSetAchivesForm={setOpenSetAchivesForm}
-            />
-          )}
-
-          {exerciseSetIdForUpdate && (
-            <RecipientAchiveForm
+          {editSetForAchiveOpen && (
+            <EditSetAchives
+              editDrawerOpen={editSetForAchiveOpen}
+              setEditDrawerOpen={setEditSetForAchiveOpen}
+              setId={infoAboutSetExer?.setId ?? 0}
+              setIndex={infoAboutSetExer?.setIndex ?? 0}
               exerciseId={Number(exerciseId)}
-              exerciseSetIdForUpdate={exerciseSetIdForUpdate}
-              setExerciseSetIdForUpdate={setExerciseSetIdForUpdate}
             />
           )}
 

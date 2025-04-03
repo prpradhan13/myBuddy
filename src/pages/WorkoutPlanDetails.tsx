@@ -284,21 +284,22 @@ const WorkoutPlanDetails = () => {
             <Star size={20} color="#000" />
           </button>
 
-          {hasReceivedPlan && (
-            <>
-              <Link
+          {(hasReceivedPlan || creatorOfPlan) && (
+            <Link
                 to={`/recipientAchivementsDetails/${currentUser}`}
                 className="rounded-lg text-black p-2 bg-BtnBgClr"
               >
                 <Award size={20} color="#000" />
               </Link>
+          )}
+
+          {hasReceivedPlan && (
               <button
                 onClick={onClickMessageBtn}
                 className="bg-BtnBgClr p-2 rounded-lg"
               >
                 <MessageCircle size={20} />
               </button>
-            </>
           )}
         </div>
       </div>

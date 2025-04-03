@@ -178,7 +178,7 @@ const UserDetails = () => {
           <div className="mt-3 bg-SecondaryBackgroundColor p-2 rounded-xl font-ubuntu">
             <h2 className="text-PrimaryTextColor text-lg font-semibold">About me</h2>
             <div className="bg-PrimaryTextColor h-1 w-10 rounded-full"></div>
-            <p className="text-SecondaryTextColor leading-5 mt-2 whitespace-pre-line">
+            <p className="text-SecondaryTextColor text-sm leading-5 mt-2 whitespace-pre-line">
               {data.bio}
             </p>
           </div>

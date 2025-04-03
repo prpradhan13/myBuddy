@@ -79,10 +79,11 @@ const RecipentAchivementDetailsPage = () => {
     <div className="bg-MainBackgroundColor p-4 min-h-screen">
       {/* User Details */}
       <div className="flex items-center gap-4 bg-[#fffbf4] p-4 rounded-lg">
-        <Avatar>
+        <Avatar className="h-14 w-14">
           <AvatarImage
             src={recipient?.avatar_url || ""}
             alt={recipient?.full_name}
+            className="object-cover"
           />
           <AvatarFallback className="bg-gradient-to-t from-[#000] to-[#454545] text-white">
             {getInitialLetter(recipient?.full_name ?? "")}
@@ -112,7 +113,7 @@ const RecipentAchivementDetailsPage = () => {
           filteredData.map((group, index) => <AchievementCard key={index} group={group} />)
         ) : (
           <div className="">
-            <p className="text-center text-white">No Data add by Recipient.</p>
+            <p className="text-center text-white">No Data added for week {selectedWeek}. It's looks like you are not add yourset achives week wise, use filter feature.</p>
           </div>
         )}
       </div>

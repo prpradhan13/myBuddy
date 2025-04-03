@@ -29,21 +29,21 @@ const NotAuthLandingPage = () => {
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-            className="text-white text-lg my-6 leading-5"
+            className="text-white mt-2 leading-5"
           >
             Welcome, Your fitness journey continues here. Log in to track your
             progress, crush your goals, and stay motivated every step of the
             way. Let’s make every workout count, log in and get started!
           </motion.p>
 
-          <div className="overflow-hidden py-1">
+          <div className="overflow-hidden py-1 mt-6">
             <motion.div
              initial={{ y: -50, opacity: 0 }}
              animate={{ y: 0, opacity: 1 }}
              transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
              className="inline-block"
             >
-              <Button onClick={handleSignUpClick} className="bg-white px-5 text-black hover:bg-white hover:text-black font-medium rounded-full">
+              <Button onClick={handleSignUpClick} className="bg-white px-5 text-black hover:bg-white hover:text-black font-medium rounded-xl">
                 Sign Up
               </Button>
             </motion.div>
@@ -54,7 +54,7 @@ const NotAuthLandingPage = () => {
               transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
               className="inline-block ml-4"
             >
-              <Button onClick={handleLoginClick} className="border-2 px-5 bg-transparent hover:bg-transparent hover:text-white rounded-full">
+              <Button onClick={handleLoginClick} className="border-2 px-5 bg-transparent hover:bg-transparent hover:text-white rounded-xl">
                 Log in
               </Button>
             </motion.div>
