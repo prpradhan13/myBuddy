@@ -14,14 +14,14 @@ const NotAuthLandingPage = () => {
     }
 
   return (
-    <div className="bg-notAuthPageBg h-screen bg-no-repeat bg-cover bg-center relative font-poppins">
+    <div className="bg-notAuthPageBg h-screen bg-no-repeat bg-cover bg-center relative font-manrope">
       <div className="absolute bottom-0 left-0 right-0 h-[80vh]  bg-gradient-to-t from-[#000] to-transparent">
         <div className="absolute bottom-28 px-6">
           <motion.h1
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="text-white font-bold text-2xl"
+            className="text-white font-bold text-3xl"
           >
             MyBuddy
           </motion.h1>

@@ -45,7 +45,7 @@ const SearchSection = ({ isSearchOpen = false, setIsSearchOpen }: SearchSectionP
 
   return (
     <Drawer open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-      <DrawerContent className="bg-SecondaryBackgroundColor border-none min-h-[50vh]">
+      <DrawerContent className="bg-SecondaryBackgroundColor border-none min-h-[50vh] font-inter">
         <DrawerHeader>
           <DrawerTitle className="text-PrimaryTextColor">Search</DrawerTitle>
           <DrawerDescription>Search creators, workout plans.</DrawerDescription>

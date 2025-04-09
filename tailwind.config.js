@@ -8,6 +8,9 @@ export default {
         montserrat: ["Montserrat", "sans-serif"],
         ubuntu: ["Ubuntu", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
+        urbanist: ["Urbanist", "sans-serif"],
+        manrope: ["Manrope", "sans-serif"],
       },
       backgroundImage: {
         "notAuthPageBg": "url('/notAuthPageBg.jpg')",

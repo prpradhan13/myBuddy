@@ -34,6 +34,7 @@ import { useAuth } from "@/context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ReviewList from "../extra/ReviewList";
+import { useHasReceivedPlan } from "@/utils/queries/sharedPlanQuery";
 
 interface ReviewFormProps {
   isReviewOpen: boolean;
@@ -56,6 +57,9 @@ const ReviewForm: React.FC<ReviewFormProps> = memo(
     const { data: reviewData, isLoading } = useGetReviewDetails(
       Number(planInfo.planId)
     );
+
+    const { data: hasReceived, isLoading: checkingReceived } =
+      useHasReceivedPlan(planInfo.planId!);
 
     useEffect(() => {
       if (reviewData && user) {
@@ -124,7 +128,7 @@ const ReviewForm: React.FC<ReviewFormProps> = memo(
 
     return (
       <Drawer open={isReviewOpen} onOpenChange={setIsReviewOpen}>
-        {isLoading ? (
+        {isLoading || checkingReceived ? (
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>Reviews</DrawerTitle>
@@ -168,7 +172,7 @@ const ReviewForm: React.FC<ReviewFormProps> = memo(
               <p className="text-center">No reviews yet.</p>
             ) : (
               <ScrollArea className="h-[70vh] w-full text-white">
-                {hasReviewed || creatorOfPlan && (
+                {(hasReceived || creatorOfPlan) && (
                   <>
                     <div className="flex justify-center gap-2">
                       {Array.from({ length: 5 }).map((_, index) => (
@@ -217,7 +221,6 @@ const ReviewForm: React.FC<ReviewFormProps> = memo(
                     </Form>
                   </>
                 )}
-
                 <ReviewList reviewData={reviewData} />
               </ScrollArea>
             )}

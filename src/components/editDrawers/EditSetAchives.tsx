@@ -68,7 +68,7 @@ const EditSetAchives = ({
 
   return (
     <Drawer open={editDrawerOpen} onOpenChange={setEditDrawerOpen}>
-      <DrawerContent className="p-4 bg-SecondaryBackgroundColor border-none font-poppins">
+      <DrawerContent className="p-4 bg-SecondaryBackgroundColor border-none font-manrope">
         <DrawerHeader>
           <DrawerTitle className="text-PrimaryTextColor">
             Edit Set {setIndex + 1}

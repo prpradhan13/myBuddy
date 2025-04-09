@@ -52,7 +52,7 @@ const ExerciseVisuals = () => {
   }
 
   return (
-    <div className="w-full md:w-1/2 h-screen relative">
+    <div className="w-full md:w-1/2 h-screen relative font-manrope">
       <div className="fixed inset-0 -z-10">
         <AdvancedVideo
           cldVid={myVideo}
@@ -89,10 +89,10 @@ const ExerciseVisuals = () => {
               </button>
             </div>
 
-            <h1 className="text-3xl font-bold capitalize">
+            <h1 className="text-3xl font-semibold capitalize mt-2">
               {exerciseWithSets?.exercise_name}
             </h1>
-            <h2 className="text-lg font-semibold mt-1 capitalize">
+            <h2 className="text-lg font-medium mt-1 capitalize">
               {exerciseWithSets?.target_muscle}
             </h2>
           </div>

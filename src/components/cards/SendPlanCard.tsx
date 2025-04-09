@@ -60,7 +60,7 @@ const SendPlanCard = () => {
         return (
           <div
             key={`${index}_item.workoutplan_id_${item.workoutplan_id}`}
-            className="rounded-xl font-poppins w-full overflow-hidden bg-[#f3f3f3] p-2"
+            className="rounded-xl w-full overflow-hidden bg-[#f3f3f3] p-2"
           >
             <div className="aspect-video">
               {planBGImage ? (
@@ -88,7 +88,7 @@ const SendPlanCard = () => {
             <div className="">
               <button
                 onClick={() => handlePlanClick(item.workoutplan_id)}
-                className="font-semibold capitalize text-[#000]"
+                className="font-semibold capitalize text-[#000] text-xl"
               >
                 {truncateText(item.workoutplan.plan_name ?? "", 30)}
               </button>
@@ -96,8 +96,8 @@ const SendPlanCard = () => {
                 onClick={() => handleSharedUserList(item.workoutplan_id)}
                 className="flex items-center gap-2 bg-[#d5d5d5] py-1 px-2 rounded-lg mt-2"
               >
-                <CircleUser size={22} />
-                <span className="capitalize">{data.length} people</span>
+                <CircleUser size={20} />
+                <span className="capitalize text-sm font-medium">{data.length} people</span>
               </button>
             </div>
           </div>

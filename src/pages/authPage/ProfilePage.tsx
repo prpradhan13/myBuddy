@@ -119,7 +119,7 @@ const ProfilePage = () => {
 
   return (
     <div className="bg-MainBackgroundColor min-h-screen w-full p-4">
-      <div className="w-full font-ubuntu flex gap-3">
+      <div className="w-full font-manrope flex gap-3">
         <div className="h-32 w-32 bg-gradient-to-t from-[#000000] via-[#1c1c1c] to-[#3e3e3e] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
           {!data.avatar_url ? (
             <p className="font-montserrat">{initialLetterOfName}</p>

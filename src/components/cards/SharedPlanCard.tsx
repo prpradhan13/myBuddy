@@ -42,7 +42,7 @@ const SharedPlanCard = ({
   const averageRating = calculateAverageRating(reviews);
 
   return (
-    <div className="rounded-xl font-poppins w-full overflow-hidden bg-[#f3f3f3] p-2 mb-2">
+    <div className="rounded-xl font-manrope w-full overflow-hidden bg-[#f3f3f3] p-2 mb-2">
       <div className="aspect-video">
         {planBGImage ? (
           <button onClick={handlePlanClick} className="w-full">

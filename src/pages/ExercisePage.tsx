@@ -62,7 +62,7 @@ const ExercisePage = () => {
     Object.keys(data).length === 0 ||
     !data.exercise_sets ||
     data.exercise_sets.length === 0 ? (
-    <div className="bg-MainBackgroundColor h-screen w-full flex flex-col items-center font-montserrat justify-center">
+    <div className="bg-MainBackgroundColor h-screen w-full flex flex-col items-center font-manrope justify-center">
       {creatorOfPlan ? (
         <>
           <p className="text-SecondaryTextColor font-semibold text-center">
@@ -95,7 +95,11 @@ const ExercisePage = () => {
       )}
     </div>
   ) : (
-    <div className={exerciseImage ? "w-full h-screen relative" : ""}>
+    <div
+      className={
+        exerciseImage ? "w-full h-screen relative font-manrope" : "font-manrope"
+      }
+    >
       {exerciseImage && (
         <div className="fixed inset-0 -z-10">
           <AdvancedImage
@@ -108,8 +112,8 @@ const ExercisePage = () => {
       <div
         className={`${
           exerciseImage
-            ? "w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y font-poppins"
-            : "w-full min-h-screen bg-MainBackgroundColor p-4 font-poppins"
+            ? "w-full absolute top-0 left-0 overflow-y-auto text-white scrollbar-hidden-y"
+            : "w-full min-h-screen bg-MainBackgroundColor p-4"
         }`}
       >
         {exerciseImage && <div className="bg-transparent h-[80vh]"></div>}
@@ -121,18 +125,18 @@ const ExercisePage = () => {
               : ""
           }`}
         >
-          <div className="bg-[#2f2f2f] p-4 rounded-xl">
+          <div className="bg-SecondaryBackgroundColor p-4 rounded-xl">
             <p className="text-[#d6d6d6] font-medium capitalize">
               {data?.target_muscle}
             </p>
-            <h1 className="text-[#fff] font-bold text-2xl capitalize flex items-center gap-1">
+            <h1 className="text-[#fff] font-semibold text-3xl capitalize flex items-center gap-1">
               {data?.exercise_name}
             </h1>
             <p className="font-medium text-PrimaryTextColor">
               Rest between sets {data.rest ?? 0}
             </p>
             {data?.exercise_description && (
-              <p className="text-white capitalize whitespace-pre-line mt-2">
+              <p className="text-white text-sm capitalize whitespace-pre-line mt-2">
                 {data?.exercise_description}
               </p>
             )}
@@ -150,46 +154,52 @@ const ExercisePage = () => {
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sortedExerciseSets.map((set, index) => (
               <div
-                className="min-h-28 bg-gradient-to-l from-[#121212] to-[#e0e0e0] p-4 rounded-xl relative"
+                className="min-h-28 flex bg-gradient-to-l from-transparent to-[#272727] p-2 rounded-xl relative"
                 key={set.id}
               >
                 <h1 className="text-7xl font-extrabold absolute right-4 bottom-0 text-[#a2a2a2]">
                   {index + 1}
                 </h1>
 
-                <div className="text-black">
-                  <h1 className="capitalize font-semibold">
-                    <span className="text-2xl">{set.target_repetitions}</span>
-                  </h1>
-                  <h1 className="capitalize font-medium">
-                    <span className="text-lg">{set.target_weight}</span>
-                  </h1>
+                <div className="text-white flex flex-col justify-between">
+                  <div className="">
+                    <h1 className="capitalize font-semibold">
+                      <span className="text-xl">{set.target_repetitions}</span>
+                    </h1>
+                    <h1 className="capitalize font-medium">
+                      <span className="text-">{set.target_weight}</span>
+                    </h1>
+                  </div>
 
-                  {(creatorOfPlan || hasReceivedPlan) && (
-                    <button
-                      onClick={() => {
-                        setEditSetForAchiveOpen(true);
-                        setInfoAboutSetExer((prev) => ({
-                          ...prev,
-                          setId: set.id,
-                          setIndex: index,
-                        }));
-                      }}
-                      className="cursor-pointer bg-BtnBgClr px-2 py-1 text-sm rounded-md"
-                    >
-                      Set achive
-                    </button>
-                  )}
+                  <div className="">
+                    {(creatorOfPlan || hasReceivedPlan) && (
+                      <button
+                        onClick={() => {
+                          setEditSetForAchiveOpen(true);
+                          setInfoAboutSetExer((prev) => ({
+                            ...prev,
+                            setId: set.id,
+                            setIndex: index,
+                          }));
+                        }}
+                        className="cursor-pointer bg-BtnBgClr text-black px-2 py-1 text-sm rounded-lg mt-2"
+                      >
+                        Set achive
+                      </button>
+                    )}
 
-                  {creatorOfPlan && (
-                    <Alert
-                      btnName="Remove"
-                      trigerBtnVarient={"ghost"}
-                      triggerBtnClassName="px-2 text-red-500 font-normal hover:text-red-500 hover:bg-transparent ml-2"
-                      handleContinueBtn={() => handleRemoveSetBtnClick(set.id)}
-                      pendingState={isPending}
-                    />
-                  )}
+                    {creatorOfPlan && (
+                      <Alert
+                        btnName="Remove"
+                        trigerBtnVarient={"ghost"}
+                        triggerBtnClassName="px-2 text-red-500 font-normal hover:text-red-500 hover:bg-transparent ml-2"
+                        handleContinueBtn={() =>
+                          handleRemoveSetBtnClick(set.id)
+                        }
+                        pendingState={isPending}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

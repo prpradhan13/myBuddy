@@ -63,7 +63,7 @@ const WorkoutDayDetails = () => {
   }
 
   return (
-    <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-montserrat">
+    <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-manrope">
       <div className="bg-SecondaryBackgroundColor p-2 rounded-xl">
         <h2 className="text-sm font-medium text-SecondaryTextColor capitalize">
           {data?.day_name}, {data?.day_difficulty}

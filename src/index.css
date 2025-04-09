@@ -20,6 +20,22 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: Inter;
+  src: url(/font/Inter-VariableFont_opsz,wght.ttf) format("truetype");
+  font-style: normal;
+}
+@font-face {
+  font-family: Urbanist;
+  src: url(/font/Urbanist-VariableFont_wght.ttf) format("truetype");
+  font-style: normal;
+}
+@font-face {
+  font-family: Manrope;
+  src: url(/font/Manrope-VariableFont_wght.ttf) format("truetype");
+  font-style: normal;
+}
+
 .no-scroll {
   overflow: hidden;
 }

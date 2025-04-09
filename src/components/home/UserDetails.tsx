@@ -82,9 +82,9 @@ const UserDetails = () => {
   const bannerImage = cld.image(data.profile_banner?.content_path);
 
   return (
-    <div className="w-full md:flex justify-center">
+    <div className="w-full md:flex justify-center font-manrope">
       <div className="w-full lg:w-[30vw] md:w-[60vw]">
-        <div className="w-full font-ubuntu flex items-center justify-between gap-3">
+        <div className="w-full flex items-center justify-between gap-3">
           {/* Profile Image */}
           <div className="relative">
             {!data.avatar_url ? (
@@ -175,7 +175,7 @@ const UserDetails = () => {
         </div>
 
         {data.bio ? (
-          <div className="mt-3 bg-SecondaryBackgroundColor p-2 rounded-xl font-ubuntu">
+          <div className="mt-3 bg-SecondaryBackgroundColor p-2 rounded-xl">
             <h2 className="text-PrimaryTextColor text-lg font-semibold">About me</h2>
             <div className="bg-PrimaryTextColor h-1 w-10 rounded-full"></div>
             <p className="text-SecondaryTextColor text-sm leading-5 mt-2 whitespace-pre-line">

@@ -138,7 +138,7 @@ const WorkoutPlanDetails = () => {
 
   if (!creatorOfPlan && !hasReceivedPlan && !publicPlan) {
     return (
-      <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-poppins">
+      <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-manrope">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989]  rounded-full flex justify-center items-center">
             {!data?.creator.avatar_url ? (
@@ -226,7 +226,7 @@ const WorkoutPlanDetails = () => {
   }
 
   return (
-    <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-poppins">
+    <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-manrope">
       {!creatorOfPlan && (
         <Link
           to={`/profilePage/${data?.creator_id}`}

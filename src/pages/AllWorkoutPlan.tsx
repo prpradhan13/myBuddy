@@ -46,7 +46,7 @@ const AllWorkoutPlan = () => {
   }
 
   return (
-    <div className="bg-MainBackgroundColor w-full min-h-screen p-3 font-poppins relative">
+    <div className="bg-MainBackgroundColor w-full min-h-screen p-3 font-manrope relative">
       <h1 className="text-PrimaryTextColor text-xl font-semibold ">All Plans</h1>
       <div className="mt-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {data.map((item) => (

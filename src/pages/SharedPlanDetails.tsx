@@ -27,7 +27,7 @@ const SharedPlanDetails = () => {
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (
-    <div className="bg-MainBackgroundColor p-4 min-h-screen w-full font-poppins">
+    <div className="bg-MainBackgroundColor p-4 min-h-screen w-full font-manrope">
       <ArrowLeft
         onClick={handleBackBtn}
         className="cursor-pointer text-PrimaryTextColor mb-3"
