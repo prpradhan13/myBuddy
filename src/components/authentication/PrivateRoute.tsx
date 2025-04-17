@@ -1,4 +1,4 @@
-import ChatProvider from '@/provider/ChatProvider';
+// import ChatProvider from '@/provider/ChatProvider';
 import { useAuth } from '../../context/AuthProvider';
 import { Navigate, Outlet } from 'react-router-dom';
 
@@ -10,9 +10,9 @@ const PrivateRoute = () => {
   }
   
   return (
-    <ChatProvider>
+    // <ChatProvider>
       <Outlet />
-    </ChatProvider>
+    // </ChatProvider>
   )
 }
 

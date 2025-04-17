@@ -18,8 +18,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { SendedPlanType, TUserDetailsOfSharedPlan } from "@/types/workoutPlans";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
-import { CircleMinus, NotebookTabs, MessageCircle } from "lucide-react";
-import { useChatContext } from "stream-chat-react";
+import { CircleMinus, NotebookTabs } from "lucide-react";
+// import { useChatContext } from "stream-chat-react";
 
 interface SharedPlanUserListProps {
   drawerOpen: boolean;
@@ -35,29 +35,29 @@ const SharedPlanUserList = React.memo(
     const { user } = useAuth();
     const currentUserId = user?.id;
     const navigate = useNavigate();
-    const { client } = useChatContext();
+    // const { client } = useChatContext();
 
     const [loadingUserId, setLoadingUserId] = useState<string | null>(null);
 
-    const onClickMessageBtn = async (recipentId: string) => {
-      if (!client || !client.user) {
-        toast.error("Chat client not initialized");
-        return;
-      }
+    // const onClickMessageBtn = async (recipentId: string) => {
+    //   if (!client || !client.user) {
+    //     toast.error("Chat client not initialized");
+    //     return;
+    //   }
 
-      try {
-        const channel = client.channel("messaging", {
-          members: [currentUserId!, recipentId],
-        });
+    //   try {
+    //     const channel = client.channel("messaging", {
+    //       members: [currentUserId!, recipentId],
+    //     });
 
-        await channel.watch();
+    //     await channel.watch();
 
-        navigate(`/chatChannel/${channel.id}`);
-      } catch (error) {
-        console.error("Error creating chat channel:", error);
-        toast.error("Failed to start a chat");
-      }
-    };
+    //     navigate(`/chatChannel/${channel.id}`);
+    //   } catch (error) {
+    //     console.error("Error creating chat channel:", error);
+    //     toast.error("Failed to start a chat");
+    //   }
+    // };
 
     const handleNavigateToRecipientAchive = (recipientId: string) => {
       navigate(`/recipientAchivementsDetails/${recipientId}`);
@@ -150,9 +150,9 @@ const SharedPlanUserList = React.memo(
                         </div>
 
                         <div className="flex gap-3 mt-2">
-                          <button onClick={() => onClickMessageBtn(item.user_id.id)} className="bg-[#d5d5d5] px-4 rounded-lg">
+                          {/* <button onClick={() => onClickMessageBtn(item.user_id.id)} className="bg-[#d5d5d5] px-4 rounded-lg">
                             <MessageCircle size={18} />
-                          </button>
+                          </button> */}
                           <button
                             onClick={() =>
                               handleNavigateToRecipientAchive(item.user_id.id)

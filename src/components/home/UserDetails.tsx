@@ -8,7 +8,7 @@ import CreateWorkoutPlan from "../forms/CreateWorkoutPlan";
 import toast from "react-hot-toast";
 import { supabase } from "@/utils/supabase";
 import SearchSection from "../publicPlan/SearchSection";
-import { UserPen, LandPlot, Send, Search, LogOut, MessageCircle, Bot } from "lucide-react";
+import { UserPen, LandPlot, Send, Search, LogOut, Bot } from "lucide-react";
 import EditUserDetails from "../forms/EditUserDetails";
 import { AdvancedImage, AdvancedVideo } from "@cloudinary/react";
 import { cld } from "@/utils/lib/cloudinary";
@@ -61,9 +61,9 @@ const UserDetails = () => {
     { Icon: LandPlot, action: () => setOpenCreateForm(true) },
     { Icon: Send, action: () => navigate("/sharedplandetails") },
     { Icon: Search, action: () => setIsSearchOpen(true) },
-    { Icon: MessageCircle, action: () => navigate("/chatPage") },
-    { Icon: LogOut, action: () => handleLogout() },
+    // { Icon: MessageCircle, action: () => navigate("/chatPage") },
     { Icon: Bot, action: () => navigate("/callWithAi")},
+    { Icon: LogOut, action: () => handleLogout() },
   ];
 
   const handleClickBanner = () => {

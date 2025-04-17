@@ -36,8 +36,8 @@ const UpdatePasswordPage = lazy(
 const RecipentAchivementDetailsPage = lazy(
   () => import("./pages/RecipentAchivementDetailsPage")
 );
-const ChatPage = lazy(() => import("./pages/ChatPage"));
-const ChatChannel = lazy(() => import("./pages/ChatChannel"));
+// const ChatPage = lazy(() => import("./pages/ChatPage"));
+// const ChatChannel = lazy(() => import("./pages/ChatChannel"));
 const CallWithAi = lazy(() => import("./pages/aiPlan/CallWithAi"));
 const AiGeneratedPlanPage = lazy(() => import("./pages/aiPlan/AiGeneratedPlanPage"));
 const AiGeneratedPlanDetailsPage = lazy(() => import("./pages/aiPlan/AiPlansDetails"));
@@ -77,8 +77,8 @@ const router = createBrowserRouter([
         path: "recipientAchivementsDetails/:recipientId",
         element: <RecipentAchivementDetailsPage />,
       },
-      { path: "chatPage", element: <ChatPage /> },
-      { path: "chatChannel/:cid", element: <ChatChannel /> },
+      // { path: "chatPage", element: <ChatPage /> },
+      // { path: "chatChannel/:cid", element: <ChatChannel /> },
       { path: "callWithAi", element: <CallWithAi /> },
       { path: "aiGeneratedPlan", element: <AiGeneratedPlanPage /> },
       { path: "aiGeneratedPlan/:id", element: <AiGeneratedPlanDetailsPage /> },
