@@ -22,9 +22,14 @@ const HomePage = () => {
       ) : (
         <div className="bg-SecondaryBackgroundColor p-2 rounded-xl mt-4">
           <div className="w-full flex justify-between items-center">
-            <h1 className="text-SecondaryTextColor font-semibold text-xl">
-              Your Plans
-            </h1>
+            <div className="flex gap-4">
+              <h1 className="text-SecondaryTextColor font-semibold text-xl">
+                Your Plans
+              </h1>
+              <Link to={"/aiGeneratedPlan"} className="text-SecondaryTextColor font-semibold text-xl">
+                AI Plans
+              </Link>
+            </div>
             <Link to={"/allWorkoutPlans"} className="text-blue-500 ">
               View all
             </Link>
