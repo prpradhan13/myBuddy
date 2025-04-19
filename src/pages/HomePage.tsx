@@ -1,17 +1,28 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserDetails from "../components/home/UserDetails";
 import { useGetUserWorkoutPlans } from "../utils/queries/workoutQuery";
 import { useAuth } from "../context/AuthProvider";
 import WorkoutPlanCard from "../components/home/WorkoutPlanCard";
+import { Sparkles } from "lucide-react";
 
 const HomePage = () => {
   const { user } = useAuth();
   const limit = 5;
   const { data, isLoading } = useGetUserWorkoutPlans(user?.id, { limit });
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-full bg-[#000] p-4">
       <UserDetails />
+
+      <button
+        onClick={() => navigate("/aiGeneratedPlan")}
+        className="text-[#ffa333] font-semibold text-lg bg-SecondaryBackgroundColor w-full p-2 mt-4 rounded-xl text-center flex gap-3 justify-center items-center"
+      >
+        <Sparkles size={18} />
+        AI Generated Plans
+        <Sparkles size={18} />
+      </button>
 
       {data?.length === 0 ? (
         <div className="bg-[#444] p-2 rounded-xl mt-4 h-36 flex justify-center items-center">
@@ -26,9 +37,6 @@ const HomePage = () => {
               <h1 className="text-SecondaryTextColor font-semibold text-xl">
                 Your Plans
               </h1>
-              <Link to={"/aiGeneratedPlan"} className="text-SecondaryTextColor font-semibold text-xl">
-                AI Plans
-              </Link>
             </div>
             <Link to={"/allWorkoutPlans"} className="text-blue-500 ">
               View all

@@ -1,11 +1,10 @@
 export const bannerPublicId = [
-    {content_type: "image", content_path: "Discipline_wallpaper_k1voqb"},
-    {content_type: "image", content_path: "e38b3afc-ea55-41cb-91f8-e301bc26e476_mwxa82"},
-    {content_type: "image", content_path: "b_e_l_l_e_è_t_o_i_l_e_uq0iil"},
-    {content_type: "image", content_path: "ғᴀsᴄɪɴᴀᴛɪɴɢ_lbnhzp"},
-    {content_type: "image", content_path: "r_e_v_ê_u_s_e_q3f884"},
-    {content_type: "image", content_path: "bannercanva_sfryfz"},
-    {content_type: "image", content_path: "2_b4zhhr"},
+    {content_type: "image", content_path: "download_3_wvvurs"},
+    {content_type: "image", content_path: "8c4d09e6-bfba-4a67-8da6-e168c1e26609_kgp5td"},
+    {content_type: "image", content_path: "FREE_PNG______Be_the_Hero_of_Your_Own_Story__Inspirational_Sticker_with_Modern_Art_Vibes__irr1cj"},
+    {content_type: "image", content_path: "Nah_I_d_Win__Wallpapers_ouqhyx"},
+    {content_type: "image", content_path: "Motivational_quotes_oak8ly"},
+    {content_type: "image", content_path: "motivationalqoutes_bp75fg"},
 ]
 
 export const daysOrder = [

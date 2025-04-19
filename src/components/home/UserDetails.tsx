@@ -25,7 +25,7 @@ const UserDetails = () => {
   const { user } = useAuth();
   const userId = user && user.id;
   const navigate = useNavigate();
-  
+
   const { data, isLoading } = getUserDetails(user?.id);
   const { data: userFollowers, isLoading: followersLoad } = useFollowers(
     userId!
@@ -62,7 +62,7 @@ const UserDetails = () => {
     { Icon: Send, action: () => navigate("/sharedplandetails") },
     { Icon: Search, action: () => setIsSearchOpen(true) },
     // { Icon: MessageCircle, action: () => navigate("/chatPage") },
-    { Icon: Bot, action: () => navigate("/callWithAi")},
+    { Icon: Bot, action: () => navigate("/callWithAi") },
     { Icon: LogOut, action: () => handleLogout() },
   ];
 
@@ -80,7 +80,7 @@ const UserDetails = () => {
   }
 
   const bannerVideo = cld.video(data.profile_banner?.content_path);
-  const bannerImage = cld.image(data.profile_banner?.content_path);
+  const bannerImage = cld.image(data.profile_banner?.content_path)
 
   return (
     <div className="w-full md:flex justify-center font-manrope">
@@ -89,7 +89,9 @@ const UserDetails = () => {
           {/* Profile Image */}
           <div className="relative">
             {!data.avatar_url ? (
-              <p className="h-28 w-28 border-2 border-[#a7a7a7] text-PrimaryTextColor font-bold text-xl bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] font-montserrat flex justify-center items-center rounded-full">{initialLetterOfName}</p>
+              <p className="h-28 w-28 border-2 border-[#a7a7a7] text-PrimaryTextColor font-bold text-xl bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] font-montserrat flex justify-center items-center rounded-full">
+                {initialLetterOfName}
+              </p>
             ) : (
               <img
                 src={data.avatar_url}
@@ -107,7 +109,9 @@ const UserDetails = () => {
               <h3 className="text-SecondaryTextColor leading-5">
                 {data.username}
               </h3>
-              <p className="text-SecondaryTextColor text-sm">{truncateText(data.email, 35)}</p>
+              <p className="text-SecondaryTextColor text-sm">
+                {truncateText(data.email, 35)}
+              </p>
             </div>
 
             <div className="flex justify-evenly gap-1 mt-3">
@@ -177,7 +181,9 @@ const UserDetails = () => {
 
         {data.bio ? (
           <div className="mt-3 bg-SecondaryBackgroundColor p-2 rounded-xl">
-            <h2 className="text-PrimaryTextColor text-lg font-semibold">About me</h2>
+            <h2 className="text-PrimaryTextColor text-lg font-semibold">
+              About me
+            </h2>
             <div className="bg-PrimaryTextColor h-1 w-10 rounded-full"></div>
             <p className="text-SecondaryTextColor text-sm leading-5 mt-2 whitespace-pre-line">
               {data.bio}
