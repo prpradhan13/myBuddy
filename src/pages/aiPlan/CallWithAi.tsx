@@ -2,8 +2,9 @@
 import { useAuth } from "@/context/AuthProvider";
 import { UserProfileType } from "@/types/userType";
 import { vapi } from "@/utils/lib/vapi";
+import { useCanCreatePlan } from "@/utils/queries/aiPlanQuery";
 import { useQueryClient } from "@tanstack/react-query";
-import { Bot, User } from "lucide-react";
+import { Bot, Loader2, Lock, Phone, PhoneMissed, User } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,13 +16,17 @@ const CallWithAi = () => {
   const [callEnded, setCallEnded] = useState(false);
 
   const { user } = useAuth();
+  const { data: canUserCreatePlan, isLoading: canUserCreatePlanLoading } =
+    useCanCreatePlan();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const messageContainerRef = useRef<HTMLDivElement>(null);
-  
-  const userId = user?.id
-  const userDetailsFromCache = queryClient.getQueryData<UserProfileType>([`user_profile_${userId}`])
-  
+
+  const userId = user?.id;
+  const userDetailsFromCache = queryClient.getQueryData<UserProfileType>([
+    `user_profile_${userId}`,
+  ]);
+
   useEffect(() => {
     const originalError = console.error;
     console.error = function (msg, ...args) {
@@ -125,7 +130,7 @@ const CallWithAi = () => {
         await vapi.start(import.meta.env.VITE_VAPI_WORKFLOW_ID!, {
           variableValues: {
             full_name: userDetailsFromCache?.full_name || "There",
-            user_id: userDetailsFromCache?.id
+            user_id: userDetailsFromCache?.id,
           },
         });
       } catch (error) {
@@ -179,24 +184,57 @@ const CallWithAi = () => {
         </div>
       </div>
 
-      <button
-        onClick={toggleCall}
-        disabled={connecting || callEnded}
-        className={`px-4 py-2 rounded-full mt-4 ${
-          callActive ? "bg-red-500" : callEnded ? "bg-green-500" : "bg-white"
-        }`}
-      >
-        {callActive
-          ? "End Call"
-          : connecting
-          ? "Connecting..."
-          : callEnded
-          ? "View Profile"
-          : "Start Call"}
-      </button>
+      {canUserCreatePlanLoading ? (
+        <button className="px-4 py-2 rounded-full mt-4 bg-white flex items-center gap-2">
+          <Loader2 size={20} className="animate-spin" />
+          <span className="font-medium">Please Wait</span>
+        </button>
+      ) : !canUserCreatePlan ? (
+        <button className="px-4 py-2 rounded-full mt-4 bg-white flex items-center gap-2">
+          <Lock size={20} />
+          <span className="font-medium">Locked</span>
+        </button>
+      ) : (
+        <button
+          onClick={toggleCall}
+          disabled={connecting || callEnded}
+          className={`px-4 py-2 rounded-full font-medium mt-4 ${
+            callActive ? "bg-red-500" : callEnded ? "bg-green-500" : "bg-white"
+          }`}
+        >
+          {callActive ? (
+            <span className="flex items-center gap-2">
+              <PhoneMissed size={20} />
+              End Call
+            </span>
+          ) : connecting ? (
+            <span className="flex items-center gap-2">
+              <Loader2 size={20} className="animate-spin" />
+              Connecting...
+            </span>
+          ) : callEnded ? (
+            "View Profile"
+          ) : (
+            <span className="flex items-center gap-2">
+              <Phone size={20} />
+              Start Call
+            </span>
+          )}
+        </button>
+      )}
+
+      {!canUserCreatePlan && (
+        <p className="text-SecondaryTextColor max-w-sm text-center mt-4">
+          You’ve reached your limit of 3 plans. Please delete one to create a
+          new plan.
+        </p>
+      )}
 
       {messages.length > 0 && (
-        <div ref={messageContainerRef} className="w-full max-h-[50vh] mt-2 bg-SecondaryBackgroundColor backdrop-blur-sm rounded-xl p-2 overflow-y-auto transition-all duration-300 scroll-smooth">
+        <div
+          ref={messageContainerRef}
+          className="w-full max-h-[50vh] mt-2 bg-SecondaryBackgroundColor backdrop-blur-sm rounded-xl p-2 overflow-y-auto transition-all duration-300 scroll-smooth"
+        >
           <div className="space-y-3">
             {messages.map((msg: any, index: number) => (
               <div key={index} className="">
@@ -209,7 +247,9 @@ const CallWithAi = () => {
 
             {callEnded && (
               <div className="">
-                <div className="font-semibold text-xs text-muted-foreground mb-1">System:</div>
+                <div className="font-semibold text-xs text-muted-foreground mb-1">
+                  System:
+                </div>
                 <p className="text-white">
                   Your fitness program has been created!
                 </p>
