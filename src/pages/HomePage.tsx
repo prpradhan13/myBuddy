@@ -3,7 +3,8 @@ import UserDetails from "../components/home/UserDetails";
 import { useGetUserWorkoutPlans } from "../utils/queries/workoutQuery";
 import { useAuth } from "../context/AuthProvider";
 import WorkoutPlanCard from "../components/home/WorkoutPlanCard";
-import { Sparkles } from "lucide-react";
+import { ChevronRight, Sparkles } from "lucide-react";
+import Loader from "@/components/loaders/Loader";
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -11,57 +12,66 @@ const HomePage = () => {
   const { data, isLoading } = useGetUserWorkoutPlans(user?.id, { limit });
   const navigate = useNavigate();
 
+  if (isLoading) return <Loader />;
+
   return (
-    <div className="min-h-screen w-full bg-[#000] p-4">
-      <UserDetails />
+    <div className="min-h-screen w-full bg-[#0a0a0a] p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto">
+        <UserDetails />
 
-      <button
-        onClick={() => navigate("/aiGeneratedPlan")}
-        className="text-[#ffa333] font-semibold text-lg bg-SecondaryBackgroundColor w-full p-2 mt-4 rounded-xl text-center flex gap-3 justify-center items-center"
-      >
-        <Sparkles size={18} />
-        AI Generated Plans
-        <Sparkles size={18} />
-      </button>
+        <button
+          onClick={() => navigate("/aiGeneratedPlan")}
+          className="w-full mt-6 p-4 rounded-xl bg-[#1a1a1a] border border-[#2a2a2a] hover:bg-[#2a2a2a] transition-all duration-300 shadow-lg hover:shadow-[#2a2a2a]/20 flex items-center justify-center gap-3 group"
+        >
+          <Sparkles
+            size={20}
+            className="text-[#ffa333] group-hover:scale-110 transition-transform"
+          />
+          <span className="text-[#ffa333] font-semibold text-lg">
+            AI Generated Plans
+          </span>
+          <Sparkles
+            size={20}
+            className="text-[#ffa333] group-hover:scale-110 transition-transform"
+          />
+        </button>
 
-      {data?.length === 0 ? (
-        <div className="bg-[#444] p-2 rounded-xl mt-4 h-36 flex justify-center items-center">
-          <p className="text-SecondaryTextColor font-semibold">
-            You have no plans
-          </p>
-        </div>
-      ) : (
-        <div className="bg-SecondaryBackgroundColor p-2 rounded-xl mt-4">
-          <div className="w-full flex justify-between items-center">
-            <div className="flex gap-4">
-              <h1 className="text-SecondaryTextColor font-semibold text-xl">
-                Your Plans
-              </h1>
-            </div>
-            <Link to={"/allWorkoutPlans"} className="text-blue-500 ">
-              View all
-            </Link>
-
-            {/* <Link to={"/smallWorkouts"} className="text-blue-500">
-              Small W
-            </Link> */}
+        {data?.length === 0 ? (
+          <div className="mt-6 p-6 rounded-xl bg-[#1a1a1a] border border-[#2a2a2a] flex flex-col items-center justify-center min-h-[200px]">
+            <p className="text-[#e0e0e0] font-medium text-lg">
+              You have no workout plans yet
+            </p>
+            <p className="text-[#a0a0a0] mt-2 text-center">
+              Start by creating a new plan or try our AI-generated plans
+            </p>
           </div>
+        ) : (
+          <div className="mt-6 p-4 sm:p-6 rounded-xl bg-[#1a1a1a] border border-[#2a2a2a]">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <h1 className="text-2xl font-bold text-[#e0e0e0]">
+                Your Workout Plans
+              </h1>
+              <Link
+                to={"/allWorkoutPlans"}
+                className="text-[#ffa333] hover:text-[#ffb366] font-medium transition-colors flex items-center gap-2"
+              >
+                View all plans
+                <ChevronRight size={18} />
+              </Link>
+            </div>
 
-          <div className="w-full mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-            {isLoading ? (
-              <div className="text-white">Loading...</div>
-            ) : (
-              data?.map((plan) => (
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data?.map((plan) => (
                 <WorkoutPlanCard
                   key={plan.id}
                   planDetails={plan}
                   limit={limit}
                 />
-              ))
-            )}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

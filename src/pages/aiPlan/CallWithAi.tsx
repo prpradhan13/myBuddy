@@ -141,17 +141,17 @@ const CallWithAi = () => {
   };
 
   return (
-    <div className="bg-MainBackgroundColor h-screen w-full p-4 flex flex-col items-center">
-      <div className="flex h-[30%] w-full gap-3">
-        <div className="bg-SecondaryBackgroundColor rounded-xl w-1/2 flex flex-col justify-center items-center">
-          <div className="bg-SecondaryBackgroundColor rounded-xl w-1/2 flex flex-col justify-center items-center relative">
-            <div className="bg-white rounded-full p-5">
-              <Bot size={32} color="black" />
+    <div className="bg-MainBackgroundColor min-h-screen w-full p-6 flex flex-col items-center gap-6">
+      <div className="flex h-[30%] w-full gap-6">
+        <div className="bg-SecondaryBackgroundColor rounded-2xl w-1/2 flex flex-col justify-center items-center p-6 shadow-lg transition-all duration-300 hover:shadow-xl">
+          <div className="bg-SecondaryBackgroundColor rounded-2xl w-full flex flex-col justify-center items-center relative">
+            <div className="bg-white rounded-full p-6 shadow-md transition-transform duration-300 hover:scale-105">
+              <Bot size={40} color="black" />
             </div>
-            <h1 className="text-white mt-4 text-xl font-semibold">Buddy</h1>
+            <h1 className="text-white mt-6 text-2xl font-bold">Buddy</h1>
 
-            <div className="py-2 px-4 mt-2 rounded-full border border-white">
-              <p className="text-white">
+            <div className="py-3 px-6 mt-4 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm">
+              <p className="text-white font-medium">
                 {connecting
                   ? "Waiting..."
                   : isAiSpeaking
@@ -164,7 +164,7 @@ const CallWithAi = () => {
 
             {(isAiSpeaking || callActive) && (
               <span
-                className={`absolute top-3 right-3 h-3 w-3 rounded-full animate-pulse ${
+                className={`absolute top-4 right-4 h-4 w-4 rounded-full animate-pulse ${
                   isAiSpeaking ? "bg-red-400" : "bg-green-400"
                 }`}
               ></span>
@@ -172,51 +172,55 @@ const CallWithAi = () => {
           </div>
         </div>
 
-        <div className="bg-SecondaryBackgroundColor rounded-xl w-1/2 flex flex-col justify-center items-center">
-          <div className="bg-white rounded-full p-5">
-            <User size={32} color="black" />
+        <div className="bg-SecondaryBackgroundColor rounded-2xl w-1/2 flex flex-col justify-center items-center p-6 shadow-lg transition-all duration-300 hover:shadow-xl">
+          <div className="bg-white rounded-full p-6 shadow-md transition-transform duration-300 hover:scale-105">
+            <User size={40} color="black" />
           </div>
 
-          <h1 className="text-white mt-4 text-xl font-semibold">You</h1>
-          <div className="py-2 px-4 mt-2 rounded-full border border-white">
-            <p className="text-white">{connecting ? "Waiting..." : "Ready"}</p>
+          <h1 className="text-white mt-6 text-2xl font-bold">You</h1>
+          <div className="py-3 px-6 mt-4 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm">
+            <p className="text-white font-medium">{connecting ? "Waiting..." : "Ready"}</p>
           </div>
         </div>
       </div>
 
       {canUserCreatePlanLoading ? (
-        <button className="px-4 py-2 rounded-full mt-4 bg-white flex items-center gap-2">
-          <Loader2 size={20} className="animate-spin" />
+        <button className="px-6 py-3 rounded-full mt-4 bg-white/90 hover:bg-white transition-all duration-300 flex items-center gap-2 shadow-md">
+          <Loader2 size={24} className="animate-spin" />
           <span className="font-medium">Please Wait</span>
         </button>
       ) : !canUserCreatePlan ? (
-        <button className="px-4 py-2 rounded-full mt-4 bg-white flex items-center gap-2">
-          <Lock size={20} />
+        <button className="px-6 py-3 rounded-full mt-4 bg-white/90 hover:bg-white transition-all duration-300 flex items-center gap-2 shadow-md">
+          <Lock size={24} />
           <span className="font-medium">Locked</span>
         </button>
       ) : (
         <button
           onClick={toggleCall}
           disabled={connecting || callEnded}
-          className={`px-4 py-2 rounded-full font-medium mt-4 ${
-            callActive ? "bg-red-500" : callEnded ? "bg-green-500" : "bg-white"
+          className={`px-6 py-3 rounded-full font-medium mt-4 transition-all duration-300 shadow-md ${
+            callActive
+              ? "bg-red-500 hover:bg-red-600"
+              : callEnded
+              ? "bg-green-500 hover:bg-green-600"
+              : "bg-white/90 hover:bg-white"
           }`}
         >
           {callActive ? (
             <span className="flex items-center gap-2">
-              <PhoneMissed size={20} />
+              <PhoneMissed size={24} />
               End Call
             </span>
           ) : connecting ? (
             <span className="flex items-center gap-2">
-              <Loader2 size={20} className="animate-spin" />
+              <Loader2 size={24} className="animate-spin" />
               Connecting...
             </span>
           ) : callEnded ? (
             "View Profile"
           ) : (
             <span className="flex items-center gap-2">
-              <Phone size={20} />
+              <Phone size={24} />
               Start Call
             </span>
           )}
@@ -224,33 +228,34 @@ const CallWithAi = () => {
       )}
 
       {!canUserCreatePlan && (
-        <p className="text-SecondaryTextColor max-w-sm text-center mt-4">
-          You’ve reached your limit of 3 plans. Please delete one to create a
-          new plan.
+        <p className="text-SecondaryTextColor max-w-sm text-center mt-4 text-sm">
+          You've reached your limit of 3 plans. Please delete one to create a new plan.
         </p>
       )}
 
       {messages.length > 0 && (
         <div
           ref={messageContainerRef}
-          className="w-full max-h-[50vh] mt-2 bg-SecondaryBackgroundColor backdrop-blur-sm rounded-xl p-2 overflow-y-auto transition-all duration-300 scroll-smooth"
+          className="w-full max-h-[50vh] mt-4 bg-SecondaryBackgroundColor/80 backdrop-blur-sm rounded-2xl p-4 overflow-y-auto transition-all duration-300 scroll-smooth shadow-lg"
         >
-          <div className="space-y-3">
+          <div className="space-y-4">
             {messages.map((msg: any, index: number) => (
-              <div key={index} className="">
-                <div className="font-semibold text-xs text-muted-foreground mb-1">
+              <div key={index} className="animate-fade-in">
+                <div className="font-semibold text-sm text-white/70 mb-1">
                   {msg.role === "assistant" ? "Buddy AI" : "You"}
                 </div>
-                <p className="text-white">{msg.content}</p>
+                <p className="text-white bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+                  {msg.content}
+                </p>
               </div>
             ))}
 
             {callEnded && (
-              <div className="">
-                <div className="font-semibold text-xs text-muted-foreground mb-1">
-                  System:
+              <div className="animate-fade-in">
+                <div className="font-semibold text-sm text-white/70 mb-1">
+                  System
                 </div>
-                <p className="text-white">
+                <p className="text-white bg-green-500/20 rounded-lg p-3 backdrop-blur-sm">
                   Your fitness program has been created!
                 </p>
               </div>

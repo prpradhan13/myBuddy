@@ -60,78 +60,93 @@ const FinalStep = ({
   if (isError) return <ErrorPage errorMessage={error.message} />;
 
   return (
-    <div className="bg-SecondaryBackgroundColor w-full max-h-[80vh] rounded-md p-3">
-      <h1 className="text-xl text-PrimaryTextColor capitalize">
-        {" "}
-        {workoutDetail.workout_name}{" "}
-      </h1>
-      <h1 className="text-PrimaryTextColor capitalize">
-        {" "}
-        Difficulty Level: {workoutDetail.difficulty_level}
-      </h1>
-      <p className="text-sm text-PrimaryTextColor capitalize">
-        {" "}
-        Workout Tips: {workoutDetail.description}{" "}
-      </p>
+    <div className="bg-SecondaryBackgroundColor w-full max-h-[80vh] rounded-lg p-6 shadow-lg">
+      <div className="space-y-4 mb-6">
+        <h1 className="text-2xl text-PrimaryTextColor capitalize font-bold">
+          {workoutDetail.workout_name}
+        </h1>
+        <div className="flex items-center gap-2">
+          <span className="text-PrimaryTextColor font-medium">Difficulty Level:</span>
+          <span className="px-3 py-1 rounded-full text-sm font-medium bg-[#2a2a2a] text-white capitalize">
+            {workoutDetail.difficulty_level}
+          </span>
+        </div>
+        {workoutDetail.description && (
+          <div className="bg-[#2a2a2a] p-4 rounded-lg">
+            <p className="text-PrimaryTextColor text-sm">
+              {workoutDetail.description}
+            </p>
+          </div>
+        )}
+      </div>
 
-      <div className="mt-4 mb-2 flex items-center justify-between">
-        <h1 className="text-PrimaryTextColor font-semibold">Exercises</h1>
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-PrimaryTextColor text-xl font-semibold">Exercises</h1>
         <button
           onClick={() => setStep(2)}
-          className="text-white text-xs capitalize font-semibold bg-blue-500 py-1 px-2 rounded-md"
+          className="text-white text-sm capitalize font-medium bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-lg transition-colors"
         >
           Add more
         </button>
       </div>
 
-      <div className="bg-black p-3 rounded-md flex flex-col gap-2 max-h-[40vh] overflow-y-scroll">
+      <div className="bg-[#2a2a2a] p-4 rounded-lg flex flex-col gap-3 max-h-[40vh] overflow-y-scroll">
         {workoutDetail.exercises.map((exercise, index) => (
           <Collapsible
             key={index}
-            className="bg-SecondaryBackgroundColor rounded-md p-3"
+            className="bg-SecondaryBackgroundColor rounded-lg p-4 border border-[#3a3a3a]"
           >
-            <div className="">
-              <Button
-                onClick={() => handleRemoveBtn(index)}
-                variant="ghost"
-                className="mt-1 p-0 text-red-500 hover:text-red-500 hover:bg-transparent"
-              >
-                Remove
-              </Button>
+            <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <h1 className="text-PrimaryTextColor capitalize font-semibold">
+                <h1 className="text-PrimaryTextColor capitalize font-semibold text-lg">
                   {exercise.exercise_name}
                 </h1>
-                {(exercise.target_muscle || exercise.exercise_description) && (
-                  <CollapsibleTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hover:bg-black hover:text-white"
-                    >
-                      <ChevronsUpDown className="h-4 w-4 text-PrimaryTextColor" />
-                      <span className="sr-only">Toggle</span>
-                    </Button>
-                  </CollapsibleTrigger>
-                )}
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => handleRemoveBtn(index)}
+                    variant="ghost"
+                    className="text-red-500 hover:text-red-600 hover:bg-transparent p-0"
+                  >
+                    Remove
+                  </Button>
+                  {(exercise.target_muscle || exercise.exercise_description) && (
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-PrimaryTextColor hover:bg-[#3a3a3a]"
+                      >
+                        <ChevronsUpDown className="h-4 w-4" />
+                        <span className="sr-only">Toggle</span>
+                      </Button>
+                    </CollapsibleTrigger>
+                  )}
+                </div>
               </div>
+              <CollapsibleContent className="space-y-2 pt-2">
+                {exercise.target_muscle && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-SecondaryTextColor font-medium">Target Muscle:</span>
+                    <span className="text-SecondaryTextColor">{exercise.target_muscle}</span>
+                  </div>
+                )}
+                {exercise.exercise_description && (
+                  <div className="bg-[#2a2a2a] p-3 rounded-lg">
+                    <p className="text-SecondaryTextColor text-sm whitespace-pre-line">
+                      {exercise.exercise_description}
+                    </p>
+                  </div>
+                )}
+              </CollapsibleContent>
             </div>
-            <CollapsibleContent className="">
-              <h1 className="text-SecondaryTextColor capitalize">
-                Target Muscle: {exercise.target_muscle}
-              </h1>
-              <p className="text-SecondaryTextColor">
-                {exercise.exercise_description}
-              </p>
-            </CollapsibleContent>
           </Collapsible>
         ))}
       </div>
 
-      <div className="flex gap-3 justify-evenly mt-3">
+      <div className="flex gap-4 justify-evenly mt-6">
         <Alert
           trigerBtnVarient={"destructive"}
-          triggerBtnClassName="w-1/2 font-semibold"
+          triggerBtnClassName="w-1/2 font-medium bg-red-600 hover:bg-red-700"
           handleContinueBtn={handleCloseBtn}
         />
 
@@ -139,13 +154,13 @@ const FinalStep = ({
           onClick={handleCreateBtn}
           disabled={isPending}
           variant="secondary"
-          className="w-1/2 font-semibold"
+          className="w-1/2 font-medium bg-blue-600 hover:bg-blue-700"
         >
           {isPending ? (
-            <>
-              <Loader2 className="animate-spin" />
-              Please wait
-            </>
+            <div className="flex items-center gap-2">
+              <Loader2 className="animate-spin h-4 w-4" />
+              <span>Please wait</span>
+            </div>
           ) : (
             "SUBMIT"
           )}

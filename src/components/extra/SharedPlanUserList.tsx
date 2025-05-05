@@ -123,11 +123,11 @@ const SharedPlanUserList = React.memo(
               You share this plan with these people.
             </DrawerDescription>
           </DrawerHeader>
-          <ScrollArea className="h-[70vh]">
+          <ScrollArea className="h-[70vh] px-4">
             {data &&
               data.map((item) => (
                 <div key={item.user_id.id} className="p-2 w-full md:w-[30vw]">
-                  <div className="bg-BtnBgClr p-2 rounded-lg">
+                  <div className="bg-BtnBgClr p-4 rounded-lg">
                     <div className="flex items-center gap-3">
                       {!item.user_id.avatar_url ? (
                         <div className="w-16 h-16 flex justify-center rounded-full items-center bg-gradient-to-t from-[#333333] via-[#383838] to-[#4c4c4c] text-PrimaryTextColor text-sm font-semibold">

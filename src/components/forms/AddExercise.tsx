@@ -33,8 +33,9 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, X } from "lucide-react";
 import { targetMuscles } from "@/utils/constants";
+import PreviousExerciseBox from "../extra/PreviousExerciseBox";
 
 interface AddExerciseProps {
   workoutId: number;
@@ -111,138 +112,167 @@ const AddExercise = ({
   };
 
   return (
-    <div className="bg-[#000000d6] fixed top-0 right-0 left-0 w-full h-screen flex justify-center items-center px-8 overflow-hidden">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       {step === 1 &&
         (!selectPreviousBoxOpen ? (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="p-3 bg-black border rounded-md w-full md:w-[50vw] flex flex-col gap-3"
+              className="bg-gray-900 border border-gray-700 rounded-lg w-full max-w-2xl p-6 space-y-6 shadow-xl"
             >
-              <FormField
-                control={form.control}
-                name="exercise_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-PrimaryTextColor text-lg">
-                      Exercise Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder=""
-                        {...field}
-                        className="text-PrimaryTextColor"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="target_muscle"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-PrimaryTextColor text-lg">
-                      Target Muscle
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger
-                          className={`w-[180px] capitalize ${
-                            field.value ? "text-white" : "text-white"
-                          }`}
-                        >
-                          <SelectValue className="text-white">
-                            {field.value}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {targetMuscles.map((target, index) => (
-                              <SelectItem
-                                key={index}
-                                value={target}
-                                className="capitalize"
-                              >
-                                {target}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="exercise_description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-PrimaryTextColor text-lg">
-                      Exercise Tips
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        className="text-PrimaryTextColor"
-                        placeholder="Optional"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="rest"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-PrimaryTextColor text-lg">
-                      Rest After This Exercise
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g. 40 seconds"
-                        {...field}
-                        value={field.value ?? ""}
-                        className="text-PrimaryTextColor"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="w-full flex gap-3">
-                <Alert
-                  trigerBtnVarient={"destructive"}
-                  triggerBtnClassName="w-1/2"
-                  handleContinueBtn={handleCloseBtn}
-                />
-
-                <Button type="submit" variant="secondary" className="w-1/2">
-                  Submit
-                </Button>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-white">
+                  Add New Exercise
+                </h2>
+                <button
+                  onClick={handleCloseBtn}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
               </div>
 
-              <p className="text-center font-semibold text-lg text-white">OR</p>
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="exercise_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-200 text-base font-medium">
+                        Exercise Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter exercise name"
+                          {...field}
+                          className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400" />
+                    </FormItem>
+                  )}
+                />
 
-              <div className="flex justify-center">
+                <FormField
+                  control={form.control}
+                  name="target_muscle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-200 text-base font-medium">
+                        Target Muscle
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white w-full">
+                            <SelectValue placeholder="Select target muscle" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-gray-800 border-gray-700">
+                            <SelectGroup>
+                              {targetMuscles.map((target, index) => (
+                                <SelectItem
+                                  key={index}
+                                  value={target}
+                                  className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                                >
+                                  {target}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-red-400" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="exercise_description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-200 text-base font-medium">
+                        Exercise Tips
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Add any tips or notes about the exercise"
+                          className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 min-h-[100px] focus:border-blue-500 focus:ring-blue-500"
+                          {...field}
+                          value={field.value ?? ""}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="rest"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-200 text-base font-medium">
+                        Rest After This Exercise
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. 40 seconds"
+                          {...field}
+                          value={field.value ?? ""}
+                          className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex flex-col gap-4 pt-4">
+                <div className="flex gap-3">
+                  <Alert
+                    trigerBtnVarient={"destructive"}
+                    triggerBtnClassName="flex-1"
+                    handleContinueBtn={handleCloseBtn}
+                  />
+                  <Button
+                    type="submit"
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                  >
+                    Add Exercise
+                  </Button>
+                </div>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-700"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-gray-900 text-gray-400">OR</span>
+                  </div>
+                </div>
+
                 <Button
                   type="button"
                   onClick={() => setSelectPreviousBoxOpen(true)}
-                  variant="secondary"
-                  className="w-full bg-transparent text-white"
+                  className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 transition-colors"
                 >
                   Select from previous exercises
                 </Button>
@@ -250,16 +280,26 @@ const AddExercise = ({
             </form>
           </Form>
         ) : (
-          <div className="bg-SecondaryBackgroundColor rounded-xl p-3 w-full">
-            <ScrollArea className="w-full h-[80vh] rounded-xl bg-SecondaryBackgroundColor overflow-hidden">
-              <h2 className="text-PrimaryTextColor text-lg text-center">
-                Previous exercises
+          <div className="bg-gray-900 border border-gray-700 rounded-lg w-full max-w-2xl p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-white">
+                Previous Exercises
               </h2>
-              <div className="w-full gap-2 mt-2">
+              <button
+                onClick={handleClosePreviousBox}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <ScrollArea className="w-full h-[70vh] rounded-lg">
+              <div className="space-y-4">
                 {isLoading ? (
-                  <div className="flex w-full justify-center">
-                    <p className="text-PrimaryTextColor text-center text-lg font-medium">
-                      Loading...
+                  <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-700 border-t-blue-500"></div>
+                    <p className="text-gray-400 text-lg">
+                      Loading exercises...
                     </p>
                   </div>
                 ) : previousExercisesData &&
@@ -271,45 +311,74 @@ const AddExercise = ({
                       })
                     )
                     .map(([category, exercises]) => (
-                      <div key={category} className="mb-3">
-                        <h2 className="text-white font-bold capitalize">
+                      <div key={category} className="space-y-3">
+                        <h2 className="text-lg font-semibold text-gray-200 capitalize">
                           {category}
                         </h2>
 
-                        <div className="flex flex-wrap gap-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           {exercises.map((exercise: ExerciseType) => (
                             <Collapsible
                               key={exercise.id}
-                              className="bg-[#d5d5d5] text-black capitalize rounded-lg"
+                              className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden transition-all hover:border-gray-600"
                             >
-                              <div className="flex justify-between items-center">
+                              <div className="flex items-center justify-between p-3">
                                 <button
                                   onClick={() =>
                                     handleSelectPreviousExercise(exercise)
                                   }
-                                  className="text-sm p-2 capitalize font-semibold"
+                                  className="text-left flex-1 text-gray-200 hover:text-white transition-colors"
                                 >
-                                  {exercise.exercise_name}
+                                  <h3 className="font-medium capitalize">
+                                    {exercise.exercise_name}
+                                  </h3>
+                                  {exercise.target_muscle && (
+                                    <p className="text-sm text-gray-400 capitalize">
+                                      {exercise.target_muscle}
+                                    </p>
+                                  )}
                                 </button>
                                 {(exercise.target_muscle ||
                                   exercise.description) && (
-                                  <CollapsibleTrigger asChild className="z-50">
+                                  <CollapsibleTrigger asChild>
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      className="text-black hover:bg-transparent hover:text-black"
+                                      className="text-gray-400 hover:text-white hover:bg-gray-700"
                                     >
                                       <ChevronsUpDown className="h-4 w-4" />
-                                      <span className="sr-only">Toggle</span>
+                                      <span className="sr-only">
+                                        Toggle details
+                                      </span>
                                     </Button>
                                   </CollapsibleTrigger>
                                 )}
                               </div>
-                              <CollapsibleContent className="px-2 pb-2 text-sm">
-                                <p className="">Rest: {exercise.rest}</p>
-                                <p className="text-xs whitespace-pre-line">
-                                  {exercise.description}
-                                </p>
+                              <CollapsibleContent className="px-3 pb-3 space-y-2">
+                                {exercise.rest && (
+                                  <div className="flex items-center text-sm text-gray-400">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-4 w-4 mr-2"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                      />
+                                    </svg>
+                                    Rest: {exercise.rest}
+                                  </div>
+                                )}
+                                {exercise.description && (
+                                  <div className="text-sm text-gray-400 whitespace-pre-line">
+                                    {exercise.description}
+                                  </div>
+                                )}
                               </CollapsibleContent>
                             </Collapsible>
                           ))}
@@ -317,22 +386,14 @@ const AddExercise = ({
                       </div>
                     ))
                 ) : (
-                  <div className="flex justify-center">
-                    <p className="text-PrimaryTextColor text-lg font-medium">
-                      No previous exercises found.
-                    </p>
-                  </div>
+                  <PreviousExerciseBox
+                    planId={planId!}
+                    handleClosePreviousBox={handleClosePreviousBox}
+                    handleSelectPreviousExercise={handleSelectPreviousExercise}
+                  />
                 )}
               </div>
             </ScrollArea>
-
-            <Button
-              variant={"destructive"}
-              onClick={handleClosePreviousBox}
-              className="w-full mt-2"
-            >
-              Close
-            </Button>
           </div>
         ))}
 

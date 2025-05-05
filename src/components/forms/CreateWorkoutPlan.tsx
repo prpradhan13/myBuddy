@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createPlanSchema, TCreateWorkout } from "@/validations/forms";
 import { useCreateWorkoutPlan } from "@/utils/queries/workoutQuery";
 import { Button } from "../ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Lock } from "lucide-react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import Alert from "../extra/Alert";
@@ -25,14 +25,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Lock } from 'lucide-react';
 
 interface CreateWorkoutPlanProps {
   openCreateForm: boolean;
@@ -81,23 +80,19 @@ const CreateWorkoutPlan = ({
   };
 
   return (
-    <Drawer
-      open={openCreateForm}
-      onOpenChange={setOpenCreateForm}
-      onClose={handleCloseBtn}
-    >
-      <DrawerContent className="p-4 bg-MainBackgroundColor border-none">
-        <DrawerHeader>
-          <DrawerTitle className="text-PrimaryTextColor">
-            Create Plan
-          </DrawerTitle>
-          <DrawerDescription>
-            Here you can create your own weekly workout plan.
-          </DrawerDescription>
-        </DrawerHeader>
+    <Dialog open={openCreateForm} onOpenChange={setOpenCreateForm}>
+      <DialogContent className="sm:max-w-[500px] bg-MainBackgroundColor border-none">
+        <DialogHeader className="space-y-2">
+          <DialogTitle className="text-PrimaryTextColor text-2xl font-bold">
+            Create Workout Plan
+          </DialogTitle>
+          <DialogDescription className="text-gray-400">
+            Design your personalized workout plan to achieve your fitness goals.
+          </DialogDescription>
+        </DialogHeader>
         {!accessForCreatePlan ? (
-          <div className="flex justify-center items-center">
-            <Card>
+          <div className="flex justify-center items-center py-6">
+            <Card className="w-full max-w-md bg-[#2a2a2a] border-[#3a3a3a]">
               <CardHeader>
                 <CardTitle className="text-2xl text-[#ff8401] text-center font-medium flex justify-center items-center gap-2">
                   <Lock color="#ff8401" strokeWidth={3} />
@@ -105,7 +100,7 @@ const CreateWorkoutPlan = ({
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-center">
-                <p className="text-sm text-primaryTextColor">
+                <p className="text-sm text-gray-400">
                   You don't have access to create new workout plans. Please
                   contact an admin.
                 </p>
@@ -116,25 +111,25 @@ const CreateWorkoutPlan = ({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="w-full md:w-[50vw] space-y-4"
+              className="w-full space-y-6 py-2"
             >
               <FormField
                 control={form.control}
                 name="plan_name"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-PrimaryTextColor text-lg">
-                      Your Plan Name
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-PrimaryTextColor text-base font-medium">
+                      Plan Name
                     </FormLabel>
                     <FormControl>
-                      <input
-                        placeholder="Write your workout plan name."
+                      <Input
+                        placeholder="Enter your workout plan name"
                         {...field}
                         value={field.value ?? ""}
-                        className="text-PrimaryTextColor border-b pb-2 px-2 bg-transparent placeholder:text-[#6c6c6c] outline-none"
+                        className="bg-[#2a2a2a] border-[#3a3a3a] text-PrimaryTextColor placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-blue-500"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500 text-sm" />
                   </FormItem>
                 )}
               />
@@ -143,107 +138,112 @@ const CreateWorkoutPlan = ({
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-PrimaryTextColor text-lg">
-                      Any Tips?
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-PrimaryTextColor text-base font-medium">
+                      Description
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Optional"
+                        placeholder="Add any tips or notes about your workout plan (optional)"
                         {...field}
-                        className="text-PrimaryTextColor h-28 placeholder:text-[#6c6c6c]"
+                        className="bg-[#2a2a2a] border-[#3a3a3a] text-PrimaryTextColor placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-blue-500 min-h-[100px]"
                         value={field.value ?? ""}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500 text-sm" />
                   </FormItem>
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="difficulty_level"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-PrimaryTextColor text-lg">
-                      Level
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger
-                          className={`w-[180px] ${
-                            field.value ? "text-white" : "text-muted-foreground"
-                          }`}
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="difficulty_level"
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-PrimaryTextColor text-base font-medium">
+                        Difficulty Level
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
                         >
-                          <SelectValue placeholder="Select Level" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem value="beginners">Beginners</SelectItem>
-                            <SelectItem value="intermediates">
-                              Intermediates
-                            </SelectItem>
-                            <SelectItem value="advance">Advance</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                          <SelectTrigger
+                            className={`bg-[#2a2a2a] border-[#3a3a3a] ${
+                              field.value ? "text-white" : "text-gray-500"
+                            }`}
+                          >
+                            <SelectValue placeholder="Select Level" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-[#2a2a2a] border-[#3a3a3a]">
+                            <SelectGroup>
+                              <SelectItem value="beginners" className="hover:bg-[#3a3a3a]">Beginners</SelectItem>
+                              <SelectItem value="intermediates" className="hover:bg-[#3a3a3a]">Intermediates</SelectItem>
+                              <SelectItem value="advance" className="hover:bg-[#3a3a3a]">Advance</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-red-500 text-sm" />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="weeks"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-PrimaryTextColor text-lg">
-                      How many week ?
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        className="text-PrimaryTextColor w-[70px]"
-                        onChange={(e) => {
-                          const value =
-                            e.target.value === "" ? "" : Number(e.target.value);
-                          field.onChange(value);
-                        }}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="weeks"
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-PrimaryTextColor text-base font-medium">
+                        Duration (Weeks)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          className="bg-[#2a2a2a] border-[#3a3a3a] text-PrimaryTextColor placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-blue-500"
+                          onChange={(e) => {
+                            const value =
+                              e.target.value === "" ? "" : Number(e.target.value);
+                            field.onChange(value);
+                          }}
+                          value={field.value ?? ""}
+                          placeholder="Enter weeks"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-500 text-sm" />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-              <div className="flex gap-3 justify-evenly">
+              <div className="flex gap-3 justify-end pt-4">
                 <Alert
                   handleContinueBtn={handleCloseBtn}
-                  trigerBtnVarient="destructive"
-                  triggerBtnClassName="w-1/2 font-semibold"
+                  trigerBtnVarient="outline"
+                  triggerBtnClassName="px-6"
                 />
-                <Button type="submit" variant="secondary" className="w-1/2">
+                <Button 
+                  type="submit" 
+                  className="px-6 bg-blue-600 hover:bg-blue-700"
+                  disabled={isPending}
+                >
                   {isPending ? (
                     <>
-                      <Loader2 className="animate-spin" />
-                      Please wait
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating...
                     </>
                   ) : (
-                    "Create"
+                    "Create Plan"
                   )}
                 </Button>
               </div>
             </form>
           </Form>
         )}
-      </DrawerContent>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 };
 

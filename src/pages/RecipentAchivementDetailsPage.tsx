@@ -76,68 +76,84 @@ const RecipentAchivementDetailsPage = () => {
   };
 
   return (
-    <div className="bg-MainBackgroundColor p-4 min-h-screen">
-      {/* User Details */}
-      <div className="flex items-center gap-4 bg-[#fffbf4] p-4 rounded-lg">
-        <Avatar className="h-14 w-14">
-          <AvatarImage
-            src={recipient?.avatar_url || ""}
-            alt={recipient?.full_name}
-            className="object-cover"
-          />
-          <AvatarFallback className="bg-gradient-to-t from-[#000] to-[#454545] text-white">
-            {getInitialLetter(recipient?.full_name ?? "")}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h1 className="text-xl font-bold">{recipient?.full_name}</h1>
-          <p className="text-gray-400">@{recipient?.username}</p>
+    <div className="bg-MainBackgroundColor min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* User Details */}
+        <div className="flex items-center gap-6 bg-gradient-to-r from-[#fffbf4] to-[#fff8e8] p-6 rounded-xl shadow-lg mb-8">
+          <Avatar className="h-20 w-20 border-4 border-white shadow-md">
+            <AvatarImage
+              src={recipient?.avatar_url || ""}
+              alt={recipient?.full_name}
+              className="object-cover"
+            />
+            <AvatarFallback className="bg-gradient-to-t from-[#000] to-[#454545] text-white text-2xl">
+              {getInitialLetter(recipient?.full_name ?? "")}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">{recipient?.full_name}</h1>
+            <p className="text-gray-600 mt-1">@{recipient?.username}</p>
+          </div>
         </div>
-      </div>
 
-      {/* Day Filter */}
-      <Filter
-        selectedWeek={selectedWeek}
-        setSelectedWeek={setSelectedWeek}
-        selectedDay={selectedDay}
-        setSelectedDay={setSelectedDay}
-        uniqueWeeks={uniqueWeeks}
-        uniqueDays={uniqueDays}
-        handleClearFilters={handleClearFilters}
-      />
+        {/* Day Filter */}
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-8">
+          <Filter
+            selectedWeek={selectedWeek}
+            setSelectedWeek={setSelectedWeek}
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+            uniqueWeeks={uniqueWeeks}
+            uniqueDays={uniqueDays}
+            handleClearFilters={handleClearFilters}
+          />
+        </div>
 
-      {/* Achievements Section */}
-      <div className="mt-6 space-y-3">
-        <h1 className="text-white text-center text-lg font-medium">Week {selectedWeek}</h1>
-        {filteredData.length > 0 ? (
-          filteredData.map((group, index) => <AchievementCard key={index} group={group} />)
-        ) : (
-          <div className="">
-            <p className="text-center text-white">No Data added for week {selectedWeek}. It's looks like you are not add yourset achives week wise, use filter feature.</p>
+        {/* Achievements Section */}
+        <div className="space-y-6">
+          <h1 className="text-2xl font-semibold text-white text-center mb-6">
+            Week {selectedWeek} Achievements
+          </h1>
+          {filteredData.length > 0 ? (
+            <div className="grid gap-6">
+              {filteredData.map((group, index) => (
+                <AchievementCard key={index} group={group} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 text-center">
+              <p className="text-gray-300 text-lg">
+                No achievements found for week {selectedWeek}. Use the filter to view different weeks.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-8 gap-4">
+            <Button
+              variant="outline"
+              className="bg-white/5 hover:bg-white/10 text-white border-white/20"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+            >
+              ⬅ Previous
+            </Button>
+            <span className="text-gray-300 font-medium">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              className="bg-white/5 hover:bg-white/10 text-white border-white/20"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+            >
+              Next ➡
+            </Button>
           </div>
         )}
       </div>
-
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-6 gap-4">
-          <Button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-          >
-            ⬅ Previous
-          </Button>
-          <span className="text-gray-300">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-          >
-            Next ➡
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

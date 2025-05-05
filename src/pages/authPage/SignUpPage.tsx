@@ -73,7 +73,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col bg-MainBackgroundColor justify-center">
+    <div className="w-full min-h-screen flex flex-col bg-MainBackgroundColor py-6">
       <div className="px-6">
         <button
           onClick={handleGoBack}
@@ -84,10 +84,10 @@ const SignUpPage = () => {
       </div>
 
       <div className="px-6 mt-4">
-        <h1 className="text-2xl text-PrimaryTextColor font-semibold">
+        <h1 className="text-2xl text-PrimaryTextColor font-semibold text-center">
           Create your account
         </h1>
-        <p className="text-SecondaryTextColor mt-1">
+        <p className="text-SecondaryTextColor mt-1 text-center">
           Get started with my app, just create an account and enjoy the
           experience.
         </p>

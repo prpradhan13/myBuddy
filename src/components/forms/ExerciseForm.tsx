@@ -14,15 +14,17 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { useGetPreviousExercises } from "@/utils/queries/exerciseQuery";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../ui/collapsible";
-import { ChevronsUpDown } from "lucide-react";
-import { ScrollArea } from "../ui/scroll-area";
+  Select,
+  SelectItem,
+  SelectGroup,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { targetMuscles } from "@/utils/constants";
+import PreviousExerciseBox from "../extra/PreviousExerciseBox";
 
 interface ExerciseFormProps {
   setStep: Dispatch<SetStateAction<number>>;
@@ -43,9 +45,6 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
   const { planInfo } = usePlan();
   const planId = planInfo.planId;
 
-  const { data: previousExercisesData, isLoading } = useGetPreviousExercises(
-    planId!
-  );
   const [selectPreviousBoxOpen, setSelectPreviousBoxOpen] = useState(false);
 
   const handleClosePreviousBox = () => {
@@ -84,21 +83,21 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleNextBtnClick)}
-            className="bg-SecondaryBackgroundColor w-full rounded-md p-3 flex flex-col gap-4"
+            className="bg-SecondaryBackgroundColor w-full rounded-lg p-6 flex flex-col gap-6 shadow-lg"
           >
             <FormField
               control={form.control}
               name="exercise_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-PrimaryTextColor text-lg">
+                  <FormLabel className="text-PrimaryTextColor text-lg font-medium">
                     Exercise Name
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder=""
+                      placeholder="Enter exercise name"
                       {...field}
-                      className="text-PrimaryTextColor"
+                      className="text-PrimaryTextColor bg-[#2a2a2a] border-[#3a3a3a] focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     />
                   </FormControl>
                   <FormMessage />
@@ -110,17 +109,32 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
               control={form.control}
               name="target_muscle"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel className="text-PrimaryTextColor text-lg">
-                    Target Muscles
+                    Target Muscle
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="e.g. Chest"
-                      {...field}
-                      value={field.value ?? ""}
-                      className="text-PrimaryTextColor"
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="bg-[#2a2a2a] border-[#3a3a3a] text-white w-full">
+                        <SelectValue placeholder="Select target muscle" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-700">
+                        <SelectGroup>
+                          {targetMuscles.map((target, index) => (
+                            <SelectItem
+                              key={index}
+                              value={target}
+                              className="text-white hover:bg-gray-700 focus:bg-gray-700"
+                            >
+                              {target}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -132,13 +146,13 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
               name="exercise_description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-PrimaryTextColor text-lg">
+                  <FormLabel className="text-PrimaryTextColor text-lg font-medium">
                     Exercise Tips
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      className="text-PrimaryTextColor"
-                      placeholder="Optional"
+                      className="text-PrimaryTextColor bg-[#2a2a2a] border-[#3a3a3a] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-h-[100px]"
+                      placeholder="Enter exercise tips and instructions"
                       {...field}
                       value={field.value ?? ""}
                     />
@@ -153,15 +167,15 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
               name="rest"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-PrimaryTextColor text-lg">
+                  <FormLabel className="text-PrimaryTextColor text-lg font-medium">
                     Rest After This Exercise
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="e.g. 40 seconds"
+                      placeholder="e.g. 40 seconds or 1 minute"
                       {...field}
                       value={field.value ?? ""}
-                      className="text-PrimaryTextColor"
+                      className="text-PrimaryTextColor bg-[#2a2a2a] border-[#3a3a3a] focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     />
                   </FormControl>
                   <FormMessage />
@@ -169,122 +183,54 @@ const ExerciseForm = ({ setStep, setExerciseData }: ExerciseFormProps) => {
               )}
             />
 
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <Button
                 type="button"
                 onClick={() => setStep(1)}
                 variant="secondary"
-                className="w-1/2 bg-blue-500"
+                className="w-1/2 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-white font-medium"
               >
                 Back
               </Button>
-              <Button type="submit" variant="secondary" className="w-1/2">
+              <Button
+                type="submit"
+                variant="secondary"
+                className="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+              >
                 Next
               </Button>
             </div>
 
-            <p className="text-center font-semibold text-lg text-white">OR</p>
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-[#3a3a3a]"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-SecondaryBackgroundColor text-PrimaryTextColor">
+                  OR
+                </span>
+              </div>
+            </div>
 
             <div className="flex justify-center">
               <Button
                 type="button"
                 onClick={() => setSelectPreviousBoxOpen(true)}
                 variant="secondary"
-                className="w-full bg-transparent text-white"
+                className="w-full bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white border border-[#3a3a3a] font-medium"
               >
                 Select from previous exercises
               </Button>
             </div>
           </form>
         </Form>
-      ) : (
-        <div className="bg-SecondaryBackgroundColor rounded-xl p-3 w-full">
-          <ScrollArea className="w-full h-[80vh] rounded-xl bg-SecondaryBackgroundColor overflow-hidden">
-            <h2 className="text-PrimaryTextColor text-lg text-center">
-              Previous exercises
-            </h2>
-            <div className="w-full gap-2 mt-2">
-              {isLoading ? (
-                <div className="flex w-full justify-center">
-                  <p className="text-PrimaryTextColor text-center text-lg font-medium">
-                    Loading...
-                  </p>
-                </div>
-              ) : previousExercisesData &&
-                Object.keys(previousExercisesData).length > 0 ? (
-                Object.entries(previousExercisesData)
-                .sort(([categoryA], [categoryB]) =>
-                  categoryA.localeCompare(categoryB, "en", {
-                    sensitivity: "base",
-                  })
-                )
-                .map(
-                  ([category, exercises]) => (
-                    <div key={category} className="mb-3">
-                      <h2 className="text-white font-bold capitalize">
-                        {category}
-                      </h2>
-
-                      <div className="flex flex-wrap gap-2">
-                        {exercises.map((exercise: ExerciseType) => (
-                            <Collapsible
-                              key={exercise.id}
-                              className="bg-[#d5d5d5] text-black capitalize rounded-lg"
-                            >
-                              <div className="flex justify-between items-center">
-                                <button
-                                  onClick={() =>
-                                    handleSelectPreviousExercise(exercise)
-                                  }
-                                  className="text-sm p-2 capitalize font-semibold"
-                                >
-                                  {exercise.exercise_name}
-                                </button>
-                                {(exercise.target_muscle ||
-                                  exercise.description) && (
-                                  <CollapsibleTrigger asChild className="z-50">
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="text-black hover:bg-transparent hover:text-black"
-                                    >
-                                      <ChevronsUpDown className="h-4 w-4" />
-                                      <span className="sr-only">Toggle</span>
-                                    </Button>
-                                  </CollapsibleTrigger>
-                                )}
-                              </div>
-                              <CollapsibleContent className="px-2 pb-2 text-sm">
-                                <p className="">Rest: {exercise.rest}</p>
-                                <p className="text-xs whitespace-pre-line">
-                                  {exercise.description}
-                                </p>
-                              </CollapsibleContent>
-                            </Collapsible>
-                          ))}
-                      </div>
-                    </div>
-                  )
-                )
-              ) : (
-                <div className="flex justify-center">
-                  <p className="text-PrimaryTextColor text-lg font-medium">
-                    No previous exercises found.
-                  </p>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-
-          <Button
-            variant={"destructive"}
-            onClick={handleClosePreviousBox}
-            className="w-full mt-2"
-          >
-            Close
-          </Button>
-        </div>
-      )}
+        ) : (
+          <PreviousExerciseBox
+            planId={planId!}
+            handleClosePreviousBox={handleClosePreviousBox}
+            handleSelectPreviousExercise={handleSelectPreviousExercise}
+          />
+        )}
 
       <div className="mt-4"></div>
     </div>

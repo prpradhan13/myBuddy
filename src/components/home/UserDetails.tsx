@@ -84,8 +84,8 @@ const UserDetails = () => {
 
   return (
     <div className="w-full md:flex justify-center font-manrope">
-      <div className="w-full lg:w-[30vw] md:w-[60vw]">
-        <div className="w-full flex items-center justify-between gap-3">
+      <div className="w-full lg:w-[30vw] md:w-[60vw] space-y-4">
+        <div className="w-full flex items-center justify-between gap-4">
           {/* Profile Image */}
           <div className="relative">
             {!data.avatar_url ? (
@@ -102,12 +102,12 @@ const UserDetails = () => {
           </div>
 
           <div className="bg-SecondaryBackgroundColor p-2 rounded-xl w-[70%] flex flex-col justify-between">
-            <div className="overflow-hidden">
-              <h1 className="text-PrimaryTextColor font-semibold text-lg leading-5">
+          <div className="space-y-2">
+              <h1 className="text-PrimaryTextColor font-bold text-xl leading-6">
                 {data.full_name}
               </h1>
-              <h3 className="text-SecondaryTextColor leading-5">
-                {data.username}
+              <h3 className="text-SecondaryTextColor text-sm font-medium">
+                @{data.username}
               </h3>
               <p className="text-SecondaryTextColor text-sm">
                 {truncateText(data.email, 35)}
@@ -115,28 +115,28 @@ const UserDetails = () => {
             </div>
 
             <div className="flex justify-evenly gap-1 mt-3">
-              <div className="bg-[#3b3b3b] w-1/2 flex flex-col items-center rounded-xl">
+            <div className="bg-[#3b3b3b] w-1/2 flex flex-col items-center rounded-xl p-2 shadow-sm hover:bg-[#444444] transition-colors">
                 {followersLoad ? (
                   <ClipLoader size={14} color="#fff" />
                 ) : (
-                  <span className="text-white font-medium">
+                  <span className="text-white font-semibold text-lg">
                     {userFollowers?.count}
                   </span>
                 )}
-                <span className="text-white font-medium leading-5 text-sm ml-1">
-                  Follower
+                <span className="text-white text-sm font-medium">
+                  Followers
                 </span>
               </div>
 
-              <div className="bg-[#3b3b3b] w-1/2 flex flex-col items-center rounded-xl">
+              <div className="bg-[#3b3b3b] w-1/2 flex flex-col items-center rounded-xl p-2 shadow-sm hover:bg-[#444444] transition-colors">
                 {followingLoad ? (
                   <ClipLoader size={20} color="#fff" />
                 ) : (
-                  <span className="text-white font-medium">
+                  <span className="text-white font-semibold text-lg">
                     {userFollowings?.count}
                   </span>
                 )}
-                <span className="text-white font-medium leading-5 text-sm ml-1">
+                <span className="text-white text-sm font-medium">
                   Following
                 </span>
               </div>
@@ -180,7 +180,7 @@ const UserDetails = () => {
         </div>
 
         {data.bio ? (
-          <div className="mt-3 bg-SecondaryBackgroundColor p-2 rounded-xl">
+          <div className="mt-3 bg-SecondaryBackgroundColor p-4 rounded-xl">
             <h2 className="text-PrimaryTextColor text-lg font-semibold">
               About me
             </h2>

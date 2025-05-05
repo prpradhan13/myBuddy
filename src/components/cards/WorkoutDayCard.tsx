@@ -55,13 +55,13 @@ const WorkoutDayCard = ({
   return (
     <>
       {dayDetails.is_restday ? (
-        <motion.div variants={cardVariants} className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
-          <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
+        <motion.div variants={cardVariants} className="bg-BtnBgClr p-4 rounded-xl flex gap-3">
+          <div className="w-16 h-16 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
             </h1>
           </div>
-          <div className="w-[calc(100% - 25%)]">
+          <div className="">
             <h1 className="text-lg font-semibold">Rest Day</h1>
             <div className="flex gap-3">
               {creatorOfPlan && (
@@ -69,7 +69,7 @@ const WorkoutDayCard = ({
                   type="button"
                   onClick={handleToggleRestDay}
                   disabled={isPending}
-                  className="bg-green-500 mt-1 text-white text-sm font-medium px-2 rounded-lg"
+                  className="bg-green-500 text-white text-xs font-medium px-2 rounded-lg"
                 >
                   {isPending ? (
                     <ClipLoader size={15} />
@@ -84,7 +84,7 @@ const WorkoutDayCard = ({
           </div>
         </motion.div>
       ) : !dayDetails.workout_name && !dayDetails.is_restday ? (
-        <motion.div variants={cardVariants} className="bg-BtnBgClr p-2 rounded-xl flex gap-3">
+        <motion.div variants={cardVariants} className="bg-BtnBgClr p-4 rounded-xl flex gap-3">
           <div className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center">
             <h1 className="text-PrimaryTextColor capitalize font-bold">
               {firstThreeLetter}
@@ -117,17 +117,17 @@ const WorkoutDayCard = ({
       ) : (
         <motion.div
           variants={cardVariants}
-          className="bg-BtnBgClr p-2 rounded-xl flex gap-3"
+          className="bg-BtnBgClr p-4 rounded-xl flex gap-3"
         >
           <Link
             to={`/workoutDayDetails/${dayDetails.id}`}
-            className="w-[25%] min-h-20 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center"
+            className="w-16 h-16 bg-gradient-to-t from-[#000000] to-[#3f3f3f] rounded-xl flex justify-center items-center"
           >
             <h1 className="capitalize font-bold text-PrimaryTextColor">
               {firstThreeLetter}
             </h1>
           </Link>
-          <div className="flex flex-col justify-center w-[calc(100%-25%)]">
+          <div className="flex-1">
             <div className="flex items-center justify-between">
               <Link to={`/workoutDayDetails/${dayDetails.id}`}>
                 <h1 className="font-semibold text-lg capitalize">

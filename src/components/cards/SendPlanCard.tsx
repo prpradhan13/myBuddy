@@ -60,7 +60,7 @@ const SendPlanCard = () => {
         return (
           <div
             key={`${index}_item.workoutplan_id_${item.workoutplan_id}`}
-            className="rounded-xl w-full overflow-hidden bg-[#f3f3f3] p-2"
+            className="rounded-xl w-full overflow-hidden bg-[#f3f3f3]"
           >
             <div className="aspect-video">
               {planBGImage ? (
@@ -70,7 +70,7 @@ const SendPlanCard = () => {
                 >
                   <AdvancedImage
                     cldImg={planBGImage}
-                    className="aspect-video w-full object-cover rounded-xl"
+                    className="aspect-video w-full object-cover"
                   />
                 </button>
               ) : (
@@ -85,19 +85,19 @@ const SendPlanCard = () => {
               )}
             </div>
 
-            <div className="">
+            <div className="p-4">
               <button
                 onClick={() => handlePlanClick(item.workoutplan_id)}
-                className="font-semibold capitalize text-[#000] text-xl"
+                className="font-bold text-gray-800 text-xl hover:text-blue-600 transition-colors duration-200 capitalize"
               >
                 {truncateText(item.workoutplan.plan_name ?? "", 30)}
               </button>
               <button
                 onClick={() => handleSharedUserList(item.workoutplan_id)}
-                className="flex items-center gap-2 bg-[#d5d5d5] py-1 px-2 rounded-lg mt-2"
+                className="flex items-center gap-2 bg-gray-200 py-2 px-3 rounded-lg mt-3 transition-colors duration-200"
               >
-                <CircleUser size={20} />
-                <span className="capitalize text-sm font-medium">{data.length} people</span>
+                <CircleUser size={20} className="text-gray-600" />
+                <span className="text-gray-700 font-medium">{data.length} people</span>
               </button>
             </div>
           </div>

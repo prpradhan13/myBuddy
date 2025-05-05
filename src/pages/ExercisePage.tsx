@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import SetsForm from "../components/forms/SetsForm";
 import { Button } from "@/components/ui/button";
-import { FilePenLine, Plus } from "lucide-react";
+import { FilePenLine, Plus, Dumbbell, Repeat } from "lucide-react";
 import Alert from "@/components/extra/Alert";
 import { usePlan } from "@/context/WorkoutPlanProvider";
 import { cld } from "@/utils/lib/cloudinary";
@@ -121,14 +121,25 @@ const ExercisePage = () => {
         <div
           className={`${
             exerciseImage
-              ? "w-full md:w-1/2 bg-gradient-to-t from-black via-[#000] to-transparent p-6"
+              ? "w-full md:w-1/2 p-6"
               : ""
           }`}
         >
-          <div className="bg-SecondaryBackgroundColor p-4 rounded-xl">
-            <p className="text-[#d6d6d6] font-medium capitalize">
-              {data?.target_muscle}
-            </p>
+          <div className={`${exerciseImage ? "bg-[#161616d7] backdrop-blur-sm" : "bg-SecondaryBackgroundColor"} p-4 rounded-xl`}>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[#d6d6d6] text-xs bg-[#3e3e3e] rounded-xl p-2 font-medium capitalize">
+                {data?.target_muscle}
+              </p>
+
+              {creatorOfPlan && (
+                <button
+                  onClick={handleEditDetails}
+                  className="rounded-lg text-black p-2 mt-2 bg-BtnBgClr"
+                >
+                  <FilePenLine size={20} color="#000" />
+                </button>
+              )}
+            </div>
             <h1 className="text-[#fff] font-semibold text-3xl capitalize flex items-center gap-1">
               {data?.exercise_name}
             </h1>
@@ -140,21 +151,12 @@ const ExercisePage = () => {
                 {data?.exercise_description}
               </p>
             )}
-
-            {creatorOfPlan && (
-              <button
-                onClick={handleEditDetails}
-                className="rounded-lg text-black p-2 mt-2 bg-BtnBgClr"
-              >
-                <FilePenLine size={20} color="#000" />
-              </button>
-            )}
           </div>
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sortedExerciseSets.map((set, index) => (
               <div
-                className="min-h-28 flex bg-gradient-to-l from-transparent to-[#272727] p-2 rounded-xl relative"
+                className={`${exerciseImage ? "bg-[#161616d7] backdrop-blur-sm" : "bg-gradient-to-l from-transparent to-[#272727]"} min-h-28 flex p-4 rounded-xl relative`}
                 key={set.id}
               >
                 <h1 className="text-7xl font-extrabold absolute right-4 bottom-0 text-[#a2a2a2]">
@@ -163,15 +165,23 @@ const ExercisePage = () => {
 
                 <div className="text-white flex flex-col justify-between">
                   <div className="">
-                    <h1 className="capitalize font-semibold">
-                      <span className="text-xl">{set.target_repetitions}</span>
-                    </h1>
-                    <h1 className="capitalize font-medium">
-                      <span className="text-">{set.target_weight}</span>
-                    </h1>
+                    <div className="capitalize font-semibold flex items-center gap-2">
+                      <div className="p-2 bg-[#3e3e3e] rounded-xl">
+                        <Repeat size={20} />
+                      </div>
+                      <h1 className="text-xl">{set.target_repetitions}</h1>
+                    </div>
+                    <div className="capitalize font-semibold flex items-center gap-2 mt-2">
+                      <div className="p-2 bg-[#3e3e3e] rounded-xl">
+                        <Dumbbell size={20} />
+                      </div>
+                      <h1 className="capitalize font-medium">
+                        {set.target_weight}
+                      </h1>
+                    </div>
                   </div>
 
-                  <div className="">
+                  <div className="mt-2">
                     {(creatorOfPlan || hasReceivedPlan) && (
                       <button
                         onClick={() => {

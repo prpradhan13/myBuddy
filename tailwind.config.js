@@ -17,7 +17,7 @@ export default {
       },
       colors: {
         MainBackgroundColor: "#000",
-        SecondaryBackgroundColor: "#1a1a1a",
+        SecondaryBackgroundColor: "#2a2a2a",
         BtnBgClr: "#f3f3f3",
         PrimaryTextColor: "#FFFFFF",
         SecondaryTextColor: "#eaeaea",

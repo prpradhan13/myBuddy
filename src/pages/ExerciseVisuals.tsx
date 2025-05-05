@@ -16,7 +16,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Timer, ChevronUp, Volume2, VolumeX } from "lucide-react";
+import { Timer, ChevronUp, Volume2, VolumeX, Info } from "lucide-react";
 import { useRef, useState } from "react";
 
 const ExerciseVisuals = () => {
@@ -24,9 +24,7 @@ const ExerciseVisuals = () => {
   const detailsRef = useRef<HTMLDivElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
 
-  const { data, isLoading, isError } = useGetExerciseVisuals(
-    Number(exerciseId)
-  );
+  const { data, isLoading, isError } = useGetExerciseVisuals(Number(exerciseId));
   const { data: exerciseWithSets, isLoading: exerciseWithSetsLoading } =
     useGetExercises(Number(exerciseId));
 
@@ -45,8 +43,10 @@ const ExerciseVisuals = () => {
   if (isLoading || exerciseWithSetsLoading) return <Loader />;
   if (!data || isError) {
     return (
-      <div className="w-full h-screen flex justify-center items-center bg-MainBackgroundColor">
-        <h1 className="text-white text-xl">Opps!! No Preview</h1>
+      <div className="w-full h-screen flex flex-col justify-center items-center bg-MainBackgroundColor gap-4">
+        <Info size={48} className="text-gray-400" />
+        <h1 className="text-white text-xl font-medium">No Preview Available</h1>
+        <p className="text-gray-400">Please try another exercise</p>
       </div>
     );
   }
@@ -67,70 +67,101 @@ const ExerciseVisuals = () => {
         <div className="bg-transparent h-[80vh]"></div>
         <div
           ref={detailsRef}
-          className="w-full min-h-screen p-6 bg-gradient-to-t from-black/80 via-black/70 to-transparent"
+          className="w-full min-h-screen p-8 bg-gradient-to-t from-black/90 via-black/80 to-transparent backdrop-blur-sm"
         >
-          <div className="">
-            <div className="space-x-3">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center gap-4 mb-6">
               <button
                 onClick={handleToggleMute}
-                className="bg-BtnBgClr p-2 rounded-xl"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-200 backdrop-blur-sm"
               >
                 {isMuted ? (
-                  <VolumeX size={20} color="#000" />
+                  <VolumeX size={20} className="text-white" />
                 ) : (
-                  <Volume2 size={20} color="#000" />
+                  <Volume2 size={20} className="text-white" />
                 )}
               </button>
               <button
-                className="bg-BtnBgClr p-2 rounded-xl"
+                className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-200 backdrop-blur-sm"
                 onClick={handlePauseAndScroll}
               >
-                <ChevronUp size={20} color="#000" />
+                <ChevronUp size={20} className="text-white" />
               </button>
             </div>
 
-            <h1 className="text-3xl font-semibold capitalize mt-2">
-              {exerciseWithSets?.exercise_name}
-            </h1>
-            <h2 className="text-lg font-medium mt-1 capitalize">
-              {exerciseWithSets?.target_muscle}
-            </h2>
-          </div>
+            <div className="space-y-2 mb-8">
+              <h1 className="text-4xl font-bold capitalize">
+                {exerciseWithSets?.exercise_name}
+              </h1>
+              <h2 className="text-xl font-medium text-gray-300 capitalize">
+                {exerciseWithSets?.target_muscle}
+              </h2>
+            </div>
 
-          <div className="">
-            <p className="mt-4 whitespace-pre-line">
-              {exerciseWithSets?.exercise_description}
-            </p>
-
-            <p className="mt-2 font-medium">
-              Rest between sets {exerciseWithSets?.rest ?? 0}
-            </p>
-
-            {exerciseWithSets?.exercise_sets?.map((item, index) => (
-              <div key={item.id} className="my-4">
-                <h3 className="text-lg font-medium">Set {index + 1}</h3>
-                <p>Target Repetitions - {item.target_repetitions}</p>
-                <p>Target Weight - {item.target_weight}</p>
+            <div className="space-y-6">
+              <div className="bg-white/5 p-6 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold mb-3">Description</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  {exerciseWithSets?.exercise_description}
+                </p>
               </div>
-            ))}
 
-            <Drawer>
-              <DrawerTrigger className="bg-[#fff] p-2 rounded-full">
-                  <Timer color="#000" size={26} />
-              </DrawerTrigger>
-              <DrawerContent>
-                <DrawerHeader>
-                  <DrawerTitle>Stopwatch</DrawerTitle>
-                  <DrawerDescription>No need to go anywhere</DrawerDescription>
-                </DrawerHeader>
-                <StopWatch />
-                <DrawerFooter>
-                  <DrawerClose asChild>
-                    <Button variant="outline">Close</Button>
-                  </DrawerClose>
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
+              <div className="bg-white/5 p-6 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold mb-3">Rest Period</h3>
+                <p className="text-gray-300">
+                  {exerciseWithSets?.rest ?? 0} seconds between sets
+                </p>
+              </div>
+
+              <div className="bg-white/5 p-6 rounded-xl backdrop-blur-sm">
+                <h3 className="text-lg font-semibold mb-4">Exercise Sets</h3>
+                <div className="space-y-4">
+                  {exerciseWithSets?.exercise_sets?.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className="bg-white/10 p-4 rounded-lg backdrop-blur-sm"
+                    >
+                      <h4 className="text-lg font-medium mb-2">Set {index + 1}</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm text-gray-400">Target Reps</p>
+                          <p className="text-lg font-medium">{item.target_repetitions}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-400">Target Weight</p>
+                          <p className="text-lg font-medium">{item.target_weight}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <Drawer>
+                <DrawerTrigger className="w-full">
+                  <Button className="w-full bg-white/10 hover:bg-white/20 text-white border-none">
+                    <Timer className="mr-2" size={20} />
+                    Open Timer
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent className="">
+                  <DrawerHeader>
+                    <DrawerTitle className="">Exercise Timer</DrawerTitle>
+                    <DrawerDescription className="text-gray-400">
+                      Track your rest periods and sets
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <StopWatch />
+                  <DrawerFooter>
+                    <DrawerClose asChild>
+                      <Button variant="outline">
+                        Close
+                      </Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
+            </div>
           </div>
         </div>
       </div>

@@ -73,26 +73,26 @@ const CreateWorkoutDay = ({
   };
 
   return (
-    <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat">
+    <div className="bg-[#00000096] fixed top-0 right-0 left-0 h-screen flex justify-center items-center px-4 font-montserrat z-50">
       {step === 1 && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="bg-SecondaryBackgroundColor w-full md:w-[50vw] rounded-md p-3 flex flex-col gap-4"
+            className="bg-SecondaryBackgroundColor w-full md:w-[50vw] rounded-lg p-6 flex flex-col gap-6 shadow-xl"
           >
             <FormField
               control={form.control}
               name="workout_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-PrimaryTextColor text-lg">
+                  <FormLabel className="text-PrimaryTextColor text-lg font-medium">
                     Workout Name
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder=""
+                      placeholder="Enter workout name"
                       {...field}
-                      className="text-PrimaryTextColor"
+                      className="text-PrimaryTextColor bg-[#2a2a2a] border-[#3a3a3a] focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     />
                   </FormControl>
                   <FormMessage />
@@ -105,7 +105,7 @@ const CreateWorkoutDay = ({
               name="difficulty_level"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="text-lg text-PrimaryTextColor">
+                  <FormLabel className="text-lg text-PrimaryTextColor font-medium">
                     Difficulty Level
                   </FormLabel>
                   <FormControl>
@@ -114,17 +114,15 @@ const CreateWorkoutDay = ({
                       defaultValue={field.value}
                     >
                       <SelectTrigger
-                        className={`w-[180px] ${
-                          field.value ? "text-white" : "text-white"
-                        }`}
+                        className={`w-[180px] bg-[#2a2a2a] border-[#3a3a3a] text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500`}
                       >
-                        <SelectValue>{field.value ?? "Select"}</SelectValue>
+                        <SelectValue placeholder="Select difficulty" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-[#2a2a2a] border-[#3a3a3a]">
                         <SelectGroup>
-                          <SelectItem value="easy">Easy</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="hard">Hard</SelectItem>
+                          <SelectItem value="easy" className="text-white hover:bg-[#3a3a3a]">Easy</SelectItem>
+                          <SelectItem value="medium" className="text-white hover:bg-[#3a3a3a]">Medium</SelectItem>
+                          <SelectItem value="hard" className="text-white hover:bg-[#3a3a3a]">Hard</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -139,14 +137,14 @@ const CreateWorkoutDay = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-PrimaryTextColor text-lg">
+                  <FormLabel className="text-PrimaryTextColor text-lg font-medium">
                     Any Tips?
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Optional"
+                      placeholder="Enter workout tips and instructions"
                       {...field}
-                      className="text-PrimaryTextColor"
+                      className="text-PrimaryTextColor bg-[#2a2a2a] border-[#3a3a3a] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-h-[100px]"
                       value={field.value ?? ""}
                     />
                   </FormControl>
@@ -155,13 +153,17 @@ const CreateWorkoutDay = ({
               )}
             />
 
-            <div className="flex gap-3 justify-evenly">
+            <div className="flex gap-4 justify-evenly">
               <Alert
                 handleContinueBtn={handleCloseBtn}
                 trigerBtnVarient="destructive"
-                triggerBtnClassName="w-1/2 text-lg font-semibold"
+                triggerBtnClassName="w-1/2 text-lg font-medium bg-red-600 hover:bg-red-700"
               />
-              <Button type="submit" variant="secondary" className="w-1/2">
+              <Button 
+                type="submit" 
+                variant="secondary" 
+                className="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+              >
                 NEXT
               </Button>
             </div>

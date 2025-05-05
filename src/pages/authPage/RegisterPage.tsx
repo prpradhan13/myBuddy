@@ -51,7 +51,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col bg-MainBackgroundColor justify-center relative">
+    <div className="w-full h-screen flex flex-col bg-MainBackgroundColor justify-center">
       <button
         onClick={handleGoBack}
         className="absolute top-8 left-6 bg-BtnBgClr rounded-lg p-1"
@@ -60,10 +60,10 @@ const RegisterPage = () => {
       </button>
 
       <div className="px-6">
-        <h1 className="text-3xl text-PrimaryTextColor font-semibold">
+        <h1 className="text-3xl text-PrimaryTextColor font-semibold text-center">
           Welcome Back!
         </h1>
-        <p className="text-SecondaryTextColor mt-1">
+        <p className="text-SecondaryTextColor mt-1 text-center">
           Log in to access your account and continue where you left off.
         </p>
       </div>

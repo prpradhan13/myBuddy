@@ -226,7 +226,7 @@ const WorkoutPlanDetails = () => {
   }
 
   return (
-    <div className="bg-MainBackgroundColor min-h-screen w-full p-4 font-manrope">
+    <div className="bg-MainBackgroundColor min-h-screen w-full p-6 font-manrope">
       {!creatorOfPlan && (
         <Link
           to={`/profilePage/${data?.creator_id}`}
@@ -251,7 +251,7 @@ const WorkoutPlanDetails = () => {
         </Link>
       )}
 
-      <div className="bg-SecondaryBackgroundColor p-2 rounded-xl my-2">
+      <div className="bg-SecondaryBackgroundColor p-4 rounded-xl my-2">
         <h1 className="text-2xl font-semibold capitalize text-PrimaryTextColor">
           {data?.plan_name}
         </h1>
@@ -315,7 +315,7 @@ const WorkoutPlanDetails = () => {
             <CarouselItem key={index} className="basis-1/6">
               <button
                 onClick={() => handleClickWeek(index)}
-                className={`flex flex-col flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
+                className={`flex flex-col gap-1 flex-wrap items-center justify-center rounded-xl h-14 w-14 text-xs font-semibold ${
                   selectedWeek === index + 1
                     ? "bg-BtnBgClr"
                     : "bg-[#666666] text-white"

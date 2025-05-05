@@ -10,9 +10,8 @@ import {
   useTogglePlanVisibility,
 } from "@/utils/queries/workoutQuery";
 import { useState } from "react";
-import { Star } from "lucide-react";
+import { Star, Ellipsis } from "lucide-react";
 import { useGetReviewDetails } from "@/utils/queries/reviewQuery";
-import { Ellipsis } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,9 +39,7 @@ const WorkoutPlanCard = ({
   const navigate = useNavigate();
 
   const { mutate, isPending } = useDeletePlan(planDetails.id, 5);
-
   const { data: reviews } = useGetReviewDetails(planDetails.id);
-
   const averageRating = calculateAverageRating(reviews);
 
   const handleDeletePlan = () => {
@@ -62,32 +59,33 @@ const WorkoutPlanCard = ({
     planDetails.image_content && cld.image(planDetails.image_content);
 
   return (
-    <div className="rounded-xl font-manrope text-xl w-full overflow-hidden bg-[#f3f3f3] p-1">
-      <div className="aspect-video">
+    <div className="group relative rounded-xl overflow-hidden bg-[#1a1a1a] border border-[#2a2a2a] transition-all duration-300 hover:border-[#ffa333]/30 hover:shadow-lg hover:shadow-[#ffa333]/5">
+      <div className="aspect-video relative overflow-hidden">
         {planBGImage ? (
-          <button onClick={handlePlanClick} className="w-full">
+          <button onClick={handlePlanClick} className="w-full h-full">
             <AdvancedImage
               cldImg={planBGImage}
-              className="aspect-video w-full object-cover rounded-xl"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a]/90 via-[#1a1a1a]/50 to-transparent" />
           </button>
         ) : (
           <button
             onClick={handlePlanClick}
-            className="aspect-video w-full bg-gradient-to-t from-[#000] to-[#4a4a4a] rounded-xl"
+            className="w-full h-full bg-gradient-to-t from-[#1a1a1a] to-[#2a2a2a] flex items-center justify-center"
           >
-            <p className="text-white font-medium text-center">
+            <p className="text-[#e0e0e0] font-medium text-lg">
               {truncateText(planDetails.plan_name ?? "", 30)}
             </p>
           </button>
         )}
       </div>
 
-      <div className="flex flex-col w-full h-full">
-        <div className="flex justify-between">
+      <div className="p-4 space-y-3">
+        <div className="flex items-start justify-between">
           <button
             onClick={handlePlanClick}
-            className="font-semibold capitalize text-[#000]"
+            className="text-[#e0e0e0] font-semibold text-lg hover:text-[#ffa333] transition-colors duration-200"
           >
             {truncateText(planDetails.plan_name ?? "", 30)}
           </button>
@@ -95,16 +93,17 @@ const WorkoutPlanCard = ({
           {isLogedInUserCreator && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="p-2 rounded-md hover:bg-transparent">
-                  <Ellipsis size={20} color="#000" />
+                <button className="p-1.5 rounded-md hover:bg-[#2a2a2a] transition-colors duration-200">
+                  <Ellipsis size={20} className="text-[#e0e0e0]" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
+                className="bg-[#1a1a1a] border-[#2a2a2a]"
               >
                 <DropdownMenuItem asChild>
                   <div className="flex items-center justify-between space-x-2">
-                    <Label htmlFor={`toggle-${planDetails.id}`}>
+                    <Label htmlFor={`toggle-${planDetails.id}`} className="text-[#e0e0e0]">
                       {planDetails.is_public ? "Public" : "Private"}
                     </Label>
                     <Switch
@@ -115,14 +114,17 @@ const WorkoutPlanCard = ({
                     />
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem onClick={() => setIsSheetOpen(true)} className="font-medium">Share Plan</DropdownMenuItem>
-
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-[#2a2a2a]" />
+                <DropdownMenuItem 
+                  onClick={() => setIsSheetOpen(true)} 
+                  className="text-[#e0e0e0] hover:bg-[#2a2a2a]"
+                >
+                  Share Plan
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-[#2a2a2a]" />
                 <Alert
                   trigerBtnVarient="ghost"
-                  triggerBtnClassName="bg-transparent h-6 p-2 text-red-500 hover:text-red-500 hover:bg-transparent"
+                  triggerBtnClassName="text-red-500 hover:text-red-500 hover:bg-[#2a2a2a] w-full justify-start"
                   btnName="Remove"
                   handleContinueBtn={handleDeletePlan}
                   pendingState={isPending}
@@ -132,32 +134,36 @@ const WorkoutPlanCard = ({
           )}
         </div>
 
-        <div className="flex gap-2 items-center mt-1">
+        <div className="flex items-center gap-3">
           <Badge
-            className={`text-black self-start ${
+            variant="outline"
+            className={`${
               planDetails.is_public
-                ? "bg-green-500 hover:bg-green-500"
-                : "bg-[#ffa600] hover:bg-[#ffa600]"
-            }`}
+                ? "border-green-500/30 text-green-500 hover:bg-green-500/10"
+                : "border-[#ffa333]/30 text-[#ffa333] hover:bg-[#ffa333]/10"
+            } font-medium`}
           >
             {planDetails.is_public ? "Free" : "Premium"}
           </Badge>
-        </div>
-        <div className="flex my-2">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              size={16}
-              className={
-                index < averageRating
-                  ? "fill-yellow-500 text-yellow-500"
-                  : "text-gray-400"
-              }
-            />
-          ))}
-          {reviews && reviews.length > 0 && (
-            <p className="ml-2 text-sm h-0">({reviews.length})</p>
-          )}
+
+          <div className="flex items-center gap-1">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Star
+                key={index}
+                size={16}
+                className={
+                  index < averageRating
+                    ? "fill-[#ffa333] text-[#ffa333]"
+                    : "text-[#4a4a4a]"
+                }
+              />
+            ))}
+            {reviews && reviews.length > 0 && (
+              <span className="text-[#a0a0a0] text-sm ml-1">
+                ({reviews.length})
+              </span>
+            )}
+          </div>
         </div>
       </div>
 

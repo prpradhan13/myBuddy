@@ -49,9 +49,9 @@ const EditUserDetails = ({
       onOpenChange={setIsEditUserDetailsOpen}
     >
       <DrawerContent className="bg-MainBackgroundColor border-none">
-        <DrawerHeader>
-          <DrawerTitle className="text-PrimaryTextColor">Edit</DrawerTitle>
-          <DrawerDescription>Edit your profile details.</DrawerDescription>
+        <DrawerHeader className="space-y-2">
+          <DrawerTitle className="text-PrimaryTextColor text-2xl font-bold">Edit Profile</DrawerTitle>
+          <DrawerDescription className="text-gray-400">Make changes to your profile here. Click save when you're done.</DrawerDescription>
         </DrawerHeader>
 
         <ProfileForm
@@ -148,30 +148,32 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   };
 
   return (
-    <div className="p-4">
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex gap-3">
-          <div className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl relative">
-            {selectedImage ? (
-              <img
-                src={URL.createObjectURL(selectedImage)}
-                alt="Preview"
-                className="h-full w-full object-cover rounded-xl"
-              />
-            ) : userAvatar ? (
-              <img
-                src={userAvatar}
-                alt="Image Preview"
-                className="h-full w-full object-cover rounded-xl"
-              />
-            ) : (
-              <p className="font-montserrat">{initialLetterOfName}</p>
-            )}
+    <div className="p-6 space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex gap-6 items-start">
+          <div className="relative group">
+            <div className="h-32 w-32 bg-gradient-to-t from-[#1d1d1d] via-[#353535] to-[#898989] rounded-xl border-2 border-[#a7a7a7] flex justify-center items-center text-PrimaryTextColor font-bold text-xl overflow-hidden">
+              {selectedImage ? (
+                <img
+                  src={URL.createObjectURL(selectedImage)}
+                  alt="Preview"
+                  className="h-full w-full object-cover rounded-xl"
+                />
+              ) : userAvatar ? (
+                <img
+                  src={userAvatar}
+                  alt="Image Preview"
+                  className="h-full w-full object-cover rounded-xl"
+                />
+              ) : (
+                <p className="font-montserrat text-4xl">{initialLetterOfName}</p>
+              )}
+            </div>
             <label
               htmlFor="profileImage"
-              className="absolute bottom-0 right-0 bg-PrimaryTextColor text-white p-2 rounded-full cursor-pointer"
+              className="absolute bottom-2 right-2 bg-white/90 text-black p-2 rounded-full cursor-pointer transition-all duration-200 hover:bg-white hover:scale-110 shadow-lg"
             >
-              <FaCamera color="black" />
+              <FaCamera size={16} />
             </label>
             <input
               type="file"
@@ -181,56 +183,72 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
               onChange={handleImageChange}
             />
           </div>
-          <div className="bg-[#444444] p-2 rounded-xl w-[70%]">
-            {/* Full Name */}
-            <div className="flex items-center gap-2 border-b border-[#fff] py-2">
-              <input
-                {...register("full_name")}
-                type="text"
-                id="fullname"
-                className="text-white bg-transparent w-full focus:outline-none placeholder:text-[#c2c2c2]"
-              />
+          
+          <div className="flex-1 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="fullname" className="text-sm font-medium text-gray-400">Full Name</label>
+              <div className="bg-[#2a2a2a] rounded-lg border border-[#3a3a3a] p-3">
+                <input
+                  {...register("full_name")}
+                  type="text"
+                  id="fullname"
+                  className="text-white bg-transparent w-full focus:outline-none placeholder:text-[#666]"
+                  placeholder="Enter your full name"
+                />
+              </div>
+              {errors.full_name && (
+                <p className="text-red-500 text-sm">{errors.full_name.message}</p>
+              )}
             </div>
-            {errors.full_name && (
-              <p className="text-red-500">{errors.full_name.message}</p>
-            )}
 
-            {/* User Name */}
-            <div className="flex items-center gap-2 border-b border-[#fff] py-2">
-              <input
-                {...register("username")}
-                type="text"
-                id="username"
-                className="text-white bg-transparent w-full focus:outline-none placeholder:text-[#c2c2c2]"
-              />
+            <div className="space-y-2">
+              <label htmlFor="username" className="text-sm font-medium text-gray-400">Username</label>
+              <div className="bg-[#2a2a2a] rounded-lg border border-[#3a3a3a] p-3">
+                <input
+                  {...register("username")}
+                  type="text"
+                  id="username"
+                  className="text-white bg-transparent w-full focus:outline-none placeholder:text-[#666]"
+                  placeholder="Enter your username"
+                />
+              </div>
+              {errors.username && (
+                <p className="text-red-500 text-sm">{errors.username.message}</p>
+              )}
             </div>
-            {errors.username && (
-              <p className="text-red-500">{errors.username.message}</p>
-            )}
           </div>
         </div>
-        <div className="mt-3 bg-[#444444] p-2 rounded-xl">
-          <h2 className="text-white text-lg font-semibold">About me</h2>
-          <div className="bg-[#fff] h-1 w-10 rounded-full"></div>
-          <div className="flex items-center gap-2 border border-[#fff] rounded-xl p-2 mt-2">
+
+        <div className="space-y-2">
+          <label htmlFor="bio" className="text-sm font-medium text-gray-400">About Me</label>
+          <div className="bg-[#2a2a2a] rounded-lg border border-[#3a3a3a] p-3">
             <textarea
               {...register("bio")}
-              placeholder="Write somthing about yourself..."
+              placeholder="Write something about yourself..."
               id="bio"
-              className="text-white bg-transparent w-full h-36 focus:outline-none placeholder:text-[#c2c2c2]"
+              className="text-white bg-transparent w-full h-32 focus:outline-none placeholder:text-[#666] resize-none"
             />
           </div>
-          {errors.bio && <p className="text-red-500">{errors.bio.message}</p>}
+          {errors.bio && <p className="text-red-500 text-sm">{errors.bio.message}</p>}
         </div>
 
-        <Button
-          type="submit"
-          disabled={isPending}
-          variant={"secondary"}
-          className="py-2 px-4 rounded-xl w-full"
-        >
-          {isPending ? "Updating..." : "Update Profile"}
-        </Button>
+        <div className="flex justify-end gap-3 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsEditUserDetailsOpen(false)}
+            className="px-6"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="px-6 bg-blue-600 hover:bg-blue-700"
+          >
+            {isPending ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
       </form>
     </div>
   );
